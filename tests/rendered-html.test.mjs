@@ -105,6 +105,17 @@ test("keeps glossary entries out of the sidebar and opens them from body links",
   assert.match(tree, /神迹之光/);
   assert.match(tree, /「枝桠」/);
   assert.doesNotMatch(tree, /红松镇|无冬城|安柏弗|古贤之誓|艾弗瑞斯卡/);
+  assert.match(tree, /正式团员/);
+  assert.match(tree, /同行者/);
+
+  const treeGroups = [...tree.matchAll(/<details[^>]*>[\s\S]*?<\/details>/g)].map((match) => match[0]);
+  const memberGroup = treeGroups.find((group) => group.includes("正式团员")) ?? "";
+  const associateGroup = treeGroups.find((group) => group.includes("同行者")) ?? "";
+  assert.match(memberGroup, /雪露/);
+  assert.match(memberGroup, /阿瑞尔/);
+  assert.doesNotMatch(memberGroup, /梅莉艾尔/);
+  assert.match(associateGroup, /梅莉艾尔/);
+  assert.doesNotMatch(associateGroup, /雪露/);
 
   const shirulResponse = await render("/archive/characters/shirul");
   const shirul = await shirulResponse.text();
@@ -128,6 +139,36 @@ test("search receives only approved archive text", async () => {
   assert.match(html, /全文索引/);
   assert.match(html, /雪露/);
   assert.doesNotMatch(html, forbiddenPublicText);
+});
+
+test("gives formal party members their own public collection", async () => {
+  const response = await render("/search?category=members");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const visibleResults = [...html.matchAll(/<a[^>]*class="search-result"[\s\S]*?<\/a>/g)]
+    .map((match) => match[0])
+    .join("\n");
+  assert.match(html, /正式团员/);
+  assert.match(visibleResults, /雪露/);
+  assert.match(visibleResults, /阿瑞尔/);
+  assert.doesNotMatch(visibleResults, /梅莉艾尔/);
+
+  const memberResponse = await render("/archive/characters/shirul");
+  const memberHtml = await memberResponse.text();
+  assert.match(memberHtml, /PARTY MEMBER/);
+  assert.match(memberHtml, /01(?:<!-- -->)? \/ 06/);
+});
+
+test("uses desktop Lenis while preserving native touch scrolling and reduced motion", async () => {
+  const [motionLayer, packageJson] = await Promise.all([
+    readFile(new URL("../app/components/MotionLayer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
+  assert.match(motionLayer, /syncTouch: false/);
+  assert.match(motionLayer, /prefers-reduced-motion: reduce/);
+  assert.equal(JSON.parse(packageJson).dependencies.lenis, "1.3.25");
 });
 
 test("renders a styled archive 404", async () => {

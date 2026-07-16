@@ -3,18 +3,26 @@
 import { FormEvent, Fragment, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { categoryLabels, siteHref, type ArchiveCategory } from "../archive-manifest";
+import {
+  categoryLabels,
+  siteHref,
+  type ArchiveCategory,
+  type CharacterRole,
+} from "../archive-manifest";
 
 export type SearchIndexItem = {
   title: string;
   englishTitle?: string;
   aliases: string[];
   category: ArchiveCategory;
+  characterRole?: CharacterRole;
   presentation?: "archive" | "glossary";
   summary: string;
   href: string;
   text: string;
 };
+
+type SearchCollection = ArchiveCategory | "members" | "all";
 
 function highlight(text: string, query: string) {
   if (!query) return text;
@@ -51,15 +59,20 @@ export function SearchClient({
   const searchParams = useSearchParams();
   const activeQuery = searchParams.get("q")?.trim() ?? "";
   const categoryParam = searchParams.get("category");
-  const category: ArchiveCategory | "all" =
-    categoryParam && ["characters", "world", "history"].includes(categoryParam)
-      ? (categoryParam as ArchiveCategory)
+  const category: SearchCollection =
+    categoryParam && ["members", "characters", "world", "history"].includes(categoryParam)
+      ? (categoryParam as SearchCollection)
       : "all";
 
   const results = useMemo(() => {
     const needle = activeQuery.toLowerCase();
     return index
-      .filter((item) => category === "all" || item.category === category)
+      .filter((item) => {
+        if (category === "all") return true;
+        if (category === "members") return item.characterRole === "member";
+        if (category === "characters") return item.characterRole === "associate";
+        return item.category === category;
+      })
       .filter((item) => {
         if (!needle) return true;
         return [item.title, item.englishTitle, ...item.aliases, item.summary, item.text]
@@ -84,7 +97,7 @@ export function SearchClient({
     router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
   }
 
-  function chooseCategory(value: ArchiveCategory | "all") {
+  function chooseCategory(value: SearchCollection) {
     const params = new URLSearchParams();
     if (activeQuery) params.set("q", activeQuery);
     if (value !== "all") params.set("category", value);
@@ -94,13 +107,13 @@ export function SearchClient({
   return (
     <div className="search-page">
       <div className="breadcrumbs"><Link href={siteHref("/")}>总览</Link><span>/</span><span>全文索引</span></div>
-      <header className="search-header">
+      <header className="search-header" data-reveal>
         <span className="eyebrow">FULL TEXT INDEX</span>
         <h1>全文索引</h1>
         <p>检索所有已经进入公开目录的人物、地点、物件与事件。</p>
       </header>
 
-      <form className="search-panel" onSubmit={submit} role="search">
+      <form className="search-panel" data-reveal onSubmit={submit} role="search">
         <label htmlFor="archive-query">关键词</label>
         <div className="search-input-row">
           <span aria-hidden="true">⌕</span>
@@ -115,14 +128,20 @@ export function SearchClient({
           <button type="submit">搜索</button>
         </div>
         <div className="search-filters" aria-label="分类筛选">
-          {(["all", "characters", "world", "history"] as const).map((value) => (
+          {(["all", "members", "characters", "world", "history"] as const).map((value) => (
             <button
               type="button"
               className={category === value ? "active" : undefined}
               onClick={() => chooseCategory(value)}
               key={value}
             >
-              {value === "all" ? "全部" : categoryLabels[value]}
+              {value === "all"
+                ? "全部"
+                : value === "members"
+                  ? "正式团员"
+                  : value === "characters"
+                    ? "同行者"
+                    : categoryLabels[value]}
             </button>
           ))}
         </div>
@@ -138,7 +157,13 @@ export function SearchClient({
           <Link className="search-result" href={item.href} key={item.href}>
             <div>
               <span className="result-category">
-                {item.presentation === "glossary" ? "世界词条" : categoryLabels[item.category]}
+                {item.characterRole === "member"
+                  ? "正式团员"
+                  : item.characterRole === "associate"
+                    ? "同行者"
+                    : item.presentation === "glossary"
+                      ? "世界词条"
+                      : categoryLabels[item.category]}
               </span>
               <h2>{highlight(item.title, activeQuery)}</h2>
               {item.englishTitle && <small>{highlight(item.englishTitle, activeQuery)}</small>}

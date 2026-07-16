@@ -4,14 +4,37 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  associateEntries,
   archiveHref,
   categoryLabels,
   navigationEntriesByCategory,
+  partyMemberEntries,
   siteHref,
   type ArchiveCategory,
+  type ArchiveManifestEntry,
 } from "../archive-manifest";
 
-const categories: ArchiveCategory[] = ["characters", "world", "history"];
+const navigationGroups: Array<{
+  key: string;
+  label: string;
+  entries: ArchiveManifestEntry[];
+  category?: ArchiveCategory;
+}> = [
+  { key: "members", label: "正式团员", entries: partyMemberEntries() },
+  { key: "associates", label: "同行者", entries: associateEntries() },
+  {
+    key: "world",
+    label: categoryLabels.world,
+    category: "world",
+    entries: navigationEntriesByCategory("world"),
+  },
+  {
+    key: "history",
+    label: categoryLabels.history,
+    category: "history",
+    entries: navigationEntriesByCategory("history"),
+  },
+];
 
 export function ArchiveShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -30,6 +53,22 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
     window.addEventListener("keydown", focusSearch);
     return () => window.removeEventListener("keydown", focusSearch);
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuOpen]);
 
   function submitSearch(event: FormEvent) {
     event.preventDefault();
@@ -53,15 +92,14 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           <span className="tree-glyph">⌂</span>
           总览
         </Link>
-        {categories.map((category) => (
-          <details key={category} open>
+        {navigationGroups.map((group) => (
+          <details key={group.key} open>
             <summary>
               <span className="tree-twist" aria-hidden="true">›</span>
-              {categoryLabels[category]}
+              {group.label}
             </summary>
             <div className="tree-children">
-              {navigationEntriesByCategory(category)
-                .map((entry) => {
+              {group.entries.map((entry) => {
                   const href = archiveHref(entry);
                   return (
                     <Link
@@ -76,7 +114,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
                   );
                 })}
             </div>
-            {category === "world" && (
+            {group.category === "world" && (
               <p className="tree-glossary-note">地点与誓言词条由正文中的虚线链接展开</p>
             )}
           </details>
@@ -89,8 +127,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="site-frame">
       <header className="topbar">
+        <span className="scroll-progress" aria-hidden="true" />
         <button
-          className="menu-button"
+          className={menuOpen ? "menu-button open" : "menu-button"}
           type="button"
           aria-label={menuOpen ? "关闭目录" : "打开目录"}
           aria-expanded={menuOpen}
@@ -133,6 +172,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           />
           <aside
             className="mobile-sidebar"
+            aria-label="移动端档案目录"
+            aria-modal="true"
+            role="dialog"
             onClick={(event) => {
               if ((event.target as HTMLElement).closest("a")) setMenuOpen(false);
             }}
@@ -142,7 +184,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main className="site-content">{children}</main>
+      <main className="site-content">
+        <div className="route-stage" key={pathname}>{children}</div>
+      </main>
     </div>
   );
 }

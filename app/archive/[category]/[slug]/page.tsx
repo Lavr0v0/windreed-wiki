@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import {
   archiveHref,
   archiveManifest,
-  categoryLabels,
+  entryCollectionLabel,
+  partyMemberEntries,
   siteHref,
 } from "../../../archive-manifest";
 import { getArchiveEntry } from "../../../archive-content.server";
@@ -39,22 +40,41 @@ export default async function ArchivePage({ params }: PageProps) {
   if (!entry) notFound();
 
   const related = archiveManifest
-    .filter((candidate) => candidate.category === entry.category && candidate.slug !== entry.slug)
+    .filter((candidate) => {
+      if (candidate.slug === entry.slug) return false;
+      if (entry.characterRole) return candidate.characterRole === entry.characterRole;
+      return candidate.category === entry.category;
+    })
     .slice(0, 4);
+  const isMember = entry.characterRole === "member";
+  const memberNumber = isMember
+    ? partyMemberEntries().findIndex((candidate) => candidate.slug === entry.slug) + 1
+    : 0;
+  const collectionLabel = entryCollectionLabel(entry);
+  const collectionFilter = isMember ? "members" : entry.category;
 
   return (
     <div className="archive-page">
       <div className="breadcrumbs" aria-label="面包屑">
         <Link href={siteHref("/")}>总览</Link>
         <span aria-hidden="true">/</span>
-        <Link href={`${siteHref("/search")}?category=${entry.category}`}>{categoryLabels[entry.category]}</Link>
+        <Link href={`${siteHref("/search")}?category=${collectionFilter}`}>{collectionLabel}</Link>
         <span aria-hidden="true">/</span>
         <span>{entry.title}</span>
       </div>
 
       <div className="article-layout">
-        <article className="archive-article">
-          <header className="article-header">
+        <article
+          className={isMember ? "archive-article member-archive-article" : "archive-article"}
+          style={{ "--entry-accent": entry.accent } as React.CSSProperties}
+        >
+          {isMember && (
+            <div className="member-article-ribbon" data-reveal>
+              <span>PARTY MEMBER</span>
+              <b>{String(memberNumber).padStart(2, "0")} / 06</b>
+            </div>
+          )}
+          <header className="article-header" data-reveal>
             <div
               className="article-monogram"
               style={{ "--entry-accent": entry.accent } as React.CSSProperties}
@@ -64,7 +84,7 @@ export default async function ArchivePage({ params }: PageProps) {
             </div>
             <div className="article-heading-copy">
               <span className="article-category">
-                {entry.presentation === "glossary" ? "世界词条" : categoryLabels[entry.category]}
+                {collectionLabel}
               </span>
               <h1>{entry.title}</h1>
               {entry.englishTitle && <p className="article-english">{entry.englishTitle}</p>}
@@ -73,7 +93,7 @@ export default async function ArchivePage({ params }: PageProps) {
           </header>
 
           {entry.facts && (
-            <dl className="fact-grid">
+            <dl className="fact-grid" data-reveal>
               {entry.facts.map((fact) => (
                 <div key={fact.label}>
                   <dt>{fact.label}</dt>
@@ -83,7 +103,9 @@ export default async function ArchivePage({ params }: PageProps) {
             </dl>
           )}
 
-          <MarkdownView markdown={entry.body} />
+          <div data-reveal>
+            <MarkdownView markdown={entry.body} />
+          </div>
 
           <footer className="article-footer">
             <span>ARCHIVE ENTRY</span>
@@ -106,15 +128,17 @@ export default async function ArchivePage({ params }: PageProps) {
               ))}
             </nav>
           )}
-          <div className="related-panel">
-            <span>同类档案</span>
-            {related.map((candidate) => (
-              <Link href={archiveHref(candidate)} key={candidate.slug}>
-                <i style={{ background: candidate.accent }} />
-                <span>{candidate.title}</span>
-              </Link>
-            ))}
-          </div>
+          {related.length > 0 && (
+            <div className="related-panel">
+              <span>{isMember ? "其他团员" : "同类档案"}</span>
+              {related.map((candidate) => (
+                <Link href={archiveHref(candidate)} key={candidate.slug}>
+                  <i style={{ background: candidate.accent }} />
+                  <span>{candidate.title}</span>
+                </Link>
+              ))}
+            </div>
+          )}
         </aside>
       </div>
     </div>

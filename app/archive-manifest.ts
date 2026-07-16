@@ -1,4 +1,5 @@
 export type ArchiveCategory = "characters" | "world" | "history";
+export type CharacterRole = "member" | "associate";
 
 export type ArchiveManifestEntry = {
   slug: string;
@@ -10,6 +11,7 @@ export type ArchiveManifestEntry = {
   sourceId: string;
   monogram: string;
   accent: string;
+  characterRole?: CharacterRole;
   presentation?: "archive" | "glossary";
   facts?: Array<{ label: string; value: string }>;
 };
@@ -31,6 +33,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "shirul",
     monogram: "雪",
     accent: "#78a99a",
+    characterRole: "member",
     facts: [
       { label: "种族", value: "人类" },
       { label: "职业", value: "圣武士 · 古贤之誓" },
@@ -48,6 +51,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "alberina",
     monogram: "莉",
     accent: "#526b91",
+    characterRole: "member",
     facts: [
       { label: "种族", value: "高精灵" },
       { label: "职业", value: "术士 · 银龙脉" },
@@ -65,6 +69,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "flavilar",
     monogram: "芙",
     accent: "#58735c",
+    characterRole: "member",
     facts: [
       { label: "种族", value: "黑龙裔" },
       { label: "职业", value: "战士 · 战团大师" },
@@ -82,6 +87,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "pheiron",
     monogram: "佩",
     accent: "#777d4f",
+    characterRole: "member",
     facts: [
       { label: "种族", value: "木精灵" },
       { label: "职业", value: "游荡者 · 刺客" },
@@ -99,6 +105,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "skamos",
     monogram: "斯",
     accent: "#7f5962",
+    characterRole: "member",
     facts: [
       { label: "种族", value: "提夫林" },
       { label: "职业", value: "吟游诗人 · 勇气学院" },
@@ -116,6 +123,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "ariel",
     monogram: "瑞",
     accent: "#615a86",
+    characterRole: "member",
     facts: [
       { label: "种族", value: "人类" },
       { label: "职业", value: "咒术师" },
@@ -133,6 +141,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     sourceId: "merielle",
     monogram: "梅",
     accent: "#a87572",
+    characterRole: "associate",
     facts: [
       { label: "种族", value: "人类" },
       { label: "身份", value: "非冒险者" },
@@ -284,4 +293,19 @@ export function navigationEntriesByCategory(category: ArchiveCategory) {
   return archiveManifest.filter(
     (entry) => entry.category === category && entry.presentation !== "glossary",
   );
+}
+
+export function partyMemberEntries() {
+  return archiveManifest.filter((entry) => entry.characterRole === "member");
+}
+
+export function associateEntries() {
+  return archiveManifest.filter((entry) => entry.characterRole === "associate");
+}
+
+export function entryCollectionLabel(entry: Pick<ArchiveManifestEntry, "category" | "characterRole" | "presentation">) {
+  if (entry.characterRole === "member") return "正式团员";
+  if (entry.characterRole === "associate") return "同行者";
+  if (entry.presentation === "glossary") return "世界词条";
+  return categoryLabels[entry.category];
 }

@@ -1,47 +1,16 @@
 import Link from "next/link";
 import {
   associateEntries,
+  archiveCollections,
   archiveHref,
   archiveManifest,
-  navigationEntriesByCategory,
+  archiveSections,
   partyMemberEntries,
   siteHref,
 } from "./archive-manifest";
 import { teamOverview } from "./archive-content.server";
 import { MarkdownView } from "./components/MarkdownView";
 import { MemberCard } from "./components/MemberCard";
-
-const categories: Array<{
-  eyebrow: string;
-  title: string;
-  description: string;
-  href: string;
-}> = [
-  {
-    eyebrow: "PARTY MEMBERS",
-    title: "正式团员",
-    description: "六名风芦旅人的人物生平、性格、动机与同行经历。",
-    href: archiveHref(partyMemberEntries()[0]),
-  },
-  {
-    eyebrow: "COMPANIONS",
-    title: "同行者",
-    description: "与队伍有明确联系、但并非正式成员的人物档案。",
-    href: archiveHref(associateEntries()[0]),
-  },
-  {
-    eyebrow: "WORLD",
-    title: "世界档案",
-    description: "核心设定与物件；地点和誓言从正文词条注释展开。",
-    href: archiveHref(navigationEntriesByCategory("world")[0]),
-  },
-  {
-    eyebrow: "HISTORY",
-    title: "历史档案",
-    description: "从各自来路到队伍合流的纪年与已确认联系。",
-    href: archiveHref(navigationEntriesByCategory("history")[0]),
-  },
-];
 
 export default function Home() {
   const members = partyMemberEntries();
@@ -79,25 +48,40 @@ export default function Home() {
       <section className="home-section" data-reveal>
         <div className="section-heading">
           <div>
-            <span className="eyebrow">ARCHIVE SECTIONS</span>
-            <h2>档案分类</h2>
+            <span className="eyebrow">ARCHIVES &amp; STORIES</span>
+            <h2>卷册索引</h2>
           </div>
-          <p>正式团员拥有独立目录；其他人物、世界与历史分别归档。</p>
+          <p>一组记人、地、物与设定，一组记录真正走出来的故事。</p>
         </div>
-        <div className="category-grid">
-          {categories.map((category, index) => (
-              <Link
-                className="category-card"
-                href={category.href}
-                key={category.title}
-                style={{ "--card-index": index } as React.CSSProperties}
-              >
-                <span className="card-number">0{index + 1}</span>
-                <span className="eyebrow">{category.eyebrow}</span>
-                <h3>{category.title}</h3>
-                <p>{category.description}</p>
-                <span className="card-link">进入目录 <span>→</span></span>
-              </Link>
+        <div className="archive-board-groups">
+          {archiveCollections.map((collection) => (
+            <section className="archive-board-group" key={collection.id}>
+              <header className="archive-board-heading">
+                <strong>{collection.english}</strong>
+                <span>{collection.chinese}</span>
+              </header>
+              <div className="category-grid">
+                {archiveSections
+                  .filter((section) => section.collection === collection.id)
+                  .map((section) => {
+                    const index = archiveSections.findIndex((candidate) => candidate.id === section.id);
+                    return (
+                      <Link
+                        className="category-card"
+                        href={`${siteHref("/search")}?section=${section.id}`}
+                        key={section.id}
+                        style={{ "--card-index": index } as React.CSSProperties}
+                      >
+                        <span className="card-number">{String(index + 1).padStart(2, "0")}</span>
+                        <span className="eyebrow">{section.english}</span>
+                        <h3>{section.chinese}</h3>
+                        <p>{section.description}</p>
+                        <span className="card-link">打开卷页 <span>→</span></span>
+                      </Link>
+                    );
+                  })}
+              </div>
+            </section>
           ))}
         </div>
       </section>
@@ -105,8 +89,8 @@ export default function Home() {
       <section className="home-section member-showcase" aria-labelledby="member-showcase-title">
         <div className="section-heading">
           <div>
-            <span className="eyebrow">THE SIX WAYFARERS</span>
-            <h2 id="member-showcase-title">正式团员</h2>
+            <span className="eyebrow">LIVES</span>
+            <h2 id="member-showcase-title">卷中人</h2>
           </div>
           <p>六份彼此独立、又在旅途中相互交汇的正式档案。</p>
         </div>
@@ -120,7 +104,7 @@ export default function Home() {
       <section className="home-section associates-section" data-reveal>
         <div className="section-heading">
           <div>
-            <span className="eyebrow">ASSOCIATED PEOPLE</span>
+            <span className="eyebrow">COMPANIONS</span>
             <h2>同行者</h2>
           </div>
           <p>与风芦旅人有明确联系，但不属于六名正式团员的人物。</p>

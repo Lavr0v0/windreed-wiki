@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   archiveHref,
   archiveManifest,
+  archiveSectionById,
   entryCollectionLabel,
   partyMemberEntries,
   siteHref,
@@ -42,8 +43,7 @@ export default async function ArchivePage({ params }: PageProps) {
   const related = archiveManifest
     .filter((candidate) => {
       if (candidate.slug === entry.slug) return false;
-      if (entry.characterRole) return candidate.characterRole === entry.characterRole;
-      return candidate.category === entry.category;
+      return candidate.section === entry.section;
     })
     .slice(0, 4);
   const isMember = entry.characterRole === "member";
@@ -51,14 +51,14 @@ export default async function ArchivePage({ params }: PageProps) {
     ? partyMemberEntries().findIndex((candidate) => candidate.slug === entry.slug) + 1
     : 0;
   const collectionLabel = entryCollectionLabel(entry);
-  const collectionFilter = isMember ? "members" : entry.category;
+  const collection = archiveSectionById[entry.section];
 
   return (
     <div className="archive-page">
       <div className="breadcrumbs" aria-label="面包屑">
         <Link href={siteHref("/")}>总览</Link>
         <span aria-hidden="true">/</span>
-        <Link href={`${siteHref("/search")}?category=${collectionFilter}`}>{collectionLabel}</Link>
+        <Link href={`${siteHref("/search")}?section=${entry.section}`}>{collection.english} · {collectionLabel}</Link>
         <span aria-hidden="true">/</span>
         <span>{entry.title}</span>
       </div>
@@ -84,7 +84,7 @@ export default async function ArchivePage({ params }: PageProps) {
             </div>
             <div className="article-heading-copy">
               <span className="article-category">
-                {collectionLabel}
+                {collection.english} · {collectionLabel}
               </span>
               <h1>{entry.title}</h1>
               {entry.englishTitle && <p className="article-english">{entry.englishTitle}</p>}
@@ -103,9 +103,7 @@ export default async function ArchivePage({ params }: PageProps) {
             </dl>
           )}
 
-          <div data-reveal>
-            <MarkdownView markdown={entry.body} />
-          </div>
+          <MarkdownView markdown={entry.body} />
 
           <footer className="article-footer">
             <span>THE WINDREED CHRONICLES</span>
@@ -131,7 +129,7 @@ export default async function ArchivePage({ params }: PageProps) {
           )}
           {related.length > 0 && (
             <div className="related-panel">
-              <span>{isMember ? "其他团员" : "同类档案"}</span>
+              <span>同卷条目</span>
               {related.map((candidate) => (
                 <Link href={archiveHref(candidate)} key={candidate.slug}>
                   <i style={{ background: candidate.accent }} />

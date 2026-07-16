@@ -4,37 +4,17 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  associateEntries,
+  archiveCollections,
   archiveHref,
-  categoryLabels,
-  navigationEntriesByCategory,
-  partyMemberEntries,
+  archiveSections,
+  entriesBySection,
   siteHref,
-  type ArchiveCategory,
-  type ArchiveManifestEntry,
 } from "../archive-manifest";
 
-const navigationGroups: Array<{
-  key: string;
-  label: string;
-  entries: ArchiveManifestEntry[];
-  category?: ArchiveCategory;
-}> = [
-  { key: "members", label: "正式团员", entries: partyMemberEntries() },
-  { key: "associates", label: "同行者", entries: associateEntries() },
-  {
-    key: "world",
-    label: categoryLabels.world,
-    category: "world",
-    entries: navigationEntriesByCategory("world"),
-  },
-  {
-    key: "history",
-    label: categoryLabels.history,
-    category: "history",
-    entries: navigationEntriesByCategory("history"),
-  },
-];
+const navigationCollections = archiveCollections.map((collection) => ({
+  ...collection,
+  sections: archiveSections.filter((section) => section.collection === collection.id),
+}));
 
 export function ArchiveShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -92,32 +72,48 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           <span className="tree-glyph">⌂</span>
           总览
         </Link>
-        {navigationGroups.map((group) => (
-          <details key={group.key} open>
-            <summary>
-              <span className="tree-twist" aria-hidden="true">›</span>
-              {group.label}
-            </summary>
-            <div className="tree-children">
-              {group.entries.map((entry) => {
-                  const href = archiveHref(entry);
-                  return (
-                    <Link
-                      className={pathname === href ? "tree-link active" : "tree-link"}
-                      href={href}
-                      key={entry.slug}
-                    >
-                      <span className="leaf-mark" style={{ background: entry.accent }} />
-                      <span>{entry.title}</span>
-                      {entry.englishTitle && <small>{entry.englishTitle}</small>}
-                    </Link>
-                  );
-                })}
+        {navigationCollections.map((collection) => (
+          <section className="tree-collection" key={collection.id}>
+            <div className="tree-collection-heading">
+              <strong>{collection.english}</strong>
+              <span>{collection.chinese}</span>
             </div>
-            {group.category === "world" && (
-              <p className="tree-glossary-note">地点与誓言词条由正文中的虚线链接展开</p>
-            )}
-          </details>
+            {collection.sections.map((section) => {
+              const entries = entriesBySection(section.id);
+              const index = archiveSections.findIndex((candidate) => candidate.id === section.id);
+              return (
+                <details key={section.id} open>
+                  <summary>
+                    <span className="tree-twist" aria-hidden="true">›</span>
+                    <span className="tree-section-number">{String(index + 1).padStart(2, "0")}</span>
+                    <span className="tree-section-name">
+                      <strong>{section.english}</strong>
+                      <small>{section.chinese}</small>
+                    </span>
+                  </summary>
+                  <div className="tree-children">
+                    <Link className="tree-index-link" href={`${siteHref("/search")}?section=${section.id}`}>
+                      卷页索引
+                    </Link>
+                    {entries.map((entry) => {
+                      const href = archiveHref(entry);
+                      return (
+                        <Link
+                          className={pathname === href ? "tree-link active" : "tree-link"}
+                          href={href}
+                          key={entry.slug}
+                        >
+                          <span className="leaf-mark" style={{ background: entry.accent }} />
+                          <span>{entry.title}</span>
+                          {entry.englishTitle && <small>{entry.englishTitle}</small>}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </details>
+              );
+            })}
+          </section>
         ))}
       </nav>
       <div className="nav-footer">The Windreed Wayfarers</div>

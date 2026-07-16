@@ -346,6 +346,32 @@ summary {
   margin-top: 7px;
 }
 
+.tree-collection {
+  border-top: 1px solid rgba(40, 58, 59, 0.11);
+  margin-top: 18px;
+  padding-top: 13px;
+}
+
+.tree-collection-heading {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  padding: 0 12px 4px;
+}
+
+.tree-collection-heading strong {
+  color: var(--gold);
+  font-family: Georgia, serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+
+.tree-collection-heading span {
+  color: #8a908c;
+  font-family: var(--serif);
+  font-size: 10px;
+}
+
 .archive-tree summary {
   color: #36464a;
   cursor: pointer;
@@ -353,7 +379,38 @@ summary {
   font-weight: 700;
   letter-spacing: 0.12em;
   list-style: none;
+  min-height: 46px;
   padding: 0 12px;
+}
+
+.tree-section-number {
+  color: #a6aaa5;
+  font-family: Georgia, serif;
+  font-size: 8px;
+  letter-spacing: 0.05em;
+  margin-right: 8px;
+}
+
+.tree-section-name strong,
+.tree-section-name small {
+  display: block;
+}
+
+.tree-section-name strong {
+  color: #36464a;
+  font-family: Georgia, serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+.tree-section-name small {
+  color: #777f7c;
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-top: 3px;
 }
 
 .archive-tree summary::-webkit-details-marker {
@@ -394,6 +451,16 @@ details[open] > summary .tree-twist {
   letter-spacing: 0.04em;
   margin-top: 1px;
 }
+
+.tree-index-link {
+  color: #939893;
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  padding: 7px 9px 4px 24px;
+}
+
+.tree-index-link:hover { color: var(--gold); }
 
 .tree-glossary-note {
   border-left: 1px solid rgba(169, 143, 83, 0.32);
@@ -677,13 +744,40 @@ details[open] > summary .tree-twist {
 .category-grid {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.archive-board-groups {
+  display: grid;
+  gap: 42px;
+}
+
+.archive-board-heading {
+  align-items: baseline;
+  border-left: 2px solid var(--gold);
+  display: flex;
+  gap: 11px;
+  margin-bottom: 16px;
+  padding-left: 13px;
+}
+
+.archive-board-heading strong {
+  color: var(--navy);
+  font-family: Georgia, serif;
+  font-size: 17px;
+  letter-spacing: 0.14em;
+}
+
+.archive-board-heading span {
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 13px;
 }
 
 .category-card {
   background: rgba(255, 253, 247, 0.7);
   border: 1px solid var(--line);
-  min-height: 245px;
+  min-height: 220px;
   padding: 28px;
   position: relative;
   overflow: hidden;
@@ -1433,7 +1527,9 @@ details[open] > summary .tree-twist {
 .search-input-row input { background: transparent; border: 0; color: var(--ink); font-family: var(--serif); font-size: 20px; height: 54px; outline: 0; padding: 0 12px; }
 .search-input-row button { background: var(--navy); border: 0; color: white; cursor: pointer; font-size: 12px; padding: 10px 22px; }
 .search-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.search-filters button { background: transparent; border: 1px solid var(--line); color: var(--ink-soft); cursor: pointer; font-size: 11px; padding: 7px 12px; }
+.search-filters button { align-items: flex-start; background: transparent; border: 1px solid var(--line); color: var(--ink-soft); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 104px; padding: 8px 11px; text-align: left; }
+.search-filters button strong { font-family: Georgia, serif; font-size: 9px; letter-spacing: 0.08em; }
+.search-filters button span { font-family: var(--serif); font-size: 11px; }
 .search-filters button:hover,
 .search-filters button.active { background: var(--reed-dark); border-color: var(--reed-dark); color: white; }
 .search-result-meta { color: var(--ink-soft); font-size: 12px; margin: 30px 0 12px; }

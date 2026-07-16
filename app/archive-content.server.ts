@@ -358,6 +358,7 @@ export function getSearchIndex() {
     englishTitle: entry.englishTitle,
     aliases: entry.aliases,
     category: entry.category,
+    section: entry.section,
     characterRole: entry.characterRole,
     presentation: entry.presentation,
     summary: entry.summary,

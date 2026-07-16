@@ -1,9 +1,21 @@
 export type ArchiveCategory = "characters" | "world" | "history";
 export type CharacterRole = "member" | "associate";
+export type ArchiveCollection = "archives" | "stories";
+export type ArchiveSection =
+  | "lives"
+  | "companions"
+  | "places"
+  | "relics"
+  | "lore"
+  | "heraldry"
+  | "tales"
+  | "chronicle"
+  | "fortunes";
 
 export type ArchiveManifestEntry = {
   slug: string;
   category: ArchiveCategory;
+  section: ArchiveSection;
   title: string;
   englishTitle?: string;
   aliases: string[];
@@ -22,10 +34,42 @@ export const categoryLabels: Record<ArchiveCategory, string> = {
   history: "历史档案",
 };
 
+export const archiveCollections: Array<{
+  id: ArchiveCollection;
+  english: "ARCHIVES" | "STORIES";
+  chinese: string;
+}> = [
+  { id: "archives", english: "ARCHIVES", chinese: "档案组" },
+  { id: "stories", english: "STORIES", chinese: "故事组" },
+];
+
+export const archiveSections: Array<{
+  id: ArchiveSection;
+  collection: ArchiveCollection;
+  english: string;
+  chinese: string;
+  description: string;
+}> = [
+  { id: "lives", collection: "archives", english: "LIVES", chinese: "卷中人", description: "角色档案；每位角色各有一篇完整故事。" },
+  { id: "companions", collection: "archives", english: "COMPANIONS", chinese: "同行者", description: "与风芦旅人同行的伙伴。" },
+  { id: "places", collection: "archives", english: "PLACES", chinese: "风物", description: "村庄、城市、森林与旅途中经过的地方。" },
+  { id: "relics", collection: "archives", english: "RELICS", chinese: "行囊", description: "有来历、值得收存的物品与信物。" },
+  { id: "lore", collection: "archives", english: "LORE", chinese: "见闻", description: "神迹、誓言、血脉与法术等见闻。" },
+  { id: "heraldry", collection: "archives", english: "HERALDRY", chinese: "纹章", description: "教会、族群与组织的纹章记录。" },
+  { id: "tales", collection: "stories", english: "TALES", chinese: "逸闻", description: "旅途中散落的短篇与片段。" },
+  { id: "chronicle", collection: "stories", english: "THE CHRONICLE", chinese: "长路", description: "风芦旅人共同经历的主线编年史。" },
+  { id: "fortunes", collection: "stories", english: "FORTUNES", chinese: "际遇", description: "个人际遇、转折与命运的遭逢。" },
+];
+
+export const archiveSectionById = Object.fromEntries(
+  archiveSections.map((section) => [section.id, section]),
+) as Record<ArchiveSection, (typeof archiveSections)[number]>;
+
 export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "shirul",
     category: "characters",
+    section: "lives",
     title: "雪露",
     englishTitle: "Shirul",
     aliases: ["雪露", "Shirul", "小骑士"],
@@ -44,6 +88,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "alberina",
     category: "characters",
+    section: "lives",
     title: "阿尔贝莉娜",
     englishTitle: "Alberina",
     aliases: ["阿尔贝莉娜", "Alberina", "莉娜"],
@@ -62,6 +107,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "flavilar",
     category: "characters",
+    section: "lives",
     title: "芙勒维拉",
     englishTitle: "Flavilar",
     aliases: ["芙勒维拉", "Flavilar"],
@@ -80,6 +126,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "pheiron",
     category: "characters",
+    section: "lives",
     title: "佩伦",
     englishTitle: "Pheiron",
     aliases: ["佩伦", "Pheiron"],
@@ -98,6 +145,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "skamos",
     category: "characters",
+    section: "lives",
     title: "斯卡摩斯",
     englishTitle: "Skamos",
     aliases: ["斯卡摩斯", "Skamos"],
@@ -116,6 +164,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "ariel",
     category: "characters",
+    section: "lives",
     title: "阿瑞尔",
     englishTitle: "Ariel",
     aliases: ["阿瑞尔", "Ariel"],
@@ -134,6 +183,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "merielle",
     category: "characters",
+    section: "companions",
     title: "梅莉艾尔",
     englishTitle: "Merielle",
     aliases: ["梅莉艾尔", "Merielle"],
@@ -152,6 +202,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "oath-of-the-ancients",
     category: "world",
+    section: "lore",
     title: "古贤之誓",
     englishTitle: "Oath of the Ancients",
     aliases: ["古贤之誓", "远古誓言", "远古之誓", "上古之誓", "Oath of the Ancients"],
@@ -164,6 +215,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "miracle-light",
     category: "world",
+    section: "lore",
     title: "神迹之光",
     aliases: ["神迹之光", "光"],
     summary: "约 1490 DR 落下并令万物迅速生长的一束光，雪露由此立誓。",
@@ -174,6 +226,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "transfiguration",
     category: "world",
+    section: "lore",
     title: "变形术",
     aliases: ["变形术", "外形变化法术"],
     summary: "阿尔贝莉娜用来遮掩芙勒维拉龙裔外貌的变化法术。",
@@ -184,6 +237,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "branch",
     category: "world",
+    section: "relics",
     title: "「枝桠」",
     aliases: ["枝桠", "「枝桠」", "Branch"],
     summary: "雪露长期使用的大型双手长剑，也是她珍视的随身之物。",
@@ -194,6 +248,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "emberford",
     category: "world",
+    section: "places",
     title: "安柏弗",
     englishTitle: "Emberford",
     aliases: ["安柏弗", "Emberford", "雪露的故乡"],
@@ -206,6 +261,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "neverwinter",
     category: "world",
+    section: "places",
     title: "无冬城",
     englishTitle: "Neverwinter",
     aliases: ["无冬城", "绝冬城", "Neverwinter"],
@@ -218,6 +274,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "redlarch",
     category: "world",
+    section: "places",
     title: "红松镇",
     englishTitle: "Red Larch",
     aliases: ["红松镇", "Red Larch", "Redlarch"],
@@ -230,6 +287,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "mere-kryptgarden",
     category: "world",
+    section: "places",
     title: "亡者沼泽与墓园森林",
     englishTitle: "Mere of Dead Men · Kryptgarden Forest",
     aliases: ["亡者沼泽", "亡者之沼", "墓园森林", "Mere of Dead Men", "Kryptgarden Forest"],
@@ -242,6 +300,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "evereska",
     category: "world",
+    section: "places",
     title: "艾弗瑞斯卡",
     englishTitle: "Evereska",
     aliases: ["艾弗瑞斯卡", "埃弗瑞斯卡", "艾佛瑞斯卡", "Evereska", "高精灵族群"],
@@ -254,6 +313,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "timeline",
     category: "history",
+    section: "chronicle",
     title: "队伍时间线",
     aliases: ["时间线", "风芦旅人时间线", "1492 DR"],
     summary: "按纪年和合流顺序整理的队伍主要经历。",
@@ -264,6 +324,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "relationships",
     category: "history",
+    section: "fortunes",
     title: "关系档案",
     aliases: ["关系档案", "关系网", "人际关系"],
     summary: "六名正式成员、梅莉艾尔与核心设定之间已经确认的联系。",
@@ -295,6 +356,10 @@ export function navigationEntriesByCategory(category: ArchiveCategory) {
   );
 }
 
+export function entriesBySection(section: ArchiveSection) {
+  return archiveManifest.filter((entry) => entry.section === section);
+}
+
 export function partyMemberEntries() {
   return archiveManifest.filter((entry) => entry.characterRole === "member");
 }
@@ -303,9 +368,6 @@ export function associateEntries() {
   return archiveManifest.filter((entry) => entry.characterRole === "associate");
 }
 
-export function entryCollectionLabel(entry: Pick<ArchiveManifestEntry, "category" | "characterRole" | "presentation">) {
-  if (entry.characterRole === "member") return "正式团员";
-  if (entry.characterRole === "associate") return "同行者";
-  if (entry.presentation === "glossary") return "世界词条";
-  return categoryLabels[entry.category];
+export function entryCollectionLabel(entry: Pick<ArchiveManifestEntry, "section">) {
+  return archiveSectionById[entry.section].chinese;
 }

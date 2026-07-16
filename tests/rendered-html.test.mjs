@@ -181,6 +181,12 @@ test("renders a styled archive 404", async () => {
   assert.match(html, /返回档案总览/);
   assert.match(html, /检索公开档案/);
   assert.doesNotMatch(html, forbiddenPublicText);
+
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const titleRule = styles.match(/\.not-found-copy h1\s*\{[\s\S]*?\}/)?.[0] ?? "";
+  assert.match(titleRule, /white-space:\s*nowrap/);
+  assert.match(titleRule, /word-break:\s*keep-all/);
+  assert.match(styles, /@media \(max-width: 1220px\)[\s\S]*?\.not-found-card/);
 });
 
 test("removes the disposable starter surface", async () => {

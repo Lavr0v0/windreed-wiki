@@ -181,6 +181,17 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     accent: "#8d8156",
   },
   {
+    slug: "emberford",
+    category: "world",
+    title: "安柏弗",
+    englishTitle: "Emberford",
+    aliases: ["安柏弗", "Emberford", "雪露的故乡"],
+    summary: "位于绝冬林东缘的温泉村庄，雪露出生并长大的故乡。",
+    sourceId: "emberford",
+    monogram: "安",
+    accent: "#a06f4f",
+  },
+  {
     slug: "neverwinter",
     category: "world",
     title: "绝冬城",
@@ -252,4 +263,3 @@ export function archiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug
 export function entriesByCategory(category: ArchiveCategory) {
   return archiveManifest.filter((entry) => entry.category === category);
 }
-

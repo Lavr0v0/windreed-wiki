@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, Fragment, useMemo, useState } from "react";
+import { FormEvent, Fragment, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { categoryLabels, type ArchiveCategory } from "../archive-manifest";
 
 export type SearchIndexItem = {
@@ -43,17 +43,17 @@ function makeSnippet(item: SearchIndexItem, query: string) {
 
 export function SearchClient({
   index,
-  initialQuery,
-  initialCategory,
 }: {
   index: SearchIndexItem[];
-  initialQuery: string;
-  initialCategory?: ArchiveCategory;
 }) {
   const router = useRouter();
-  const [query, setQuery] = useState(initialQuery);
-  const [activeQuery, setActiveQuery] = useState(initialQuery.trim());
-  const [category, setCategory] = useState<ArchiveCategory | "all">(initialCategory ?? "all");
+  const searchParams = useSearchParams();
+  const activeQuery = searchParams.get("q")?.trim() ?? "";
+  const categoryParam = searchParams.get("category");
+  const category: ArchiveCategory | "all" =
+    categoryParam && ["characters", "world", "history"].includes(categoryParam)
+      ? (categoryParam as ArchiveCategory)
+      : "all";
 
   const results = useMemo(() => {
     const needle = activeQuery.toLowerCase();
@@ -75,11 +75,18 @@ export function SearchClient({
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    const trimmed = query.trim();
-    setActiveQuery(trimmed);
+    const form = new FormData(event.currentTarget as HTMLFormElement);
+    const trimmed = String(form.get("q") ?? "").trim();
     const params = new URLSearchParams();
     if (trimmed) params.set("q", trimmed);
     if (category !== "all") params.set("category", category);
+    router.replace(params.size ? `/search?${params}` : "/search");
+  }
+
+  function chooseCategory(value: ArchiveCategory | "all") {
+    const params = new URLSearchParams();
+    if (activeQuery) params.set("q", activeQuery);
+    if (value !== "all") params.set("category", value);
     router.replace(params.size ? `/search?${params}` : "/search");
   }
 
@@ -98,8 +105,9 @@ export function SearchClient({
           <span aria-hidden="true">⌕</span>
           <input
             id="archive-query"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            name="q"
+            defaultValue={activeQuery}
+            key={activeQuery}
             placeholder="例如：雪露、Neverwinter、誓言"
             autoFocus
           />
@@ -110,7 +118,7 @@ export function SearchClient({
             <button
               type="button"
               className={category === value ? "active" : undefined}
-              onClick={() => setCategory(value)}
+              onClick={() => chooseCategory(value)}
               key={value}
             >
               {value === "all" ? "全部" : categoryLabels[value]}
@@ -147,4 +155,3 @@ export function SearchClient({
     </div>
   );
 }
-

@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import Link from "next/link";
 import { headingId } from "../archive-content.server";
 
 function renderInline(text: string): ReactNode[] {
@@ -21,14 +22,13 @@ function renderInline(text: string): ReactNode[] {
       if (link) {
         const external = /^https?:\/\//.test(link[2]);
         output.push(
-          <a
-            key={key}
-            href={link[2]}
-            target={external ? "_blank" : undefined}
-            rel={external ? "noreferrer" : undefined}
-          >
-            {link[1]}
-          </a>,
+          external ? (
+            <a key={key} href={link[2]} target="_blank" rel="noreferrer">
+              {link[1]}
+            </a>
+          ) : (
+            <Link key={key} href={link[2]}>{link[1]}</Link>
+          ),
         );
       }
     }

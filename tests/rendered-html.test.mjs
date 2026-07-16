@@ -35,6 +35,7 @@ const routes = [
   "/archive/world/miracle-light",
   "/archive/world/transfiguration",
   "/archive/world/branch",
+  "/archive/world/emberford",
   "/archive/world/neverwinter",
   "/archive/world/redlarch",
   "/archive/world/mere-kryptgarden",
@@ -78,6 +79,15 @@ test("publishes the final Neverwinter identity only", async () => {
   assert.match(html, /绝冬城/);
   assert.match(html, /Neverwinter/);
   assert.doesNotMatch(html, /养病的城|银月城/);
+});
+
+test("publishes Emberford as Shirul's confirmed homeland", async () => {
+  const response = await render("/archive/world/emberford");
+  const html = await response.text();
+  assert.match(html, /安柏弗/);
+  assert.match(html, /Emberford/);
+  assert.match(html, /雪露/);
+  assert.doesNotMatch(html, /芦溪村/);
 });
 
 test("search receives only approved archive text", async () => {

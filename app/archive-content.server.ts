@@ -11,6 +11,7 @@ import miracleLightRaw from "../content/source/设定/神迹之光.md?raw";
 import transfigurationRaw from "../content/source/设定/变形术.md?raw";
 import branchRaw from "../content/source/道具/「枝桠」.md?raw";
 import geographyRaw from "../content/source/设定/地理.md?raw";
+import emberfordRaw from "../content/source/地点/雪露的村庄.md?raw";
 import neverwinterRaw from "../content/source/地点/养病的城.md?raw";
 import evereskaRaw from "../content/source/势力/高精灵族群.md?raw";
 import timelineRaw from "../content/source/事件/风芦旅人时间线.md?raw";
@@ -81,6 +82,7 @@ const sourceSpecs: Record<string, SourceSpec> = {
   "miracle-light": { raw: miracleLightRaw, source: "设定/神迹之光.md" },
   transfiguration: { raw: transfigurationRaw, source: "设定/变形术.md" },
   branch: { raw: branchRaw, source: "道具/「枝桠」.md" },
+  emberford: { raw: emberfordRaw, source: "地点/雪露的村庄.md" },
   neverwinter: { raw: neverwinterRaw, source: "地点/养病的城.md" },
   redlarch: {
     raw: geographyRaw,
@@ -186,7 +188,7 @@ function removeExcludedSections(markdown: string) {
 function normalizePublicNames(markdown: string) {
   return markdown
     .replaceAll("养病的城", "绝冬城")
-    .replaceAll("芦溪村", "雪露的故乡")
+    .replaceAll("芦溪村", "安柏弗")
     .replaceAll("银桦林", "村边林地")
     .replace(/^#\s+.*$/m, "");
 }

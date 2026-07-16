@@ -53,7 +53,7 @@ export const archiveSections: Array<{
   { id: "lives", collection: "archives", english: "LIVES", chinese: "卷中人", description: "角色档案；每位角色各有一篇完整故事。" },
   { id: "companions", collection: "archives", english: "COMPANIONS", chinese: "同行者", description: "与风芦旅人同行的伙伴。" },
   { id: "places", collection: "archives", english: "PLACES", chinese: "风物", description: "村庄、城市、森林与旅途中经过的地方。" },
-  { id: "relics", collection: "archives", english: "RELICS", chinese: "匣中物", description: "有来历、值得收存的物品与信物。" },
+  { id: "relics", collection: "archives", english: "RELICS", chinese: "行囊", description: "有来历、值得收存的物品与信物。" },
   { id: "lore", collection: "archives", english: "LORE", chinese: "见闻", description: "神迹、誓言、血脉与法术等见闻。" },
   { id: "heraldry", collection: "archives", english: "HERALDRY", chinese: "纹章", description: "教会、族群与组织的纹章记录。" },
   { id: "tales", collection: "stories", english: "TALES", chinese: "逸闻", description: "旅途中散落的短篇与片段。" },

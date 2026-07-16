@@ -104,7 +104,7 @@ test("uses the fixed bilingual archive and story navigation", async () => {
   const tree = home.match(/<nav class="archive-tree"[\s\S]*?<\/nav>/)?.[0] ?? "";
   const fixedLabels = [
     "ARCHIVES", "LIVES", "卷中人", "COMPANIONS", "同行者", "PLACES", "风物",
-    "RELICS", "匣中物", "LORE", "见闻", "HERALDRY", "纹章", "STORIES",
+    "RELICS", "行囊", "LORE", "见闻", "HERALDRY", "纹章", "STORIES",
     "TALES", "逸闻", "THE CHRONICLE", "长路", "FORTUNES", "际遇",
   ];
   let lastPosition = -1;

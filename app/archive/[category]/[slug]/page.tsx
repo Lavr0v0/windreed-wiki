@@ -103,9 +103,7 @@ export default async function ArchivePage({ params }: PageProps) {
             </dl>
           )}
 
-          <div data-reveal>
-            <MarkdownView markdown={entry.body} />
-          </div>
+          <MarkdownView markdown={entry.body} />
 
           <footer className="article-footer">
             <span>THE WINDREED CHRONICLES</span>

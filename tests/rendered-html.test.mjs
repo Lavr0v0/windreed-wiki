@@ -180,6 +180,14 @@ test("keeps archive navigation scrollable without visible browser chrome", async
   assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.mobile-sidebar\s*\{[\s\S]*?background-color:\s*var\(--paper-light\)/);
 });
 
+test("renders archive prose immediately without an intersection reveal gate", async () => {
+  const archivePage = await readFile(
+    new URL("../app/archive/[category]/[slug]/page.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(archivePage, /<div data-reveal>\s*<MarkdownView/);
+});
+
 test("renders a styled archive 404", async () => {
   const response = await render("/a-road-not-recorded");
   assert.equal(response.status, 404);

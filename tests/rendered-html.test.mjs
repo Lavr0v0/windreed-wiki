@@ -45,7 +45,7 @@ const routes = [
 ];
 
 const forbiddenPublicText =
-  /ChatGPT|人工智能|问卷|待定|待补|银月城|现有资料|现有档案|候选方案|工作记录|codex-preview/i;
+  /ChatGPT|Claude|人工智能|问卷|答卷|待定|待补|银月城|现有资料|现有档案|候选方案|工作记录|待跑团|均填|留白|当前均无资料|当前不增加|codex-preview|starter project|your site is taking shape|答卷\/|\.md\b|\.xlsx\b/i;
 
 test("renders the finished archive home page", async () => {
   const response = await render();
@@ -59,6 +59,7 @@ test("renders the finished archive home page", async () => {
   assert.match(html, /1492 DR/);
   assert.match(html, /卷册索引/);
   assert.doesNotMatch(html, forbiddenPublicText);
+  assert.doesNotMatch(html, /世界与设定索引|雪露的村庄/);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/i);
 });
 
@@ -142,6 +143,12 @@ test("publishes Emberford as Shirul's confirmed homeland", async () => {
   assert.doesNotMatch(html, /芦溪村/);
 });
 
+test("removes empty headings left behind by unpublished editorial sections", async () => {
+  const response = await render("/archive/world/miracle-light");
+  const html = await response.text();
+  assert.doesNotMatch(html, /两种解释/);
+});
+
 test("search receives only approved archive text", async () => {
   const response = await render("/search?q=%E9%9B%AA%E9%9C%B2");
   assert.equal(response.status, 200);
@@ -208,6 +215,23 @@ test("keeps archive navigation scrollable without visible browser chrome", async
   assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?scrollbar-width:\s*none/);
   assert.match(styles, /\.desktop-sidebar::\-webkit-scrollbar,\s*\n\.mobile-sidebar::\-webkit-scrollbar[\s\S]*?display:\s*none/);
   assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.mobile-sidebar\s*\{[\s\S]*?background-color:\s*var\(--paper-light\)/);
+});
+
+test("ships a reliable Chinese serif on iPad instead of falling back to sans-serif", async () => {
+  const [layout, styles, packageJson] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(layout, /@fontsource-variable\/noto-serif-sc\/wght\.css/);
+  assert.match(styles, /--serif:\s*"Noto Serif SC Variable",\s*ui-serif/);
+  assert.match(styles, /"Songti SC"/);
+  assert.match(styles, /"STSongti-SC-Regular"/);
+  assert.equal(
+    JSON.parse(packageJson).dependencies["@fontsource-variable/noto-serif-sc"],
+    "5.2.10",
+  );
 });
 
 test("renders archive prose immediately without an intersection reveal gate", async () => {

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ArchiveShell } from "./components/ArchiveShell";
 import { MotionLayer } from "./components/MotionLayer";
+import "@fontsource-variable/noto-serif-sc/wght.css";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 

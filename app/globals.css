@@ -15,7 +15,7 @@
   --shadow: 0 18px 54px rgba(28, 41, 43, 0.1);
   --scroll-progress: 0;
   --scroll-shift: 0;
-  --serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  --serif: "Noto Serif SC Variable", ui-serif, "Songti SC", "STSongti-SC-Regular", "STSongti-SC-Light", "STSong", "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", Georgia, serif;
   --sans: Inter, "Noto Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 }
 

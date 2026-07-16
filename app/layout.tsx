@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ArchiveShell } from "./components/ArchiveShell";
+import { MotionLayer } from "./components/MotionLayer";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +35,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="zh-CN">
       <body>
-        <ArchiveShell>{children}</ArchiveShell>
+        <MotionLayer>
+          <ArchiveShell>{children}</ArchiveShell>
+        </MotionLayer>
       </body>
     </html>
   );

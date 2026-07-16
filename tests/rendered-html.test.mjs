@@ -67,7 +67,7 @@ test("every published archive route renders and passes the content policy", asyn
     const response = await render(route);
     assert.equal(response.status, 200, route);
     const html = await response.text();
-    assert.match(html, /ARCHIVE ENTRY/, route);
+    assert.match(html, /THE WINDREED CHRONICLES/, route);
     assert.doesNotMatch(html, forbiddenPublicText, route);
     assert.doesNotMatch(html, /芦溪村|银桦林/, route);
   }
@@ -105,6 +105,17 @@ test("keeps glossary entries out of the sidebar and opens them from body links",
   assert.match(tree, /神迹之光/);
   assert.match(tree, /「枝桠」/);
   assert.doesNotMatch(tree, /红松镇|无冬城|安柏弗|古贤之誓|艾弗瑞斯卡/);
+  assert.match(tree, /正式团员/);
+  assert.match(tree, /同行者/);
+
+  const treeGroups = [...tree.matchAll(/<details[^>]*>[\s\S]*?<\/details>/g)].map((match) => match[0]);
+  const memberGroup = treeGroups.find((group) => group.includes("正式团员")) ?? "";
+  const associateGroup = treeGroups.find((group) => group.includes("同行者")) ?? "";
+  assert.match(memberGroup, /雪露/);
+  assert.match(memberGroup, /阿瑞尔/);
+  assert.doesNotMatch(memberGroup, /梅莉艾尔/);
+  assert.match(associateGroup, /梅莉艾尔/);
+  assert.doesNotMatch(associateGroup, /雪露/);
 
   const shirulResponse = await render("/archive/characters/shirul");
   const shirul = await shirulResponse.text();
@@ -128,6 +139,63 @@ test("search receives only approved archive text", async () => {
   assert.match(html, /全文索引/);
   assert.match(html, /雪露/);
   assert.doesNotMatch(html, forbiddenPublicText);
+});
+
+test("gives formal party members their own public collection", async () => {
+  const response = await render("/search?category=members");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const visibleResults = [...html.matchAll(/<a[^>]*class="search-result"[\s\S]*?<\/a>/g)]
+    .map((match) => match[0])
+    .join("\n");
+  assert.match(html, /正式团员/);
+  assert.match(visibleResults, /雪露/);
+  assert.match(visibleResults, /阿瑞尔/);
+  assert.doesNotMatch(visibleResults, /梅莉艾尔/);
+
+  const memberResponse = await render("/archive/characters/shirul");
+  const memberHtml = await memberResponse.text();
+  assert.match(memberHtml, /PARTY MEMBER/);
+  assert.match(memberHtml, /01(?:<!-- -->)? \/ 06/);
+});
+
+test("uses desktop Lenis while preserving native touch scrolling and reduced motion", async () => {
+  const [motionLayer, packageJson] = await Promise.all([
+    readFile(new URL("../app/components/MotionLayer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
+  assert.match(motionLayer, /syncTouch: false/);
+  assert.match(motionLayer, /prefers-reduced-motion: reduce/);
+  assert.match(motionLayer, /scrollTo\(0, \{ immediate: true \}\)/);
+  assert.match(motionLayer, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
+  assert.equal(JSON.parse(packageJson).dependencies.lenis, "1.3.25");
+});
+
+test("keeps archive navigation scrollable without visible browser chrome", async () => {
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?scrollbar-width:\s*none/);
+  assert.match(styles, /\.desktop-sidebar::\-webkit-scrollbar,\s*\n\.mobile-sidebar::\-webkit-scrollbar[\s\S]*?display:\s*none/);
+  assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.mobile-sidebar\s*\{[\s\S]*?background-color:\s*var\(--paper-light\)/);
+});
+
+test("renders a styled archive 404", async () => {
+  const response = await render("/a-road-not-recorded");
+  assert.equal(response.status, 404);
+
+  const html = await response.text();
+  assert.match(html, /此路未载于档案/);
+  assert.match(html, /清风拂过这里，他们已经去往新的旅途。/);
+  assert.match(html, /返回档案总览/);
+  assert.match(html, /检索公开档案/);
+  assert.doesNotMatch(html, forbiddenPublicText);
+
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const titleRule = styles.match(/\.not-found-copy h1\s*\{[\s\S]*?\}/)?.[0] ?? "";
+  assert.match(titleRule, /white-space:\s*nowrap/);
+  assert.match(titleRule, /word-break:\s*keep-all/);
+  assert.match(styles, /@media \(max-width: 1220px\)[\s\S]*?\.not-found-card/);
 });
 
 test("removes the disposable starter surface", async () => {

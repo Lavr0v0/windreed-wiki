@@ -4,6 +4,8 @@ import {
   archiveManifest,
   categoryLabels,
   entriesByCategory,
+  navigationEntriesByCategory,
+  siteHref,
   type ArchiveCategory,
 } from "./archive-manifest";
 import { teamOverview } from "./archive-content.server";
@@ -22,7 +24,7 @@ const categories: Array<{
   {
     id: "world",
     eyebrow: "WORLD",
-    description: "队伍亲历的地点、誓言、法术与重要物件。",
+    description: "核心设定与物件；地点和誓言从正文词条注释展开。",
   },
   {
     id: "history",
@@ -44,8 +46,8 @@ export default function Home() {
             六名来路不同的旅人在路途中成为同伴。这是一份关于他们生平、行程与共同经历的公开档案。
           </p>
           <div className="hero-actions">
-            <Link className="primary-action" href="/archive/characters/shirul">开始阅读</Link>
-            <Link className="secondary-action" href="/search">浏览全部索引</Link>
+            <Link className="primary-action" href={siteHref("/archive/characters/shirul")}>开始阅读</Link>
+            <Link className="secondary-action" href={siteHref("/search")}>浏览全部索引</Link>
           </div>
         </div>
         <div className="hero-emblem" aria-hidden="true">
@@ -73,7 +75,7 @@ export default function Home() {
         </div>
         <div className="category-grid">
           {categories.map((category, index) => {
-            const first = entriesByCategory(category.id)[0];
+            const first = navigationEntriesByCategory(category.id)[0];
             return (
               <Link className="category-card" href={archiveHref(first)} key={category.id}>
                 <span className="card-number">0{index + 1}</span>
@@ -127,4 +129,3 @@ export default function Home() {
     </div>
   );
 }
-

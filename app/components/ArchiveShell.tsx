@@ -5,8 +5,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   archiveHref,
-  archiveManifest,
   categoryLabels,
+  navigationEntriesByCategory,
+  siteHref,
   type ArchiveCategory,
 } from "../archive-manifest";
 
@@ -33,7 +34,11 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
   function submitSearch(event: FormEvent) {
     event.preventDefault();
     const trimmed = query.trim();
-    router.push(trimmed ? `/search?q=${encodeURIComponent(trimmed)}` : "/search");
+    router.push(
+      trimmed
+        ? `${siteHref("/search")}?q=${encodeURIComponent(trimmed)}`
+        : siteHref("/search"),
+    );
   }
 
   const sidebar = (
@@ -44,7 +49,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
         <span className="nav-year">1492 DR</span>
       </div>
       <nav className="archive-tree" aria-label="档案目录">
-        <Link className={pathname === "/" ? "tree-home active" : "tree-home"} href="/">
+        <Link className={pathname === siteHref("/") ? "tree-home active" : "tree-home"} href={siteHref("/")}>
           <span className="tree-glyph">⌂</span>
           总览
         </Link>
@@ -55,8 +60,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
               {categoryLabels[category]}
             </summary>
             <div className="tree-children">
-              {archiveManifest
-                .filter((entry) => entry.category === category)
+              {navigationEntriesByCategory(category)
                 .map((entry) => {
                   const href = archiveHref(entry);
                   return (
@@ -72,6 +76,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
                   );
                 })}
             </div>
+            {category === "world" && (
+              <p className="tree-glossary-note">地点与誓言词条由正文中的虚线链接展开</p>
+            )}
           </details>
         ))}
       </nav>
@@ -93,7 +100,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           <span />
           <span />
         </button>
-        <Link className="site-brand" href="/" aria-label="The Windreed Wayfarers 首页">
+        <Link className="site-brand" href={siteHref("/")} aria-label="The Windreed Wayfarers 首页">
           <span className="brand-seal">W</span>
           <span>
             <strong>The Windreed Wayfarers</strong>
@@ -112,7 +119,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           />
           <kbd>/</kbd>
         </form>
-        <Link className="top-index-link" href="/search">索引</Link>
+        <Link className="top-index-link" href={siteHref("/search")}>索引</Link>
       </header>
 
       <aside className="desktop-sidebar">{sidebar}</aside>

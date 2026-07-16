@@ -1,6 +1,14 @@
 import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import { headingId } from "../archive-content.server";
+import { archiveHref, archiveManifest } from "../archive-manifest";
+import { GlossaryLink } from "./GlossaryLink";
+
+const glossaryEntriesByHref = new Map(
+  archiveManifest
+    .filter((entry) => entry.presentation === "glossary")
+    .map((entry) => [archiveHref(entry), entry]),
+);
 
 function renderInline(text: string): ReactNode[] {
   const tokenPattern = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`)/g;
@@ -21,11 +29,22 @@ function renderInline(text: string): ReactNode[] {
       const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
       if (link) {
         const external = /^https?:\/\//.test(link[2]);
+        const glossaryEntry = glossaryEntriesByHref.get(link[2]);
         output.push(
           external ? (
             <a key={key} href={link[2]} target="_blank" rel="noreferrer">
               {link[1]}
             </a>
+          ) : glossaryEntry ? (
+            <GlossaryLink
+              key={key}
+              label={link[1]}
+              href={link[2]}
+              title={glossaryEntry.title}
+              englishTitle={glossaryEntry.englishTitle}
+              summary={glossaryEntry.summary}
+              aliases={glossaryEntry.aliases}
+            />
           ) : (
             <Link key={key} href={link[2]}>{link[1]}</Link>
           ),

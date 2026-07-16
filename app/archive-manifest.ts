@@ -10,6 +10,7 @@ export type ArchiveManifestEntry = {
   sourceId: string;
   monogram: string;
   accent: string;
+  presentation?: "archive" | "glossary";
   facts?: Array<{ label: string; value: string }>;
 };
 
@@ -32,7 +33,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     accent: "#78a99a",
     facts: [
       { label: "种族", value: "人类" },
-      { label: "职业", value: "圣武士 · 上古之誓" },
+      { label: "职业", value: "圣武士 · 古贤之誓" },
       { label: "年龄", value: "15 岁" },
       { label: "定位", value: "情感核心" },
     ],
@@ -43,7 +44,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     title: "阿尔贝莉娜",
     englishTitle: "Alberina",
     aliases: ["阿尔贝莉娜", "Alberina", "莉娜"],
-    summary: "离开艾佛瑞斯卡的高精灵术士，以知识、判断和长久陪伴支撑队伍。",
+    summary: "离开艾弗瑞斯卡的高精灵术士，以知识、判断和长久陪伴支撑队伍。",
     sourceId: "alberina",
     monogram: "莉",
     accent: "#526b91",
@@ -142,13 +143,14 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "oath-of-the-ancients",
     category: "world",
-    title: "远古誓言",
+    title: "古贤之誓",
     englishTitle: "Oath of the Ancients",
-    aliases: ["远古誓言", "上古之誓", "Oath of the Ancients"],
+    aliases: ["古贤之誓", "远古誓言", "远古之誓", "上古之誓", "Oath of the Ancients"],
     summary: "雪露所立下的圣武士誓言，以守护生命、光与希望为核心。",
     sourceId: "oath",
     monogram: "誓",
     accent: "#7b9367",
+    presentation: "glossary",
   },
   {
     slug: "miracle-light",
@@ -186,53 +188,59 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     title: "安柏弗",
     englishTitle: "Emberford",
     aliases: ["安柏弗", "Emberford", "雪露的故乡"],
-    summary: "位于绝冬林东缘的温泉村庄，雪露出生并长大的故乡。",
+    summary: "位于无冬森林东缘的温泉村庄，雪露出生并长大的故乡。",
     sourceId: "emberford",
     monogram: "安",
     accent: "#a06f4f",
+    presentation: "glossary",
   },
   {
     slug: "neverwinter",
     category: "world",
-    title: "绝冬城",
+    title: "无冬城",
     englishTitle: "Neverwinter",
-    aliases: ["绝冬城", "Neverwinter"],
+    aliases: ["无冬城", "绝冬城", "Neverwinter"],
     summary: "气候温暖、医师与圣堂集中的城市，梅莉艾尔常在此接受照料。",
     sourceId: "neverwinter",
     monogram: "冬",
     accent: "#6d8798",
+    presentation: "glossary",
   },
   {
     slug: "redlarch",
     category: "world",
-    title: "Redlarch",
-    aliases: ["Redlarch", "红松镇"],
-    summary: "德萨林河谷长路沿线的商队小镇，早期五人在这里合流。",
+    title: "红松镇",
+    englishTitle: "Red Larch",
+    aliases: ["红松镇", "Red Larch", "Redlarch"],
+    summary: "德沙林河谷长路沿线的商队小镇，早期五人在这里合流。",
     sourceId: "redlarch",
     monogram: "R",
     accent: "#9a6c52",
+    presentation: "glossary",
   },
   {
     slug: "mere-kryptgarden",
     category: "world",
-    title: "亡者之沼与墓园森林",
+    title: "亡者沼泽与墓园森林",
     englishTitle: "Mere of Dead Men · Kryptgarden Forest",
-    aliases: ["亡者之沼", "墓园森林", "Mere of Dead Men", "Kryptgarden Forest"],
+    aliases: ["亡者沼泽", "亡者之沼", "墓园森林", "Mere of Dead Men", "Kryptgarden Forest"],
     summary: "芙勒维拉的出生地、放逐之地与重新被同伴找到的区域。",
     sourceId: "mere-kryptgarden",
     monogram: "沼",
     accent: "#4f6b5d",
+    presentation: "glossary",
   },
   {
     slug: "evereska",
     category: "world",
-    title: "艾佛瑞斯卡",
+    title: "艾弗瑞斯卡",
     englishTitle: "Evereska",
-    aliases: ["艾佛瑞斯卡", "Evereska", "高精灵族群"],
+    aliases: ["艾弗瑞斯卡", "埃弗瑞斯卡", "艾佛瑞斯卡", "Evereska", "高精灵族群"],
     summary: "阿尔贝莉娜出生和接受完整教育的精灵城市。",
     sourceId: "evereska",
     monogram: "艾",
     accent: "#657a9b",
+    presentation: "glossary",
   },
   {
     slug: "timeline",
@@ -256,10 +264,24 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   },
 ];
 
+const configuredBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH?.replace(/\/$/, "") ?? "";
+
+export function siteHref(path: string) {
+  if (!path.startsWith("/")) return path;
+  if (!configuredBasePath) return path;
+  return path === "/" ? `${configuredBasePath}/` : `${configuredBasePath}${path}`;
+}
+
 export function archiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug">) {
-  return `/archive/${entry.category}/${entry.slug}`;
+  return siteHref(`/archive/${entry.category}/${entry.slug}`);
 }
 
 export function entriesByCategory(category: ArchiveCategory) {
   return archiveManifest.filter((entry) => entry.category === category);
+}
+
+export function navigationEntriesByCategory(category: ArchiveCategory) {
+  return archiveManifest.filter(
+    (entry) => entry.category === category && entry.presentation !== "glossary",
+  );
 }

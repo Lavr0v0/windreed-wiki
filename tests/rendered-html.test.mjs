@@ -73,12 +73,43 @@ test("every published archive route renders and passes the content policy", asyn
   }
 });
 
-test("publishes the final Neverwinter identity only", async () => {
+test("publishes the 5E Neverwinter name and keeps the old translation as an alias", async () => {
   const response = await render("/archive/world/neverwinter");
   const html = await response.text();
+  assert.match(html, /无冬城/);
   assert.match(html, /绝冬城/);
   assert.match(html, /Neverwinter/);
   assert.doesNotMatch(html, /养病的城|银月城/);
+});
+
+test("uses checked 5E names for glossary entries", async () => {
+  const cases = [
+    ["/archive/world/redlarch", /红松镇/, /Red Larch/],
+    ["/archive/world/oath-of-the-ancients", /古贤之誓/, /Oath of the Ancients/],
+    ["/archive/world/evereska", /艾弗瑞斯卡/, /Evereska/],
+    ["/archive/world/mere-kryptgarden", /亡者沼泽/, /Mere of Dead Men/],
+  ];
+
+  for (const [route, chineseName, englishName] of cases) {
+    const response = await render(route);
+    const html = await response.text();
+    assert.match(html, chineseName, route);
+    assert.match(html, englishName, route);
+  }
+});
+
+test("keeps glossary entries out of the sidebar and opens them from body links", async () => {
+  const homeResponse = await render();
+  const home = await homeResponse.text();
+  const tree = home.match(/<nav class="archive-tree"[\s\S]*?<\/nav>/)?.[0] ?? "";
+  assert.match(tree, /神迹之光/);
+  assert.match(tree, /「枝桠」/);
+  assert.doesNotMatch(tree, /红松镇|无冬城|安柏弗|古贤之誓|艾弗瑞斯卡/);
+
+  const shirulResponse = await render("/archive/characters/shirul");
+  const shirul = await shirulResponse.text();
+  assert.match(shirul, /glossary-trigger/);
+  assert.match(shirul, /aria-haspopup="dialog"/);
 });
 
 test("publishes Emberford as Shirul's confirmed homeland", async () => {

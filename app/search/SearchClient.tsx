@@ -3,13 +3,14 @@
 import { FormEvent, Fragment, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { categoryLabels, type ArchiveCategory } from "../archive-manifest";
+import { categoryLabels, siteHref, type ArchiveCategory } from "../archive-manifest";
 
 export type SearchIndexItem = {
   title: string;
   englishTitle?: string;
   aliases: string[];
   category: ArchiveCategory;
+  presentation?: "archive" | "glossary";
   summary: string;
   href: string;
   text: string;
@@ -80,19 +81,19 @@ export function SearchClient({
     const params = new URLSearchParams();
     if (trimmed) params.set("q", trimmed);
     if (category !== "all") params.set("category", category);
-    router.replace(params.size ? `/search?${params}` : "/search");
+    router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
   }
 
   function chooseCategory(value: ArchiveCategory | "all") {
     const params = new URLSearchParams();
     if (activeQuery) params.set("q", activeQuery);
     if (value !== "all") params.set("category", value);
-    router.replace(params.size ? `/search?${params}` : "/search");
+    router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
   }
 
   return (
     <div className="search-page">
-      <div className="breadcrumbs"><Link href="/">总览</Link><span>/</span><span>全文索引</span></div>
+      <div className="breadcrumbs"><Link href={siteHref("/")}>总览</Link><span>/</span><span>全文索引</span></div>
       <header className="search-header">
         <span className="eyebrow">FULL TEXT INDEX</span>
         <h1>全文索引</h1>
@@ -136,7 +137,9 @@ export function SearchClient({
         {results.map((item) => (
           <Link className="search-result" href={item.href} key={item.href}>
             <div>
-              <span className="result-category">{categoryLabels[item.category]}</span>
+              <span className="result-category">
+                {item.presentation === "glossary" ? "世界词条" : categoryLabels[item.category]}
+              </span>
               <h2>{highlight(item.title, activeQuery)}</h2>
               {item.englishTitle && <small>{highlight(item.englishTitle, activeQuery)}</small>}
               <p>{highlight(makeSnippet(item, activeQuery), activeQuery)}</p>

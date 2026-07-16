@@ -8,7 +8,6 @@ const pagesBasePath = requestedBasePath === "/"
 
 const nextConfig: NextConfig = {
   output: githubPagesBuild ? "export" : undefined,
-  basePath: githubPagesBuild ? pagesBasePath : undefined,
   assetPrefix: githubPagesBuild ? pagesBasePath : undefined,
   trailingSlash: githubPagesBuild,
 };

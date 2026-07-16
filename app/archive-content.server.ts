@@ -18,6 +18,7 @@ import timelineRaw from "../content/source/事件/风芦旅人时间线.md?raw";
 import {
   archiveHref,
   archiveManifest,
+  siteHref,
   type ArchiveManifestEntry,
 } from "./archive-manifest";
 
@@ -106,15 +107,15 @@ for (const entry of archiveManifest) {
     if (name) targetRoutes.set(name.toLowerCase(), href);
   }
 }
-targetRoutes.set("风芦旅人", "/");
-targetRoutes.set("雪露 shirul", "/archive/characters/shirul");
-targetRoutes.set("阿尔贝莉娜 alberina", "/archive/characters/alberina");
-targetRoutes.set("芙勒维拉 flavilar", "/archive/characters/flavilar");
-targetRoutes.set("佩伦 pheiron", "/archive/characters/pheiron");
-targetRoutes.set("斯卡摩斯 skamos", "/archive/characters/skamos");
-targetRoutes.set("阿瑞尔 ariel", "/archive/characters/ariel");
-targetRoutes.set("梅莉艾尔 merielle", "/archive/characters/merielle");
-targetRoutes.set("高精灵族群", "/archive/world/evereska");
+targetRoutes.set("风芦旅人", siteHref("/"));
+targetRoutes.set("雪露 shirul", siteHref("/archive/characters/shirul"));
+targetRoutes.set("阿尔贝莉娜 alberina", siteHref("/archive/characters/alberina"));
+targetRoutes.set("芙勒维拉 flavilar", siteHref("/archive/characters/flavilar"));
+targetRoutes.set("佩伦 pheiron", siteHref("/archive/characters/pheiron"));
+targetRoutes.set("斯卡摩斯 skamos", siteHref("/archive/characters/skamos"));
+targetRoutes.set("阿瑞尔 ariel", siteHref("/archive/characters/ariel"));
+targetRoutes.set("梅莉艾尔 merielle", siteHref("/archive/characters/merielle"));
+targetRoutes.set("高精灵族群", siteHref("/archive/world/evereska"));
 
 const excludedSection = /^(未解|待定|待补|尚未确定|答卷视角)/;
 const editorialBlock = [
@@ -187,10 +188,68 @@ function removeExcludedSections(markdown: string) {
 
 function normalizePublicNames(markdown: string) {
   return markdown
-    .replaceAll("养病的城", "绝冬城")
+    .replaceAll("养病的城", "无冬城")
+    .replaceAll("绝冬城", "无冬城")
+    .replaceAll("绝冬林", "无冬森林")
+    .replaceAll("绝冬河", "无冬河")
+    .replaceAll("德萨林河谷", "德沙林河谷")
+    .replaceAll("亡者之沼", "亡者沼泽")
+    .replaceAll("艾佛瑞斯卡", "艾弗瑞斯卡")
+    .replaceAll("远古誓言", "古贤之誓")
+    .replaceAll("远古之誓", "古贤之誓")
+    .replaceAll("上古之誓", "古贤之誓")
+    .replaceAll("Redlarch", "红松镇")
+    .replaceAll("沃恩拉", "福恩拉")
+    .replaceAll("阴影谷", "暗影谷")
+    .replaceAll("阿拉贝", "阿拉贝尔")
+    .replaceAll("伊里亚博", "伊利亚巴")
+    .replaceAll("贝尔杜斯克", "贝尔达斯克")
+    .replaceAll("斯科努贝尔", "斯克努贝尔")
     .replaceAll("芦溪村", "安柏弗")
     .replaceAll("银桦林", "村边林地")
     .replace(/^#\s+.*$/m, "");
+}
+
+const glossaryTerms = archiveManifest
+  .filter((entry) => entry.presentation === "glossary")
+  .flatMap((entry) =>
+    [entry.title, entry.englishTitle, ...entry.aliases]
+      .filter((term): term is string => Boolean(term))
+      .map((term) => ({ term, href: archiveHref(entry) })),
+  )
+  .filter(
+    (candidate, index, terms) =>
+      terms.findIndex((term) => term.term.toLowerCase() === candidate.term.toLowerCase()) === index,
+  )
+  .sort((left, right) => right.term.length - left.term.length);
+
+function escapePattern(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function linkifyGlossaryTerms(markdown: string) {
+  return markdown
+    .split("\n")
+    .map((line) => {
+      if (/^#{1,6}\s/.test(line.trim())) return line;
+      return line
+        .split(/(\[[^\]]+\]\([^)]+\)|`[^`]+`)/g)
+        .map((segment) => {
+          if (/^\[[^\]]+\]\([^)]+\)$/.test(segment) || /^`[^`]+`$/.test(segment)) {
+            return segment;
+          }
+          let linked = segment;
+          for (const { term, href } of glossaryTerms) {
+            linked = linked.replace(
+              new RegExp(escapePattern(term), "giu"),
+              (match) => `[${match}](${href})`,
+            );
+          }
+          return linked;
+        })
+        .join("");
+    })
+    .join("\n");
 }
 
 function removeEditorialBlocks(markdown: string) {
@@ -230,6 +289,7 @@ function sanitizeMarkdown(spec: SourceSpec) {
   markdown = normalizePublicNames(markdown);
   markdown = removeEditorialBlocks(markdown);
   markdown = convertWikiLinks(markdown);
+  markdown = linkifyGlossaryTerms(markdown);
   return tidyMarkdown(markdown);
 }
 
@@ -298,6 +358,7 @@ export function getSearchIndex() {
     englishTitle: entry.englishTitle,
     aliases: entry.aliases,
     category: entry.category,
+    presentation: entry.presentation,
     summary: entry.summary,
     href: archiveHref(entry),
     text: entry.plainText,

@@ -5,6 +5,7 @@ import {
   archiveHref,
   archiveManifest,
   categoryLabels,
+  siteHref,
 } from "../../../archive-manifest";
 import { getArchiveEntry } from "../../../archive-content.server";
 import { MarkdownView } from "../../../components/MarkdownView";
@@ -44,9 +45,9 @@ export default async function ArchivePage({ params }: PageProps) {
   return (
     <div className="archive-page">
       <div className="breadcrumbs" aria-label="面包屑">
-        <Link href="/">总览</Link>
+        <Link href={siteHref("/")}>总览</Link>
         <span aria-hidden="true">/</span>
-        <Link href={`/search?category=${entry.category}`}>{categoryLabels[entry.category]}</Link>
+        <Link href={`${siteHref("/search")}?category=${entry.category}`}>{categoryLabels[entry.category]}</Link>
         <span aria-hidden="true">/</span>
         <span>{entry.title}</span>
       </div>
@@ -62,7 +63,9 @@ export default async function ArchivePage({ params }: PageProps) {
               {entry.monogram}
             </div>
             <div className="article-heading-copy">
-              <span className="article-category">{categoryLabels[entry.category]}</span>
+              <span className="article-category">
+                {entry.presentation === "glossary" ? "世界词条" : categoryLabels[entry.category]}
+              </span>
               <h1>{entry.title}</h1>
               {entry.englishTitle && <p className="article-english">{entry.englishTitle}</p>}
               <p className="article-summary">{entry.summary}</p>
@@ -117,4 +120,3 @@ export default async function ArchivePage({ params }: PageProps) {
     </div>
   );
 }
-

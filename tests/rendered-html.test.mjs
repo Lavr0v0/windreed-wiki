@@ -130,6 +130,18 @@ test("search receives only approved archive text", async () => {
   assert.doesNotMatch(html, forbiddenPublicText);
 });
 
+test("renders a styled archive 404", async () => {
+  const response = await render("/a-road-not-recorded");
+  assert.equal(response.status, 404);
+
+  const html = await response.text();
+  assert.match(html, /此路未载于档案/);
+  assert.match(html, /清风拂过这里，他们已经去往新的旅途。/);
+  assert.match(html, /返回档案总览/);
+  assert.match(html, /检索公开档案/);
+  assert.doesNotMatch(html, forbiddenPublicText);
+});
+
 test("removes the disposable starter surface", async () => {
   const [page, layout, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),

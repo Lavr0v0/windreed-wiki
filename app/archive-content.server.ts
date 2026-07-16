@@ -117,9 +117,10 @@ targetRoutes.set("阿瑞尔 ariel", siteHref("/archive/characters/ariel"));
 targetRoutes.set("梅莉艾尔 merielle", siteHref("/archive/characters/merielle"));
 targetRoutes.set("高精灵族群", siteHref("/archive/world/evereska"));
 
-const excludedSection = /^(未解|待定|待补|尚未确定|答卷视角)/;
+const excludedSection = /^(未解|待定|待补|尚未确定|答卷视角|世界与设定索引)/;
 const editorialBlock = [
   /问卷/,
+  /答卷/,
   /2026-\d/,
   /现有资料/,
   /现有档案/,
@@ -146,6 +147,18 @@ const editorialBlock = [
   /逐年资料见/,
   /道路参考/,
   /具体.*没有确定/,
+  /资料没有说明/,
+  /尚无对应资料/,
+  /当前均无资料/,
+  /当前不增加/,
+  /均填/,
+  /留白/,
+  /问到/,
+  /原话/,
+  /仍未说明/,
+  /仍未确定/,
+  /先后未定/,
+  /可能指/,
   /银月城/,
 ];
 
@@ -210,6 +223,46 @@ function normalizePublicNames(markdown: string) {
     .replace(/^#\s+.*$/m, "");
 }
 
+function normalizeEditorialVoice(markdown: string) {
+  return markdown
+    .replaceAll(
+      "冒险结束后，他想找回失去的东西，具体所指没有说明。世上也没有哪件东西被他列为“给多少钱都不卖”。他最怕失去记忆和自我，噩梦是“变回从前的自己”。问到十年后的目标，他只写“实现目标”。梦想从未告诉任何人。他也不准备纠正别人眼中的那些毛病，原话是“那不是毛病，是他的一部分”。",
+      "冒险结束后，他想找回失去的东西。他最怕失去记忆和自我，噩梦是“变回从前的自己”。梦想从未告诉任何人。他也不准备纠正别人眼中的那些毛病：“那不是毛病，是他的一部分”。",
+    )
+    .replaceAll(
+      "他用“法王”形容阿尔贝莉娜，最欣赏她会很多法术。其余项目均填“无”，当前不增加额外关系。",
+      "他用“法王”形容阿尔贝莉娜，最欣赏她会很多法术。",
+    )
+    .replaceAll(
+      "他称芙勒维拉为“大力神”，最欣赏她的力量。其余项目留白。",
+      "他称芙勒维拉为“大力神”，最欣赏她的力量。",
+    )
+    .replaceAll(
+      "他最怕失去**自由**。问到“给多少钱都不卖的东西”，他只写自己的命。十年以后想在哪里，他答“随风而去”。梦想只告诉过一个人，对方是谁、梦想是什么，都没有说明。如果有墓碑，他希望上面刻着，**肉身虽死，灵魂自由。**",
+      "他最怕失去**自由**。即使有人出再多的钱，他也不会出让自己的命。十年以后，他想“随风而去”。他只向一个人说过梦想。如果有墓碑，他希望上面刻着，**肉身虽死，灵魂自由。**",
+    )
+    .replaceAll("他的噩梦很可能与变回从前的自己有关。", "")
+    .replaceAll(
+      "他所说的“曾经的自己”，以及滥杀无辜的经历，就发生在这段西行中。他具体做过什么、替谁做事、最后为何收手，仍未说明。哥哥送给他的胸章也一直带在身上。哥哥与商队有什么关系，商队解散后去了哪里，当前均无资料。",
+      "他所说的“曾经的自己”，以及滥杀无辜的经历，就发生在这段西行中。哥哥送给他的胸章也一直带在身上。",
+    )
+    .replaceAll(
+      "问到最先保护队里的谁，他回答**平等**。每个人都算在内，没有先后。斯卡摩斯用了很长时间才从观察者变成参与者，而他自己已经承认，这支队伍是人生中最接近幸福的存在。",
+      "在他看来，每个人都算在内，没有保护的先后。斯卡摩斯用了很长时间才从观察者变成参与者，而他自己已经承认，这支队伍是人生中最接近幸福的存在。",
+    )
+    .replaceAll(
+      "冒险结束后，他最想看到“**某个人平安**”，却没有说那个人是谁，也可能指他的哥哥。",
+      "冒险结束后，他最想看到“**某个人平安**”。",
+    )
+    .replaceAll("动手者与原因仍未揭晓。", "")
+    .replaceAll("立誓与得剑的先后未定，赠剑者可能是阿尔贝莉娜。", "")
+    .replaceAll(
+      "现有设定包括沉没城堡、雾中孤岛、黑龙巢穴和眷属栖地。",
+      "领地中有沉没城堡、雾中孤岛、黑龙巢穴和眷属栖地。",
+    )
+    .replaceAll("领地入口、统治者、抹忆者和放逐原因仍未确定。", "");
+}
+
 const glossaryTerms = archiveManifest
   .filter((entry) => entry.presentation === "glossary")
   .flatMap((entry) =>
@@ -259,6 +312,37 @@ function removeEditorialBlocks(markdown: string) {
     .join("\n\n");
 }
 
+function removeEmptyHeadings(markdown: string) {
+  let lines = markdown.split("\n");
+  let changed = true;
+
+  while (changed) {
+    changed = false;
+    lines = lines.filter((line, index) => {
+      const heading = /^(#{2,6})\s+/.exec(line.trim());
+      if (!heading) return true;
+      const level = heading[1].length;
+      let end = lines.length;
+
+      for (let cursor = index + 1; cursor < lines.length; cursor += 1) {
+        const nextHeading = /^(#{2,6})\s+/.exec(lines[cursor].trim());
+        if (nextHeading && nextHeading[1].length <= level) {
+          end = cursor;
+          break;
+        }
+      }
+
+      const hasContent = lines
+        .slice(index + 1, end)
+        .some((candidate) => candidate.trim() && !/^#{2,6}\s+/.test(candidate.trim()));
+      if (!hasContent) changed = true;
+      return hasContent;
+    });
+  }
+
+  return lines.join("\n");
+}
+
 function convertWikiLinks(markdown: string) {
   return markdown.replace(
     /\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|([^\]]+))?\]\]/g,
@@ -287,7 +371,9 @@ function sanitizeMarkdown(spec: SourceSpec) {
   markdown = selectSection(markdown, spec.section);
   markdown = removeExcludedSections(markdown);
   markdown = normalizePublicNames(markdown);
+  markdown = normalizeEditorialVoice(markdown);
   markdown = removeEditorialBlocks(markdown);
+  markdown = removeEmptyHeadings(markdown);
   markdown = convertWikiLinks(markdown);
   markdown = linkifyGlossaryTerms(markdown);
   return tidyMarkdown(markdown);

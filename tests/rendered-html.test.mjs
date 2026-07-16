@@ -57,7 +57,7 @@ test("renders the finished archive home page", async () => {
   assert.match(html, /The Windreed Wayfarers/);
   assert.match(html, /风芦旅人/);
   assert.match(html, /1492 DR/);
-  assert.match(html, /人物档案/);
+  assert.match(html, /卷册索引/);
   assert.doesNotMatch(html, forbiddenPublicText);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/i);
 });
@@ -98,24 +98,34 @@ test("uses checked 5E names for glossary entries", async () => {
   }
 });
 
-test("keeps glossary entries out of the sidebar and opens them from body links", async () => {
+test("uses the fixed bilingual archive and story navigation", async () => {
   const homeResponse = await render();
   const home = await homeResponse.text();
   const tree = home.match(/<nav class="archive-tree"[\s\S]*?<\/nav>/)?.[0] ?? "";
-  assert.match(tree, /神迹之光/);
-  assert.match(tree, /「枝桠」/);
-  assert.doesNotMatch(tree, /红松镇|无冬城|安柏弗|古贤之誓|艾弗瑞斯卡/);
-  assert.match(tree, /正式团员/);
-  assert.match(tree, /同行者/);
+  const fixedLabels = [
+    "ARCHIVES", "LIVES", "卷中人", "COMPANIONS", "同行者", "PLACES", "风物",
+    "RELICS", "匣中物", "LORE", "见闻", "HERALDRY", "纹章", "STORIES",
+    "TALES", "逸闻", "THE CHRONICLE", "长路", "FORTUNES", "际遇",
+  ];
+  let lastPosition = -1;
+  for (const label of fixedLabels) {
+    const position = tree.indexOf(label, lastPosition + 1);
+    assert.ok(position > lastPosition, `${label} should appear in the fixed navigation order`);
+    lastPosition = position;
+  }
 
   const treeGroups = [...tree.matchAll(/<details[^>]*>[\s\S]*?<\/details>/g)].map((match) => match[0]);
-  const memberGroup = treeGroups.find((group) => group.includes("正式团员")) ?? "";
-  const associateGroup = treeGroups.find((group) => group.includes("同行者")) ?? "";
+  const memberGroup = treeGroups.find((group) => group.includes("LIVES")) ?? "";
+  const associateGroup = treeGroups.find((group) => group.includes("COMPANIONS")) ?? "";
+  const placesGroup = treeGroups.find((group) => group.includes("PLACES")) ?? "";
   assert.match(memberGroup, /雪露/);
   assert.match(memberGroup, /阿瑞尔/);
   assert.doesNotMatch(memberGroup, /梅莉艾尔/);
   assert.match(associateGroup, /梅莉艾尔/);
   assert.doesNotMatch(associateGroup, /雪露/);
+  assert.match(placesGroup, /红松镇/);
+  assert.match(placesGroup, /无冬城/);
+  assert.match(placesGroup, /安柏弗/);
 
   const shirulResponse = await render("/archive/characters/shirul");
   const shirul = await shirulResponse.text();
@@ -141,14 +151,15 @@ test("search receives only approved archive text", async () => {
   assert.doesNotMatch(html, forbiddenPublicText);
 });
 
-test("gives formal party members their own public collection", async () => {
-  const response = await render("/search?category=members");
+test("gives every published entry its requested chronicle section", async () => {
+  const response = await render("/search?section=lives");
   assert.equal(response.status, 200);
   const html = await response.text();
   const visibleResults = [...html.matchAll(/<a[^>]*class="search-result"[\s\S]*?<\/a>/g)]
     .map((match) => match[0])
     .join("\n");
-  assert.match(html, /正式团员/);
+  assert.match(html, /LIVES/);
+  assert.match(html, /卷中人/);
   assert.match(visibleResults, /雪露/);
   assert.match(visibleResults, /阿瑞尔/);
   assert.doesNotMatch(visibleResults, /梅莉艾尔/);
@@ -156,7 +167,26 @@ test("gives formal party members their own public collection", async () => {
   const memberResponse = await render("/archive/characters/shirul");
   const memberHtml = await memberResponse.text();
   assert.match(memberHtml, /PARTY MEMBER/);
+  assert.match(memberHtml, /LIVES/);
+  assert.match(memberHtml, /卷中人/);
   assert.match(memberHtml, /01(?:<!-- -->)? \/ 06/);
+
+  const sectionCases = [
+    ["places", /红松镇/, /「枝桠」/],
+    ["relics", /「枝桠」/, /红松镇/],
+    ["lore", /古贤之誓/, /队伍时间线/],
+    ["chronicle", /队伍时间线/, /关系档案/],
+    ["fortunes", /关系档案/, /队伍时间线/],
+  ];
+  for (const [section, included, excluded] of sectionCases) {
+    const sectionResponse = await render(`/search?section=${section}`);
+    const sectionHtml = await sectionResponse.text();
+    const sectionResults = [...sectionHtml.matchAll(/<a[^>]*class="search-result"[\s\S]*?<\/a>/g)]
+      .map((match) => match[0])
+      .join("\n");
+    assert.match(sectionResults, included, section);
+    assert.doesNotMatch(sectionResults, excluded, section);
+  }
 });
 
 test("uses desktop Lenis while preserving native touch scrolling and reduced motion", async () => {

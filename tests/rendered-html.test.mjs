@@ -67,7 +67,7 @@ test("every published archive route renders and passes the content policy", asyn
     const response = await render(route);
     assert.equal(response.status, 200, route);
     const html = await response.text();
-    assert.match(html, /ARCHIVE ENTRY/, route);
+    assert.match(html, /THE WINDREED CHRONICLES/, route);
     assert.doesNotMatch(html, forbiddenPublicText, route);
     assert.doesNotMatch(html, /芦溪村|银桦林/, route);
   }
@@ -168,7 +168,16 @@ test("uses desktop Lenis while preserving native touch scrolling and reduced mot
   assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(motionLayer, /syncTouch: false/);
   assert.match(motionLayer, /prefers-reduced-motion: reduce/);
+  assert.match(motionLayer, /scrollTo\(0, \{ immediate: true \}\)/);
+  assert.match(motionLayer, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
   assert.equal(JSON.parse(packageJson).dependencies.lenis, "1.3.25");
+});
+
+test("keeps archive navigation scrollable without visible browser chrome", async () => {
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?scrollbar-width:\s*none/);
+  assert.match(styles, /\.desktop-sidebar::\-webkit-scrollbar,\s*\n\.mobile-sidebar::\-webkit-scrollbar[\s\S]*?display:\s*none/);
+  assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.mobile-sidebar\s*\{[\s\S]*?background-color:\s*var\(--paper-light\)/);
 });
 
 test("renders a styled archive 404", async () => {

@@ -41,6 +41,17 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      lenisRef.current?.scrollTo(0, { immediate: true });
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname]);
+
+  useEffect(() => {
     let frame = 0;
 
     function updateScrollMetrics() {

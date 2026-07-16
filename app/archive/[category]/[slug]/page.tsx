@@ -108,8 +108,9 @@ export default async function ArchivePage({ params }: PageProps) {
           </div>
 
           <footer className="article-footer">
-            <span>ARCHIVE ENTRY</span>
-            <strong>The Windreed Wayfarers</strong>
+            <span>THE WINDREED CHRONICLES</span>
+            <b className="article-folio" aria-label={`档案：${entry.title}`}>{entry.monogram}</b>
+            <strong>{entry.title} · 1492 DR</strong>
           </footer>
         </article>
 

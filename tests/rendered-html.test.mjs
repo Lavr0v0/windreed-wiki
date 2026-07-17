@@ -248,8 +248,11 @@ test("presents party member names as handwritten chronicle entries", async () =>
   assert.match(html, /展卷阅其人/);
   assert.match(html, /data-logo-slot="site"/);
   assert.match(html, /data-logo-slot="member"/);
+  assert.match(html, /windreed-logo-on-dark\.svg/);
   assert.match(layout, /@fontsource\/lxgw-wenkai\/500\.css/);
+  assert.match(layout, /windreed-logo-favicon\.svg/);
   assert.match(styles, /--hand:\s*"LXGW WenKai"/);
+  assert.match(styles, /\.hero-logo/);
   assert.match(styles, /\.member-card-name::after/);
   assert.equal(JSON.parse(packageJson).dependencies["@fontsource/lxgw-wenkai"], "5.2.5");
 });

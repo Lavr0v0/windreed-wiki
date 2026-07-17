@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { siteHref } from "./archive-manifest";
 import { ArchiveShell } from "./components/ArchiveShell";
 import { MotionLayer } from "./components/MotionLayer";
 import "@fontsource-variable/noto-serif-sc/wght.css";
@@ -13,6 +14,10 @@ export const metadata: Metadata = {
   },
   description: "风芦旅人的人物生平、行程与共同经历公开档案。",
   applicationName: "The Windreed Wayfarers",
+  icons: {
+    icon: [{ url: siteHref("/brand/final/windreed-logo-favicon.svg"), type: "image/svg+xml" }],
+    shortcut: [siteHref("/brand/final/windreed-logo-favicon.svg")],
+  },
   openGraph: {
     title: "The Windreed Wayfarers",
     description: "风芦旅人的人物生平、行程与共同经历公开档案。",

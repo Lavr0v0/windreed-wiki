@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   associateEntries,
@@ -31,10 +32,15 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-emblem" aria-hidden="true">
-          <span className="emblem-ring" />
-          <span className="emblem-w">W</span>
-          <span className="emblem-reed reed-one" />
-          <span className="emblem-reed reed-two" />
+          <Image
+            alt=""
+            className="hero-logo"
+            height={300}
+            priority
+            src={siteHref("/brand/final/windreed-logo-on-dark.svg")}
+            unoptimized
+            width={300}
+          />
           <small>EST. 1491 DR</small>
         </div>
       </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -137,7 +138,15 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
         </button>
         <Link className="site-brand" href={siteHref("/")} aria-label="The Windreed Wayfarers 首页">
           <span className="brand-seal" data-logo-slot="site" aria-hidden="true">
-            <span className="brand-logo-fallback">W</span>
+            <Image
+              alt=""
+              className="brand-logo"
+              height={40}
+              priority
+              src={siteHref("/brand/final/windreed-logo-on-dark.svg")}
+              unoptimized
+              width={40}
+            />
           </span>
           <span>
             <strong>The Windreed Wayfarers</strong>

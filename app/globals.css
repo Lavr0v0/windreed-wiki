@@ -138,18 +138,20 @@ summary {
 
 .brand-seal {
   align-items: center;
-  border: 1px solid rgba(212, 193, 145, 0.55);
-  border-radius: 50%;
-  color: #d8c48e;
   display: flex;
-  flex: 0 0 38px;
-  font-family: Georgia, serif;
-  font-size: 21px;
-  height: 38px;
+  flex: 0 0 40px;
+  height: 40px;
   justify-content: center;
+  width: 40px;
 }
 
-.brand-logo-fallback { display: block; line-height: 1; }
+.brand-logo {
+  display: block;
+  filter: drop-shadow(0 2px 7px rgba(3, 12, 18, 0.24));
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
 
 .site-brand strong,
 .site-brand small {
@@ -628,68 +630,23 @@ details[open] > summary .tree-twist {
   aspect-ratio: 1;
   display: flex;
   justify-content: center;
+  padding: 18px;
   transform: translateY(calc(var(--scroll-shift) * 0.075px)) rotate(calc(var(--scroll-shift) * 0.012deg));
   transition: transform 80ms linear;
   will-change: transform;
 }
 
-.emblem-ring {
-  border: 1px solid rgba(216, 196, 142, 0.42);
-  border-radius: 50%;
-  height: 245px;
-  position: absolute;
-  width: 245px;
+.hero-logo {
+  display: block;
+  filter: drop-shadow(0 18px 34px rgba(3, 13, 19, 0.26));
+  height: auto;
+  max-width: 280px;
+  opacity: 0.96;
+  width: 100%;
 }
-
-.emblem-ring::before,
-.emblem-ring::after {
-  border: 1px solid rgba(216, 196, 142, 0.16);
-  border-radius: 50%;
-  content: "";
-  inset: 12px;
-  position: absolute;
-}
-
-.emblem-ring::after {
-  inset: 28px;
-}
-
-.emblem-w {
-  color: #d8c48e;
-  font-family: Georgia, serif;
-  font-size: 102px;
-  font-weight: 400;
-  position: relative;
-  z-index: 2;
-}
-
-.emblem-reed {
-  background: rgba(216, 196, 142, 0.7);
-  bottom: 65px;
-  height: 145px;
-  position: absolute;
-  transform: rotate(-18deg);
-  transform-origin: bottom;
-  width: 1px;
-}
-
-.emblem-reed::before,
-.emblem-reed::after {
-  background: rgba(216, 196, 142, 0.7);
-  border-radius: 50%;
-  content: "";
-  height: 23px;
-  position: absolute;
-  width: 5px;
-}
-
-.emblem-reed::before { left: -6px; top: 34px; transform: rotate(-35deg); }
-.emblem-reed::after { right: -6px; top: 62px; transform: rotate(35deg); }
-.reed-one { right: 74px; }
-.reed-two { left: 79px; transform: rotate(20deg); }
 
 .hero-emblem small {
-  bottom: 11px;
+  bottom: 1px;
   color: rgba(216, 196, 142, 0.6);
   font-family: Georgia, serif;
   font-size: 9px;
@@ -1918,7 +1875,7 @@ details[open] > summary .tree-twist {
   .archive-page,
   .search-page { padding-left: 36px; padding-right: 36px; }
   .hero-panel { grid-template-columns: 1fr 240px; padding-left: 7%; padding-right: 7%; }
-  .emblem-ring { height: 205px; width: 205px; }
+  .hero-logo { max-width: 225px; }
   .member-grid { grid-template-columns: 1fr; }
   .article-layout { display: block; }
   .article-rail { display: none; }
@@ -1932,7 +1889,7 @@ details[open] > summary .tree-twist {
   .top-index-link { display: none; }
   .site-brand { justify-self: center; }
   .site-brand strong { font-size: 14px; }
-  .brand-seal { flex-basis: 32px; font-size: 17px; height: 32px; width: 32px; }
+  .brand-seal { flex-basis: 32px; height: 32px; width: 32px; }
   .desktop-sidebar { display: none; }
   .site-content { margin-left: 0; padding-top: 64px; }
   .route-stage { min-height: calc(100vh - 64px); }

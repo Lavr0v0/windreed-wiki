@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人物专页 · The Windreed Wayfarers</title>
+  <meta name="description" content="风芦旅人的人物专属卷册入口。">
+  <meta name="theme-color" content="#0d2026">
+  <link rel="canonical" href="https://windreed.wiki/DnD/">
+  <meta property="og:title" content="人物专页 · The Windreed Wayfarers">
+  <meta property="og:description" content="风芦旅人的人物专属卷册入口。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://windreed.wiki/DnD/">
+  <meta property="og:site_name" content="The Windreed Wayfarers">
+  <link rel="stylesheet" href="shared/page.css">
+  <style>
+    :root {
+      --ink: #213137;
+      --navy: #0d2026;
+      --paper: #f4efe4;
+      --paper-light: #fbf8f0;
+      --reed: #76917f;
+      --gold: #a98f53;
+      --line: rgba(40, 58, 59, 0.18);
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--navy); }
+    body {
+      background:
+        radial-gradient(circle at 82% 4%, rgba(169, 143, 83, 0.16), transparent 28rem),
+        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(244, 239, 228, 0.018) 32px),
+        var(--navy);
+      color: var(--paper);
+      font-family: Georgia, "Archive Noto Serif SC", "Songti SC", serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; }
+    .page {
+      margin: 0 auto;
+      max-width: 1180px;
+      padding: clamp(54px, 9vw, 116px) clamp(22px, 5vw, 64px) 88px;
+    }
+    header { border-bottom: 1px solid rgba(244, 239, 228, 0.16); padding-bottom: 42px; }
+    .eyebrow { color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: 0.28em; }
+    h1 { font-size: clamp(44px, 8vw, 92px); font-weight: 400; letter-spacing: -0.045em; line-height: 0.94; margin: 18px 0 16px; }
+    header p { color: rgba(244, 239, 228, 0.62); font-size: 14px; letter-spacing: 0.05em; margin: 0; }
+    .folio-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 46px; }
+    .folio {
+      --accent: var(--reed);
+      background: linear-gradient(145deg, rgba(251, 248, 240, 0.98), rgba(232, 223, 207, 0.94));
+      border: 1px solid color-mix(in srgb, var(--accent), transparent 58%);
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      min-height: 310px;
+      overflow: hidden;
+      padding: 30px;
+      position: relative;
+      transition: translate 220ms ease, box-shadow 220ms ease;
+    }
+    .folio::before { background: var(--accent); content: ""; inset: 0 auto 0 0; opacity: 0.72; position: absolute; width: 3px; }
+    .folio::after { border: 1px solid color-mix(in srgb, var(--accent), transparent 72%); border-radius: 50%; content: ""; height: 150px; position: absolute; right: -72px; top: -70px; width: 150px; }
+    .folio:hover { box-shadow: 0 20px 56px rgba(0, 0, 0, 0.26); translate: 0 -5px; }
+    .folio-number { color: var(--accent); font-size: 9px; font-weight: 700; letter-spacing: 0.2em; }
+    .folio h2 { font-size: clamp(30px, 4vw, 42px); font-weight: 400; margin: 43px 0 4px; }
+    .folio h2 + span { color: #7e837f; font-size: 12px; letter-spacing: 0.08em; }
+    .folio p { color: #596563; font-family: "Noto Serif SC", "Songti SC", serif; font-size: 13px; line-height: 1.8; margin: 24px 0 0; }
+    .folio-open { color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-top: auto; padding-top: 26px; }
+    footer { color: rgba(244, 239, 228, 0.44); font-size: 9px; letter-spacing: 0.16em; margin-top: 52px; text-align: center; }
+    @media (max-width: 820px) { .folio-grid { grid-template-columns: 1fr; } .folio { min-height: 245px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <span class="eyebrow">LIVES · PERSONAL CHRONICLES</span>
+      <h1>卷中人</h1>
+      <p>人物专属卷册</p>
+    </header>
+    <section class="folio-grid" aria-label="已收录的人物专页">
+      <a class="folio" href="Alberina/" style="--accent:#12347a">
+        <span class="folio-number">FOLIO 01</span>
+        <h2>阿尔贝莉娜</h2>
+        <span>Alberina</span>
+        <p>高精灵 · 法师</p>
+        <span class="folio-open">展卷阅其人 ↗</span>
+      </a>
+      <a class="folio" href="Flavilar/" style="--accent:#47765d">
+        <span class="folio-number">FOLIO 02</span>
+        <h2>芙勒维拉</h2>
+        <span>Flavilar</span>
+        <p>龙裔 · 野蛮人</p>
+        <span class="folio-open">展卷阅其人 ↗</span>
+      </a>
+      <a class="folio" href="Shirul/" style="--accent:#0891b2">
+        <span class="folio-number">FOLIO 03</span>
+        <h2>雪露</h2>
+        <span>Shirul</span>
+        <p>人类 · 圣武士</p>
+        <span class="folio-open">展卷阅其人 ↗</span>
+      </a>
+    </section>
+    <footer>THE WINDREED WAYFARERS · 1492 DR · 角色署名见各人物页面</footer>
+  </main>
+</body>
+</html>

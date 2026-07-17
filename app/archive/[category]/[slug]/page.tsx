@@ -103,6 +103,18 @@ export default async function ArchivePage({ params }: PageProps) {
             </dl>
           )}
 
+          {entry.personalPage && (
+            <a
+              aria-label={`翻阅${entry.title}的人物专页`}
+              className="personal-chronicle-link"
+              href={siteHref(entry.personalPage)}
+            >
+              <span>PERSONAL CHRONICLE</span>
+              <b>翻阅人物专页</b>
+              <i aria-hidden="true">↗</i>
+            </a>
+          )}
+
           <MarkdownView markdown={entry.body} />
 
           <footer className="article-footer">

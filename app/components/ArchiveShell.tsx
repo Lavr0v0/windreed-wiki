@@ -136,7 +136,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           <span />
         </button>
         <Link className="site-brand" href={siteHref("/")} aria-label="The Windreed Wayfarers 首页">
-          <span className="brand-seal">W</span>
+          <span className="brand-seal" data-logo-slot="site" aria-hidden="true">
+            <span className="brand-logo-fallback">W</span>
+          </span>
           <span>
             <strong>The Windreed Wayfarers</strong>
             <small>风芦旅人 · 公开档案</small>

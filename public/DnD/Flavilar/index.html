@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flavilar · 芙勒维拉 · The Windreed Wayfarers</title>
+    <meta name="description" content="Flavilar（芙勒维拉）是基于龙与地下城（D&D）规则的同人自设角色。角色设定由椿创作，页面由 Lavro 制作。">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Flavilar · 芙勒维拉 – D&D 同人自设角色">
+    <meta property="og:description" content="基于 D&D 规则的龙裔野蛮人角色档案。角色设定由椿创作，页面由 Lavro 制作。">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="The Windreed Wayfarers">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Flavilar – D&D 同人自设角色展示">
+    <meta name="twitter:description" content="基于 D&D 规则的同人自设龙裔野蛮人角色展示页面。非官方内容。">
+    <meta name="author" content="Lavro">
+    <meta name="theme-color" content="#0c0b0a">
+    <link rel="canonical" href="https://windreed.wiki/DnD/Flavilar/">
+    <meta property="og:url" content="https://windreed.wiki/DnD/Flavilar/">
+    <link rel="stylesheet" href="tailwind.css">
+    <link rel="stylesheet" href="../shared/page.css">
+    <!-- Lenis Smooth Scroll -->
+    <script src="../shared/lenis.min.js"></script>
+
+    <style>
+        /* 基础与排版 */
+        body {
+            background-color: #0c0b0a;
+            color: #eae4d9;
+            font-family: Georgia, 'Archive Noto Serif SC', 'Songti SC', serif;
+            overflow-x: hidden;
+            selection-background-color: #10b981;
+            selection-color: white;
+            line-height: 1.8; /* 增加行高，提升小字体的阅读体验 */
+        }
+
+        /* 噪点纹理材质 */
+        .bg-noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Lenis 平滑滚动必需样式 */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        /* 苹果式 Scroll Reveal 动画类 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @media (min-width: 768px) {
+            .reveal { transform: translateY(60px); }
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* 环境光晕 */
+        .glow-gold {
+            position: fixed; top: -10%; left: 0%; width: 100vw; height: 100vw;
+            background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none; z-index: 1; mix-blend-mode: screen;
+        }
+        @media (min-width: 768px) {
+            .glow-gold { left: 10%; width: 50vw; height: 50vw; }
+        }
+        
+        .glow-emerald {
+            position: fixed; bottom: -20%; right: -20%; width: 120vw; height: 120vw;
+            background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none; z-index: 1; mix-blend-mode: screen;
+        }
+        @media (min-width: 768px) {
+            .glow-emerald { right: -10%; width: 60vw; height: 60vw; }
+        }
+
+        /* D&D 羊皮纸边缘阴影 */
+        .page-shadow {
+            box-shadow: 0 0 30px 10px rgba(0,0,0,0.8) inset;
+        }
+        @media (min-width: 768px) {
+            .page-shadow { box-shadow: 0 0 50px 20px rgba(0,0,0,0.8) inset; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <a class="archive-return" href="../" aria-label="返回人物专页索引"><span aria-hidden="true">←</span><b>返回卷册</b></a>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "Flavilar – D&D 同人自设角色展示",
+      "description": "基于 D&D 规则的同人自设（OC）角色 Flavilar（芙勒维拉），龙裔野蛮人。非官方内容。",
+      "genre": "Fan-made Original Character (OC)",
+      "creator": { "@type": "Person", "name": "椿" },
+      "author": { "@type": "Person", "name": "Lavro" },
+      "isPartOf": { "@type": "WebSite", "name": "The Windreed Wayfarers" }
+    }
+    </script>
+
+    <!-- 全局噪点与光晕 -->
+    <div class="bg-noise"></div>
+    <div class="glow-gold"></div>
+    <div class="glow-emerald"></div>
+
+    <!-- 首屏 (Hero Section) - 采用 Sticky 定位实现视差滚动 -->
+    <div class="h-screen w-full sticky top-0 flex flex-col items-center justify-center overflow-hidden z-0" id="hero-section">
+        
+        <!-- 四角哥特装饰 -->
+        <div class="absolute inset-4 md:inset-12 border border-dnd-gold/20 pointer-events-none">
+            <svg class="absolute top-0 left-0 w-10 h-10 md:w-16 md:h-16 text-dnd-gold opacity-50" viewBox="0 0 100 100" fill="none"><path d="M0 0V20C0 20 20 20 20 40C20 60 40 60 40 60H60C60 60 60 40 80 40C100 40 100 20 100 20V0H0Z" fill="currentColor" fill-opacity="0.1"/><path d="M2 2V25C2 25 25 25 25 50C25 75 50 75 50 75H75C75 75 75 50 100 50" stroke="currentColor" stroke-width="1.5"/></svg>
+            <svg class="absolute top-0 right-0 w-10 h-10 md:w-16 md:h-16 text-dnd-gold opacity-50 transform rotate-90" viewBox="0 0 100 100" fill="none"><path d="M0 0V20C0 20 20 20 20 40C20 60 40 60 40 60H60C60 60 60 40 80 40C100 40 100 20 100 20V0H0Z" fill="currentColor" fill-opacity="0.1"/><path d="M2 2V25C2 25 25 25 25 50C25 75 50 75 50 75H75C75 75 75 50 100 50" stroke="currentColor" stroke-width="1.5"/></svg>
+            <svg class="absolute bottom-0 right-0 w-10 h-10 md:w-16 md:h-16 text-dnd-gold opacity-50 transform rotate-180" viewBox="0 0 100 100" fill="none"><path d="M0 0V20C0 20 20 20 20 40C20 60 40 60 40 60H60C60 60 60 40 80 40C100 40 100 20 100 20V0H0Z" fill="currentColor" fill-opacity="0.1"/><path d="M2 2V25C2 25 25 25 25 50C25 75 50 75 50 75H75C75 75 75 50 100 50" stroke="currentColor" stroke-width="1.5"/></svg>
+            <svg class="absolute bottom-0 left-0 w-10 h-10 md:w-16 md:h-16 text-dnd-gold opacity-50 transform -rotate-90" viewBox="0 0 100 100" fill="none"><path d="M0 0V20C0 20 20 20 20 40C20 60 40 60 40 60H60C60 60 60 40 80 40C100 40 100 20 100 20V0H0Z" fill="currentColor" fill-opacity="0.1"/><path d="M2 2V25C2 25 25 25 25 50C25 75 50 75 50 75H75C75 75 75 50 100 50" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+
+        <!-- 视差容器 -->
+        <div id="hero-content" class="text-center relative z-10 w-full px-4 will-change-transform">
+            <p class="font-cinzel text-dnd-gold tracking-[0.2em] md:tracking-[0.4em] text-[10px] md:text-sm mb-6 md:mb-8 uppercase flex items-center justify-center gap-2 md:gap-4 reveal">
+                <span class="w-8 md:w-16 h-[1px] bg-gradient-to-r from-transparent to-dnd-gold"></span>
+                The Windreed Wayfarers
+                <span class="w-8 md:w-16 h-[1px] bg-gradient-to-l from-transparent to-dnd-gold"></span>
+            </p>
+            
+            <div class="relative inline-block mb-2 md:mb-4 reveal reveal-delay-1 w-full">
+                <!-- 巨大的背景水印 (自适应移动端大小) -->
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-cinzel text-[4rem] sm:text-[6rem] md:text-[14rem] text-dnd-emerald opacity-[0.04] blur-[2px] md:blur-sm pointer-events-none font-black tracking-tighter w-full text-center">
+                    BARBARIAN
+                </span>
+                <h1 class="font-cinzel text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-black text-dnd-light tracking-widest uppercase relative z-10 drop-shadow-2xl">
+                    Flavilar
+                </h1>
+            </div>
+            
+            <h2 class="font-cinzel text-2xl md:text-4xl text-dnd-gold mt-2 mb-16 md:mb-20 tracking-[0.2em] md:tracking-[0.3em] font-bold reveal reveal-delay-2">
+                芙勒维拉
+            </h2>
+
+            <!-- 滚动提示器 -->
+            <div class="absolute -bottom-24 md:-bottom-32 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 reveal reveal-delay-3">
+                <span class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-[0.2em] mb-4 uppercase">Scroll to explore</span>
+                <div class="w-[1px] h-16 md:h-24 bg-gradient-to-b from-dnd-gold to-transparent relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1/2 bg-white animate-[slideDown_2s_ease-in-out_infinite]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(200%); opacity: 0; }
+        }
+    </style>
+
+    <!-- 正文内容 (盖在 Hero 上方滚动) -->
+    <main id="main-content" class="relative z-10 bg-dnd-dark page-shadow">
+        <!-- 顶部装饰边 -->
+        <div class="w-full h-8 bg-gradient-to-b from-[#000] to-transparent opacity-80 absolute top-0 left-0"></div>
+        <div class="w-full border-t border-dnd-gold/30"></div>
+
+        <div class="max-w-6xl mx-auto px-5 md:px-12 pt-20 md:pt-32 pb-16 md:pb-24">
+            
+            <!-- D&D 车卡属性栏 (Character Sheet Block) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 mb-20 md:mb-32 reveal">
+                <!-- Stat Box 1 -->
+                <div class="relative border border-dnd-gold/40 bg-dnd-paper p-4 md:p-6 text-center group">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-dnd-paper px-2 md:px-3 border border-dnd-gold/40 whitespace-nowrap">
+                        <span class="font-cinzel text-[8px] md:text-[10px] text-dnd-gold tracking-widest uppercase">Race</span>
+                    </div>
+                    <div class="font-cinzel text-lg md:text-xl lg:text-2xl text-dnd-light mt-2 group-hover:text-dnd-emerald transition-colors">Dragonborn</div>
+                    <div class="text-xs md:text-sm text-dnd-muted mt-1 md:mt-2 font-garamond italic">龙裔 / 黑鳞</div>
+                    <!-- 四角点缀 -->
+                    <div class="absolute top-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute top-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div>
+                </div>
+                <!-- Stat Box 2 -->
+                <div class="relative border border-dnd-gold/40 bg-dnd-paper p-4 md:p-6 text-center group">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-dnd-paper px-2 md:px-3 border border-dnd-gold/40 whitespace-nowrap">
+                        <span class="font-cinzel text-[8px] md:text-[10px] text-dnd-gold tracking-widest uppercase">Class</span>
+                    </div>
+                    <div class="font-cinzel text-lg md:text-xl lg:text-2xl text-dnd-light mt-2 group-hover:text-dnd-emerald transition-colors">Barbarian</div>
+                    <div class="text-xs md:text-sm text-dnd-muted mt-1 md:mt-2 font-garamond italic">野蛮人</div>
+                    <div class="absolute top-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute top-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div>
+                </div>
+                <!-- Stat Box 3 -->
+                <div class="relative border border-dnd-gold/40 bg-dnd-paper p-4 md:p-6 text-center group">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-dnd-paper px-2 md:px-3 border border-dnd-gold/40 whitespace-nowrap">
+                        <span class="font-cinzel text-[8px] md:text-[10px] text-dnd-gold tracking-widest uppercase">Size</span>
+                    </div>
+                    <div class="font-cinzel text-lg md:text-xl lg:text-2xl text-dnd-light mt-2 group-hover:text-dnd-emerald transition-colors">~ 2.7 m</div>
+                    <div class="text-xs md:text-sm text-dnd-muted mt-1 md:mt-2 font-garamond italic">巨型体格</div>
+                    <div class="absolute top-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute top-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div>
+                </div>
+                <!-- Stat Box 4 -->
+                <div class="relative border border-dnd-gold/40 bg-dnd-paper p-4 md:p-6 text-center group">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-dnd-paper px-2 md:px-3 border border-dnd-gold/40 whitespace-nowrap">
+                        <span class="font-cinzel text-[8px] md:text-[10px] text-dnd-gold tracking-widest uppercase">Affiliation</span>
+                    </div>
+                    <div class="font-cinzel text-lg md:text-xl lg:text-2xl text-dnd-light mt-2 group-hover:text-dnd-emerald transition-colors">Windreed Wayfarers</div>
+                    <div class="text-xs md:text-sm text-dnd-muted mt-1 md:mt-2 font-garamond italic">风芦旅人</div>
+                    <div class="absolute top-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute top-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 left-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div><div class="absolute bottom-1 right-1 w-1 h-1 bg-dnd-gold/50 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Section 1: 简介与存在感 -->
+            <section class="relative flex flex-col md:flex-row gap-8 md:gap-16 items-start mb-24 md:mb-32">
+                <div class="w-full md:w-1/3 md:sticky md:top-32 reveal">
+                    <div class="flex items-center gap-3 md:gap-4 text-dnd-gold mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 md:w-8 md:h-8"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>
+                        <h3 class="font-cinzel text-3xl md:text-4xl text-dnd-light tracking-wider uppercase">Presence</h3>
+                    </div>
+                    <p class="font-cinzel text-dnd-gold tracking-[0.2em] text-sm md:text-base uppercase ml-9 md:ml-12">存在感与来历</p>
+                    <div class="h-[1px] bg-dnd-gold/40 mt-4 md:mt-6 w-16 md:w-24 ml-9 md:ml-12"></div>
+                </div>
+                <div class="w-full md:w-2/3 space-y-6 md:space-y-8 text-sm md:text-base leading-relaxed text-[#b5aa9d] reveal reveal-delay-1">
+                    <p class="first-letter:font-cinzel first-letter:text-4xl md:first-letter:text-5xl first-letter:text-dnd-gold first-letter:float-left first-letter:mr-3 md:first-letter:mr-4 first-letter:mt-1 md:first-letter:mt-2">
+                        芙勒维拉是风芦旅人中最具压迫感的成员之一。她高大、强壮，<strong class="text-dnd-emerald font-normal drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">黑鳞覆身，绿瞳锐利</strong>，站在那里便足以让人先感到一阵本能上的不安。若只是远远望去，她几乎不像一个会与人同行的旅者，更像是从密林深处走出来的某种古老生灵：沉重、直接，带着未经驯化的攻击性。
+                    </p>
+                    <p>
+                        她的野性却并不只是森林岁月留下的痕迹。更早以前，她的记忆曾被人主动清除，许多原本属于“人”的部分也随之一并剥落。直到同伴们将她一点点拉回语言、规则与人群之中，她才慢慢学会如今这种“与人并肩”的模样。
+                    </p>
+                    
+                    <!-- 边框引言块 (魔法设定) -->
+                    <div class="relative p-6 md:p-10 mt-8 md:mt-12 border border-dnd-gold/20 bg-dnd-paper shadow-2xl reveal reveal-delay-2">
+                        <!-- 角落钉子 -->
+                        <div class="absolute -top-2 -left-2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-black border-2 border-dnd-gold/50"></div>
+                        <div class="absolute -bottom-2 -right-2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-black border-2 border-dnd-gold/50"></div>
+                        
+                        <div class="absolute -top-3 md:-top-4 left-4 md:left-8 px-2 md:px-4 bg-dnd-paper text-dnd-gold font-cinzel text-xs md:text-sm tracking-widest uppercase border border-dnd-gold/20 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-3 h-3 mr-1 md:mr-2"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>Polymorph
+                        </div>
+                        <p class="italic text-[#958c81] text-sm md:text-base">
+                            在城镇中，阿尔贝莉娜往往会为她施放变形术。那时的她化身为两米左右的黑发绿瞳女性，仍旧高大，却至少不至于在第一眼就惊动整条街。对她来说，这只是旅途中需要做的事，而不是某种伪装。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 古典华丽分割线 -->
+            <div class="flex items-center justify-center w-full my-20 md:my-32 opacity-70 reveal">
+                <div class="h-[1px] w-1/4 md:w-1/3 bg-gradient-to-r from-transparent to-dnd-gold"></div>
+                <div class="mx-4 md:mx-6 text-dnd-gold flex items-center gap-2 md:gap-4">
+                    <div class="w-2 h-2 md:w-3 md:h-3 rotate-45 border border-dnd-gold"></div>
+                    <!-- D20 骰子 SVG -->
+                    <svg class="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2" fill="rgba(197,160,89,0.1)"></polygon>
+                        <polygon points="2 17 12 22 22 17 12 12 2 17" fill="rgba(197,160,89,0.1)"></polygon>
+                        <polygon points="2 7 2 17 12 12 2 7"></polygon>
+                        <polygon points="22 7 22 17 12 12 22 7"></polygon>
+                    </svg>
+                    <div class="w-2 h-2 md:w-3 md:h-3 rotate-45 border border-dnd-gold"></div>
+                </div>
+                <div class="h-[1px] w-1/4 md:w-1/3 bg-gradient-to-l from-transparent to-dnd-gold"></div>
+            </div>
+
+            <!-- Section 2: 战斗本能 -->
+            <section class="relative flex flex-col md:flex-row gap-8 md:gap-16 items-start mb-24 md:mb-32">
+                <div class="w-full md:w-1/3 md:order-2 md:sticky md:top-32 md:text-right reveal">
+                    <div class="flex items-center md:justify-end gap-3 md:gap-4 text-dnd-gold mb-2">
+                        <h3 class="font-cinzel text-3xl md:text-4xl text-dnd-light tracking-wider uppercase md:order-1 order-2">Combat</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 md:w-8 md:h-8 md:order-2 order-1"><path d="m14 12-8.381 8.38a1 1 0 0 1-3.001-3L11 9"/><path d="M15 15.5a.5.5 0 0 0 .5.5A6.5 6.5 0 0 0 22 9.5a.5.5 0 0 0-.5-.5h-1.672a2 2 0 0 1-1.414-.586l-5.062-5.062a1.205 1.205 0 0 0-1.704 0L9.352 5.648a1.205 1.205 0 0 0 0 1.704l5.062 5.062A2 2 0 0 1 15 13.828z"/></svg>
+                    </div>
+                    <p class="font-cinzel text-dnd-gold tracking-[0.2em] text-sm md:text-base uppercase ml-9 md:ml-0 md:mr-12">战意与本能</p>
+                    <div class="h-[1px] bg-dnd-gold/40 mt-4 md:mt-6 w-16 md:w-24 ml-9 md:ml-auto md:mr-12"></div>
+                </div>
+                <div class="w-full md:w-2/3 md:order-1 space-y-8 md:space-y-10 text-sm md:text-base leading-relaxed text-[#b5aa9d] reveal reveal-delay-1">
+                    <p>
+                        在战斗中，她极具野性。她的侵略性很强，也很少迟疑。真正开打时，她并不依靠复杂的盘算，而更像顺着某种深埋在身体里的本能往前压去：<strong class="text-dnd-light font-normal">直接、凶猛，带着巨物才有的力量感与压迫感。</strong>战斗开始，她就已经在那里。
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mt-8 md:mt-12">
+                        <div class="border border-dnd-gold/20 p-6 md:p-8 bg-dnd-paper relative overflow-hidden group hover:border-dnd-emerald/50 transition-colors duration-500 reveal">
+                            <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-24 h-24 md:w-32 md:h-32 text-dnd-emerald"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 md:w-8 md:h-8 text-dnd-emerald mb-4 md:mb-6 opacity-80"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                            <h4 class="font-cinzel text-dnd-light text-lg md:text-xl mb-2 md:mb-3 font-bold tracking-wide">前排执行者<br><span class="text-xs md:text-sm text-dnd-gold tracking-widest font-normal">Vanguard</span></h4>
+                            <p class="text-xs md:text-sm text-[#958c81] leading-relaxed">冲得最快，压得最重，也最不犹豫。她不执着于包揽判断，只要有人给出指令，她就把那件事做到底。</p>
+                        </div>
+                        
+                        <div class="border border-dnd-gold/20 p-6 md:p-8 bg-dnd-paper relative overflow-hidden group hover:border-dnd-emerald/50 transition-colors duration-500 reveal reveal-delay-1">
+                            <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-24 h-24 md:w-32 md:h-32 text-dnd-emerald"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 md:w-8 md:h-8 text-dnd-emerald mb-4 md:mb-6 opacity-80"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
+                            <h4 class="font-cinzel text-dnd-light text-lg md:text-xl mb-2 md:mb-3 font-bold tracking-wide">山壁之重<br><span class="text-xs md:text-sm text-dnd-gold tracking-widest font-normal">The Bulwark</span></h4>
+                            <p class="text-xs md:text-sm text-[#958c81] leading-relaxed">与雪露并肩时，战斗感尤为鲜明。一个野性如山压过，一个以圣武士意志顶住，让“前排”变得极为具体。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: 性格特质 (全宽背景) -->
+            <section class="bg-[#141210] border-y border-dnd-gold/10 py-20 md:py-32 px-5 md:px-20 -mx-5 md:-mx-12 relative overflow-hidden my-24 md:my-32 page-shadow">
+                <!-- 背景巨型浮水印 -->
+                <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] opacity-[0.02] pointer-events-none">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-dnd-gold" fill="currentColor"><path d="M50 0L60 40H100L70 60L80 100L50 80L20 100L30 60L0 40H40L50 0Z"/></svg>
+                </div>
+                
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-16 md:mb-24 reveal">
+                        <h3 class="font-cinzel text-3xl md:text-4xl text-dnd-light tracking-[0.2em] md:tracking-[0.3em] mb-3 md:mb-4 uppercase">Traits & Paradox</h3>
+                        <p class="text-dnd-gold font-cinzel text-sm md:text-base tracking-widest">性格与悖论</p>
+                        <div class="h-[1px] w-16 md:w-24 bg-dnd-gold/40 mx-auto mt-4 md:mt-6"></div>
+                    </div>
+
+                    <div class="space-y-12 md:space-y-16">
+                        <!-- 行 1 -->
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8 items-start reveal">
+                            <div class="md:w-1/3 flex items-start gap-3 md:gap-4">
+                                <div class="w-2 h-2 md:w-3 md:h-3 mt-1.5 md:mt-2 rotate-45 bg-dnd-gold shadow-[0_0_8px_#c5a059]"></div>
+                                <div>
+                                    <h4 class="font-cinzel text-lg md:text-xl text-dnd-light font-bold">直接与纯粹</h4>
+                                    <p class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-[0.2em] uppercase mt-1">Communication</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3 border-l-2 md:border-l border-dnd-gold/20 pl-4 md:pl-8 pb-2 md:pb-4">
+                                <p class="text-sm md:text-base text-[#b5aa9d] leading-relaxed">说话短，思路也短，不喜欢把一句话绕出几层意思。比起“从前发生了什么”，她更在乎“现在该做什么”。行动往往先于语言。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 行 2 -->
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8 items-start reveal">
+                            <div class="md:w-1/3 flex items-start gap-3 md:gap-4">
+                                <div class="w-2 h-2 md:w-3 md:h-3 mt-1.5 md:mt-2 rotate-45 bg-dnd-gold shadow-[0_0_8px_#c5a059]"></div>
+                                <div>
+                                    <h4 class="font-cinzel text-lg md:text-xl text-dnd-light font-bold">群体的怒火</h4>
+                                    <p class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-[0.2em] uppercase mt-1">Instinct</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3 border-l-2 md:border-l border-dnd-gold/20 pl-4 md:pl-8 pb-2 md:pb-4">
+                                <p class="text-sm md:text-base text-[#b5aa9d] leading-relaxed">愤怒大多不深，更像一种短促的反弹。比起自己被冒犯，她更在意朋友被冒犯，更在意熟悉的地方被外人闯入。愤怒首要指向“我的同伴”。</p>
+                            </div>
+                        </div>
+
+                        <!-- 行 3 -->
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8 items-start reveal">
+                            <div class="md:w-1/3 flex items-start gap-3 md:gap-4">
+                                <div class="w-2 h-2 md:w-3 md:h-3 mt-1.5 md:mt-2 rotate-45 bg-dnd-gold shadow-[0_0_8px_#c5a059]"></div>
+                                <div>
+                                    <h4 class="font-cinzel text-lg md:text-xl text-dnd-light font-bold">巨兽的温柔</h4>
+                                    <p class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-[0.2em] uppercase mt-1">Nature</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3 border-l-2 md:border-l border-dnd-gold/20 pl-4 md:pl-8">
+                                <p class="text-sm md:text-base text-[#b5aa9d] leading-relaxed">身上并不只有粗粝。巨大的身体里，仍保留着对亮晶晶的小玩意、颜色鲜亮的花，以及小猫等弱小生命的天然偏爱。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: 人际羁绊 -->
+            <section class="mb-16 md:mb-20">
+                <div class="text-center mb-16 md:mb-20 reveal">
+                    <div class="flex items-center justify-center gap-4 text-dnd-gold mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 md:w-10 md:h-10"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                    <h3 class="font-cinzel text-3xl md:text-4xl text-dnd-light tracking-[0.2em] uppercase mt-4 md:mt-6 mb-3 md:mb-4">The Pack</h3>
+                    <p class="font-cinzel text-dnd-gold tracking-widest text-sm md:text-base">羁绊与归属</p>
+                    <div class="h-[1px] w-16 md:w-24 bg-dnd-gold/40 mx-auto mt-4 md:mt-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Bond 1 -->
+                    <div class="relative p-8 md:p-10 border border-dnd-gold/20 bg-dnd-paper hover:-translate-y-2 md:hover:-translate-y-4 transition-transform duration-500 reveal group mt-6 md:mt-0">
+                        <div class="absolute -top-5 md:-top-6 left-1/2 transform -translate-x-1/2 w-10 h-10 md:w-12 md:h-12 bg-dnd-paper border-2 border-dnd-gold rotate-45 flex items-center justify-center group-hover:bg-dnd-gold transition-colors duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="-rotate-45 text-dnd-gold group-hover:text-black w-5 h-5 md:w-6 md:h-6"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+                        </div>
+                        
+                        <div class="text-center mt-6 md:mt-8 mb-6 md:mb-8">
+                            <h4 class="font-cinzel text-lg md:text-xl text-dnd-light font-bold">Alberina</h4>
+                            <p class="text-dnd-muted text-xs md:text-sm mt-1 font-bold">阿尔贝莉娜</p>
+                            <div class="inline-block border-b border-dnd-gold/40 pb-1 md:pb-2 mt-3 md:mt-4">
+                                <span class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-widest uppercase">导师 / 权威</span>
+                            </div>
+                        </div>
+                        <p class="text-[#958c81] text-xs md:text-sm leading-relaxed text-center">最信任的人。阿尔贝莉娜会解释世界，给出清楚的答案。芙勒维拉对她带有近乎学生气的敬重，被点名时会下意识坐直。她认这个人，认她的话。</p>
+                    </div>
+
+                    <!-- Bond 2 -->
+                    <div class="relative p-8 md:p-10 border border-dnd-gold/20 bg-dnd-paper hover:-translate-y-2 md:hover:-translate-y-4 transition-transform duration-500 reveal reveal-delay-1 group mt-6 md:mt-0">
+                        <div class="absolute -top-5 md:-top-6 left-1/2 transform -translate-x-1/2 w-10 h-10 md:w-12 md:h-12 bg-dnd-paper border-2 border-dnd-gold rotate-45 flex items-center justify-center group-hover:bg-dnd-gold transition-colors duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="-rotate-45 text-dnd-gold group-hover:text-black w-5 h-5 md:w-6 md:h-6"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+                        </div>
+                        
+                        <div class="text-center mt-6 md:mt-8 mb-6 md:mb-8">
+                            <h4 class="font-cinzel text-lg md:text-xl text-dnd-light font-bold">Shirul</h4>
+                            <p class="text-dnd-muted text-xs md:text-sm mt-1 font-bold">雪露</p>
+                            <div class="inline-block border-b border-dnd-gold/40 pb-1 md:pb-2 mt-3 md:mt-4">
+                                <span class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-widest uppercase">战友 / 挚友</span>
+                            </div>
+                        </div>
+                        <p class="text-[#958c81] text-xs md:text-sm leading-relaxed text-center">起点源于一次在野外的遇见。后来一起上课、吃苦、出丑，并肩作战。不只是“处得好”，更像是一起熬出来的朋友。她心里极深地认雪露。</p>
+                    </div>
+
+                    <!-- Bond 3 -->
+                    <div class="relative p-8 md:p-10 border border-dnd-gold/20 bg-dnd-paper hover:-translate-y-2 md:hover:-translate-y-4 transition-transform duration-500 reveal reveal-delay-2 group mt-6 md:mt-0">
+                        <div class="absolute -top-5 md:-top-6 left-1/2 transform -translate-x-1/2 w-10 h-10 md:w-12 md:h-12 bg-dnd-paper border-2 border-dnd-gold rotate-45 flex items-center justify-center group-hover:bg-dnd-gold transition-colors duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="-rotate-45 text-dnd-gold group-hover:text-black w-5 h-5 md:w-6 md:h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+                        </div>
+                        
+                        <div class="text-center mt-6 md:mt-8 mb-6 md:mb-8">
+                            <h4 class="font-cinzel text-lg md:text-xl text-dnd-light font-bold">Windreed Wayfarers</h4>
+                            <p class="text-dnd-muted text-xs md:text-sm mt-1 font-bold">风芦旅人</p>
+                            <div class="inline-block border-b border-dnd-gold/40 pb-1 md:pb-2 mt-3 md:mt-4">
+                                <span class="font-cinzel text-[10px] md:text-xs text-dnd-gold tracking-widest uppercase">归属 / 现实</span>
+                            </div>
+                        </div>
+                        <p class="text-[#958c81] text-xs md:text-sm leading-relaxed text-center">重新走回“人”的世界的现实。在这里学着说话、生活、做错事、往前走。她记住谁和自己一起上路，谁没有把她当怪物扔下。</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-dnd-gold/20 py-12 md:py-16 text-center bg-[#0a0908] px-4">
+        <div class="flex justify-center items-center gap-4 md:gap-6 mb-6 md:mb-8 opacity-60">
+            <div class="w-16 md:w-24 h-[1px] bg-dnd-gold"></div>
+            <div class="w-3 h-3 md:w-4 md:h-4 rotate-45 border-2 border-dnd-gold"></div>
+            <div class="w-16 md:w-24 h-[1px] bg-dnd-gold"></div>
+        </div>
+        <p class="font-cinzel text-dnd-gold text-xs md:text-sm tracking-[0.3em] md:tracking-[0.5em] uppercase font-bold">
+            Flavilar • Dragonborn • Barbarian
+        </p>
+        <p class="font-garamond text-dnd-muted text-xs md:text-sm mt-3 md:mt-4 italic">The Windreed Wayfarers Archives</p>
+        <p class="text-dnd-muted/40 text-[10px] md:text-xs mt-4 md:mt-6 leading-relaxed">角色人设 / Character by 椿 · 界面与文案 / Page & Copy by Lavro</p>
+    </footer>
+
+    <!-- 脚本逻辑 -->
+    <script>
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+        // 检测是否为移动端
+        const isMobile = window.innerWidth < 768;
+
+        // 2. 初始化 Lenis (平滑滚动)
+        const lenis = new Lenis({
+            autoRaf: true,
+            lerp: 0.085,
+            smoothWheel: finePointer && !reducedMotion,
+            syncTouch: false,
+        });
+
+        // 3. 滚动视差与模糊特效 (Hero Section)
+        const heroContent = document.getElementById('hero-content');
+        
+        lenis.on('scroll', (e) => {
+            const scrollY = window.scrollY;
+            if (!reducedMotion && scrollY < window.innerHeight && heroContent) {
+                const yPos = scrollY * (isMobile ? 0.25 : 0.4);
+                const scale = 1 + (scrollY * (isMobile ? 0.0002 : 0.0005));
+                const opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * (isMobile ? 0.5 : 0.7))));
+                const blur = Math.min(10, scrollY * 0.02);
+                heroContent.style.transform = `translate3d(0, ${yPos}px, 0) scale(${scale})`;
+                heroContent.style.opacity = opacity;
+                heroContent.style.filter = `blur(${blur}px)`;
+            }
+        });
+
+        // 4. Scroll Reveal
+        const observerOptions = {
+            root: null,
+            rootMargin: isMobile ? '0px 0px 0px 0px' : '0px 0px -10% 0px',
+            threshold: 0.1
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            revealObserver.observe(el);
+        });
+    </script>
+</body>
+</html>

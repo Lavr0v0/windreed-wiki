@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alberina · 阿尔贝莉娜 · The Windreed Wayfarers</title>
+    <meta name="description" content="Alberina（阿尔贝莉娜）是基于龙与地下城（D&D）规则的同人自设角色。角色设定由 SSnO 创作，页面由 Lavro 制作。">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Alberina · 阿尔贝莉娜 – D&D 同人自设角色">
+    <meta property="og:description" content="基于 D&D 规则的高精灵法师角色档案。角色设定由 SSnO 创作，页面由 Lavro 制作。">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="The Windreed Wayfarers">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Alberina – D&D 同人自设角色展示">
+    <meta name="twitter:description" content="基于 D&D 规则的同人自设高精灵法师角色展示页面。非官方内容。">
+    <meta name="author" content="Lavro">
+    <meta name="theme-color" content="#040d1c">
+    <link rel="canonical" href="https://windreed.wiki/DnD/Alberina/">
+    <meta property="og:url" content="https://windreed.wiki/DnD/Alberina/">
+    <link rel="stylesheet" href="tailwind.css">
+    <link rel="stylesheet" href="../shared/page.css">
+    <script src="../shared/lenis.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Noto Serif SC';
+            src: url('fonts/NotoSerifSC-subset.woff2') format('woff2');
+            font-weight: 300 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        :root {
+            --astral-blue: #040d1c;
+            --astral-blue-light: #12347a;
+            --star-gold: #c7a76d;
+            --paper: #f2f2ef;
+            --scroll: 0;
+            
+            --p-scale: 0.7; 
+        }
+
+        @media (max-width: 768px) {
+            
+            :root { --p-scale: 0.35; } 
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--astral-blue);
+            
+            font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', 'PT Serif', 'Georgia', serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        .font-divine { font-family: 'Archive Cinzel', 'Times New Roman', serif; }
+        .font-editorial { font-family: Georgia, 'Times New Roman', serif; }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.15;
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, var(--astral-blue) 0.5px, transparent 0.5px),
+                linear-gradient(to bottom, var(--astral-blue) 0.5px, transparent 0.5px);
+            mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+        }
+        .bg-nodes {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.4;
+            background-size: 200px 200px;
+            background-image: radial-gradient(circle at 0 0, var(--star-gold) 1.5px, transparent 1.5px);
+            mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+        }
+
+        @media (max-width: 768px) {
+            .bg-grid { background-size: 20px 20px; }
+            .bg-nodes { background-size: 100px 100px; }
+        }
+
+        .text-hollow {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--astral-blue);
+        }
+        .text-hollow-gold {
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--star-gold);
+        }
+        
+        .bg-text-massive {
+            font-size: 25vw;
+            line-height: 0.8;
+            white-space: nowrap;
+            opacity: 0.05;
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .vertical-rl {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .glass-card {
+            background: rgba(242, 242, 239, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(199, 167, 109, 0.4);
+        }
+        .glass-card-dark {
+            background: rgba(4, 13, 28, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 0.5px solid rgba(199, 167, 109, 0.2);
+            color: var(--paper);
+        }
+
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 4.5rem;
+            line-height: 0.8;
+            padding-top: 0.3rem;
+            margin-right: 0.75rem;
+            color: var(--star-gold);
+            font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', 'Cinzel', serif;
+            font-weight: 700;
+        }
+
+        .thread {
+            position: absolute;
+            width: 0.5px;
+            background: linear-gradient(to bottom, transparent, var(--astral-blue-light) 20%, var(--astral-blue) 80%, transparent);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        .thread-gold {
+            background: linear-gradient(to bottom, transparent, var(--star-gold) 50%, transparent);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        
+        .parallax-el {
+            will-change: transform;
+        }
+
+        
+        .hero-enter {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#c7a76d] selection:text-white">
+    <a class="archive-return" href="../" aria-label="返回人物专页索引"><span aria-hidden="true">←</span><b>返回卷册</b></a>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "Alberina – D&D 同人自设角色展示",
+      "description": "基于 D&D 规则的同人自设（OC）角色 Alberina（阿尔贝莉娜），高精灵法师。非官方内容。",
+      "genre": "Fan-made Original Character (OC)",
+      "creator": { "@type": "Person", "name": "SSnO" },
+      "author": { "@type": "Person", "name": "Lavro" },
+      "isPartOf": { "@type": "WebSite", "name": "The Windreed Wayfarers" }
+    }
+    </script>
+
+    <div class="bg-grid"></div>
+    <div class="bg-nodes"></div>
+
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] md:w-[80vw] md:h-[80vw] opacity-[0.3] pointer-events-none z-0" id="astrolabe">
+        <svg viewBox="0 0 100 100" class="w-full h-full stroke-[var(--astral-blue)] fill-none" stroke-width="0.05">
+            <circle cx="50" cy="50" r="48" stroke-dasharray="0.5 1.5"/>
+            <circle cx="50" cy="50" r="40" />
+            <circle cx="50" cy="50" r="32" stroke-dasharray="2 4"/>
+            <path d="M50 2 L50 98 M2 50 L98 50" />
+            <path d="M16 16 L84 84 M16 84 L84 16" />
+            <path d="M50 20 C50 40 40 50 20 50 C40 50 50 60 50 80 C50 60 60 50 80 50 C60 50 50 40 50 20 Z" fill="var(--astral-blue)" stroke="none" opacity="0.3"/>
+        </svg>
+    </div>
+
+    <main id="main-content" class="relative z-10 w-full">
+        
+        
+        <section class="relative w-full h-[140vh] flex items-center justify-center">
+            
+            
+            <div class="relative w-full max-w-[1400px] h-screen flex items-center justify-center select-none mt-[-35vh]">
+                
+                
+                <svg class="absolute inset-0 w-full h-full pointer-events-none parallax-el z-0" data-speed="0.02" viewBox="0 0 1400 800">
+                    
+                    <line x1="100" y1="400" x2="1300" y2="400" stroke="var(--astral-blue)" stroke-width="0.3" stroke-dasharray="10 20" opacity="0.2"/>
+                    
+                    
+                    <path d="M 150 420 Q 300 300 450 400 T 750 400 T 1050 400 T 1250 380" fill="none" stroke="var(--star-gold)" stroke-width="0.6" stroke-dasharray="2 4" opacity="0.3"/>
+                    
+                    
+                    <g opacity="0.3">
+                        <circle cx="150" cy="420" r="2" fill="var(--star-gold)"/>
+                        <circle cx="450" cy="400" r="3" fill="none" stroke="var(--star-gold)" stroke-width="0.8"/>
+                        <circle cx="700" cy="400" r="6" fill="none" stroke="var(--star-gold)" stroke-width="1.2"/>
+                        <circle cx="1050" cy="400" r="3" fill="none" stroke="var(--star-gold)" stroke-width="0.8"/>
+                        <circle cx="1250" cy="380" r="2" fill="var(--star-gold)"/>
+                    </g>
+                </svg>
+
+                
+                <div class="relative w-full flex items-center justify-between px-[10%] font-divine z-10">
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter hero-enter-up ml-3" data-speed="-0.12" style="--settle-y: -8px">
+                        <div class="absolute w-[140%] aspect-square rounded-full border-[1.5px] border-[var(--astral-blue)] opacity-30"></div>
+                        <div class="absolute w-[80%] aspect-square rounded-full border-[1px] border-dashed border-[var(--astral-blue)] opacity-15"></div>
+                        <span class="text-[12vw] md:text-[8vw] leading-none text-hollow relative z-10">A</span>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter -ml-4" data-speed="0.08" style="--settle-y: 6px">
+                        <div class="absolute w-2 h-2 bg-[var(--star-gold)] rotate-45 -top-6 opacity-30"></div>
+                        <div class="absolute w-[0.75px] h-[120%] bg-[var(--star-gold)] opacity-15"></div>
+                        <span class="text-[10vw] md:text-[7vw] leading-none text-[var(--astral-blue)] relative z-10">L</span>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter hero-enter-up mr-2" data-speed="-0.18" style="--settle-y: -12px">
+                        <div class="absolute w-[160%] aspect-square rounded-full border-[1.5px] border-dashed border-[var(--star-gold)] opacity-30"></div>
+                        <div class="absolute w-[100%] aspect-square rounded-full border-[1px] border-[var(--star-gold)] opacity-15"></div>
+                        <span class="text-[14vw] md:text-[9vw] leading-none font-bold text-hollow-gold relative z-10">B</span>
+                    </div>
+
+                    
+                    <div class="flex flex-col items-center mx-4 md:mx-8 parallax-el z-20 hero-enter" data-speed="-0.04">
+                        <div class="w-[0.75px] h-16 bg-gradient-to-t from-[var(--astral-blue)] to-transparent mb-4 opacity-30"></div>
+                        <h2 class="vertical-rl font-semibold text-3xl md:text-5xl tracking-[0.6em] text-[var(--astral-blue)] py-2" style="font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;">阿尔贝莉娜</h2>
+                        <div class="w-[0.75px] h-24 bg-gradient-to-b from-[var(--astral-blue)] to-transparent mt-4 opacity-30"></div>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter hero-enter-up -ml-5" data-speed="0.12" style="--settle-y: 5px">
+                        <div class="absolute w-[150%] h-[0.75px] bg-[var(--astral-blue-light)] rotate-45 opacity-30"></div>
+                        <div class="absolute w-[150%] h-[0.75px] bg-[var(--astral-blue-light)] -rotate-45 opacity-30"></div>
+                        <div class="absolute w-[80%] aspect-square rounded-full border-[1px] border-[var(--astral-blue-light)] opacity-15"></div>
+                        <span class="text-[11vw] md:text-[7.5vw] leading-none text-[var(--astral-blue-light)] relative z-10">E</span>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter ml-3" data-speed="-0.22" style="--settle-y: -10px">
+                        <div class="absolute w-[120%] h-[80%] border-y-[1.5px] border-[var(--astral-blue)] opacity-30"></div>
+                        <span class="text-[13vw] md:text-[8.5vw] leading-none text-hollow relative z-10">R</span>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter hero-enter-up -mr-3" data-speed="0.06" style="--settle-y: 7px">
+                        <div class="absolute w-[250%] aspect-square rounded-full border-[1.5px] border-[var(--star-gold)] opacity-30"></div>
+                        <div class="absolute w-[120%] aspect-square rounded-full border-[1.5px] border-[var(--star-gold)] opacity-30"></div>
+                        <div class="absolute w-[180%] aspect-square rounded-full border-[1px] border-dashed border-[var(--star-gold)] opacity-15"></div>
+                        <span class="text-[9vw] md:text-[6vw] leading-none text-[var(--star-gold)] relative z-10">I</span>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter ml-4" data-speed="-0.1" style="--settle-y: -6px">
+                        <div class="absolute w-[0.75px] h-[150%] bg-[var(--astral-blue)] opacity-30"></div>
+                        <div class="absolute w-[100%] h-[0.75px] bg-[var(--astral-blue)] opacity-15"></div>
+                        <span class="text-[11vw] md:text-[7.5vw] leading-none text-[var(--astral-blue)] relative z-10">N</span>
+                    </div>
+
+                    
+                    <div class="parallax-el relative flex items-center justify-center hero-enter hero-enter-up -ml-2" data-speed="0.15" style="--settle-y: 9px">
+                        <div class="absolute w-[130%] aspect-square border-[1.5px] border-[var(--astral-blue)] rotate-45 opacity-30"></div>
+                        <div class="absolute w-[80%] aspect-square border-[1px] border-[var(--astral-blue)] rotate-45 opacity-15"></div>
+                        <span class="text-[13vw] md:text-[8.5vw] leading-none text-hollow-gold relative z-10">A</span>
+                    </div>
+                </div>
+
+                
+                
+                <div class="absolute left-[12%] bottom-[20%] md:bottom-[25%] flex items-start space-x-4 parallax-el hero-enter" data-speed="-0.08">
+                    <div class="flex flex-col items-center">
+                        <div class="w-[1px] h-12 bg-[var(--star-gold)] mb-2"></div>
+                        <div class="w-2 h-2 border border-[var(--star-gold)] rotate-45"></div>
+                    </div>
+                    <div class="flex flex-col pt-4">
+                        <span class="font-divine text-[10px] tracking-widest text-[var(--star-gold)] mb-1">=RACE</span>
+                        <span class="text-sm font-bold tracking-[0.2em]">HIGH ELF / 高精灵</span>
+                        <span class="text-[9px] opacity-40 mt-1 uppercase tracking-tighter italic"></span>
+                    </div>
+                </div>
+
+                
+                <div class="absolute right-[12%] top-[15%] md:top-[20%] flex flex-row-reverse items-start space-x-reverse space-x-4 text-right parallax-el hero-enter hero-enter-up" data-speed="0.06">
+                    <div class="flex flex-col items-center">
+                        <div class="w-2 h-2 bg-[var(--astral-blue-light)] rotate-45"></div>
+                        <div class="w-[1px] h-12 bg-[var(--astral-blue-light)] mt-2"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-divine text-[10px] tracking-widest text-[var(--star-gold)] mb-1">=CLASS</span>
+                        <span class="text-sm font-bold tracking-[0.2em]">WIZARD / 法师</span>
+                        <span class="text-[9px] opacity-40 mt-1 tracking-widest">WIND REED TRAVELERS</span>
+                    </div>
+                </div>
+
+                
+                <div class="absolute left-1/2 bottom-[15%] -translate-x-1/2 flex items-center space-x-8 opacity-40 parallax-el hero-enter" data-speed="-0.1">
+                    <p class="font-editorial italic text-xs tracking-[0.4em] uppercase">Quiet</p>
+                    <div class="w-1 h-1 bg-current rounded-full"></div>
+                    <p class="font-editorial italic text-xs tracking-[0.4em] uppercase">Rational</p>
+                    <div class="w-1 h-1 bg-current rounded-full"></div>
+                    <p class="font-editorial italic text-xs tracking-[0.4em] uppercase">Ethereal</p>
+                </div>
+
+            </div>
+
+            
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-40 parallax-el hero-enter" data-speed="0.3">
+                <div class="w-[0.5px] h-16 bg-gradient-to-b from-[var(--astral-blue)] to-transparent"></div>
+            </div>
+        </section>
+
+        
+        <section class="relative w-full min-h-screen px-4 md:px-12 py-32 mt-20">
+            
+            <div class="bg-text-massive top-0 left-[-5%] font-divine parallax-el text-hollow" data-speed="0.2">I.</div>
+
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 relative">
+                
+                
+                <div class="md:col-span-2 hidden md:flex flex-col items-center relative pt-32">
+                    <div class="thread h-full top-0"></div>
+                    <div class="parallax-el bg-[var(--paper)] py-8 z-10" data-speed="0.1">
+                        <p class="vertical-rl font-divine tracking-[0.5em] text-xl text-[var(--astral-blue-light)]">CHRONICLE</p>
+                    </div>
+                </div>
+
+                
+                <div class="md:col-span-5 relative mt-12 md:mt-32">
+                    <div class="thread h-[200%] -top-32 hidden md:block"></div>
+                    
+                    <div class="glass-card p-8 md:p-12 relative z-10 parallax-el" data-speed="-0.15">
+                        <svg class="w-5 h-5 text-[var(--star-gold)] absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[var(--paper)] opacity-30" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0 C12 8 16 12 24 12 C16 12 12 16 12 24 C12 16 8 12 0 12 C8 12 12 8 12 0 Z"/>
+                        </svg>
+                        
+                        <h2 class="font-divine text-2xl mb-8 border-b border-[var(--astral-blue)]/20 pb-4 tracking-widest">
+                            <span class="text-xs text-[var(--star-gold)] align-top mr-2">01</span> THE SCHOLAR
+                        </h2>
+                        
+                        
+                        <div class="parallax-el" data-speed="-0.05">
+                            <p class="text-sm md:text-base leading-relaxed mb-6 drop-cap text-justify">
+                                阿尔贝莉娜是风芦旅人中的高精灵法师，也是队伍中学识最完整的人。她出身优渥，自幼接受良好教育，长期浸润于书籍、法术与系统性的知识训练之中，因此拥有远高于常人的阅读量、理解力与施法素养。
+                            </p>
+                            <p class="text-sm md:text-base leading-relaxed text-justify">
+                                她并非真正意义上老练入世的人。与其说她“成熟”，不如说她<strong class="font-semibold text-[var(--astral-blue-light)]">清醒、安静、节奏很慢</strong>。她懂得很多，却不真正熟悉世俗生活的粗粝与复杂；她擅长思考，却不总愿意主动介入；她看起来有距离感，但并不冷淡，只是不习惯把亲近表达得太热烈。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="md:col-span-5 relative mt-32 md:mt-64">
+                    <div class="thread thread-gold h-[150%] -top-20 hidden md:block"></div>
+                    
+                    <div class="glass-card p-8 md:p-12 relative z-10 parallax-el" data-speed="-0.25">
+                        <h2 class="font-divine text-2xl mb-8 border-b border-[var(--star-gold)]/30 pb-4 tracking-widest text-[var(--astral-blue-light)]">
+                            <span class="text-xs text-[var(--astral-blue)] align-top mr-2">02</span> ORIGIN
+                        </h2>
+                        
+                        <div class="parallax-el" data-speed="-0.08">
+                            <p class="text-sm md:text-base leading-relaxed mb-6 text-justify">
+                                她从小生活在非常优渥的环境中。学识并非浮在表面的“会一点”，而是经过长时间积累后形成的完整体系。但这份背景也带来了局限——她的知识大多来自教育与阅读，而非现实的摸爬滚打。她聪明，但不圆滑；通透，却不世故。
+                            </p>
+                            <div class="w-full h-[0.5px] bg-[var(--astral-blue)]/20 my-6"></div>
+                            <p class="text-sm md:text-base leading-relaxed text-justify font-editorial italic">
+                                在接近成年（约九十岁）时，她顺着性子离开了拘束的生活节奏，来到雪露村子附近的树林中。这段经历让她身上同时保留了两种气质：出身带来的精致书卷气，与后来养成的林间些许懒散。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="relative w-full py-40 mt-20">
+            
+            <div class="absolute top-0 left-0 w-full h-[0.5px] bg-[var(--astral-blue)]/20"></div>
+            
+            <div class="bg-text-massive top-10 right-[-5%] font-divine parallax-el text-[var(--star-gold)]/10" data-speed="0.15">II.</div>
+
+            <div class="max-w-6xl mx-auto px-4 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 relative">
+                
+                
+                <div class="relative w-full parallax-el z-20" data-speed="-0.3">
+                    <div class="glass-card-dark p-10 md:p-16 relative overflow-hidden group">
+                        
+                        <svg class="absolute -bottom-10 -right-10 w-48 h-48 text-[var(--star-gold)] opacity-10 group-hover:rotate-45 transition-transform duration-1000" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.5">
+                            <circle cx="50" cy="50" r="40"/>
+                            <path d="M50 0 L50 100 M0 50 L100 50" />
+                            <rect x="20" y="20" width="60" height="60" transform="rotate(45 50 50)"/>
+                        </svg>
+
+                        <h2 class="font-divine text-3xl mb-12 tracking-[0.2em] text-[var(--star-gold)] flex items-center">
+                            NATURE
+                            <span class="w-12 h-[0.5px] bg-[var(--star-gold)] ml-6 inline-block"></span>
+                        </h2>
+
+                        <div class="space-y-10">
+                            <div>
+                                <h3 class="font-bold text-lg mb-3 tracking-widest text-[var(--paper)]">安静而有距离感</h3>
+                                <p class="text-sm leading-relaxed text-white/70 text-justify">
+                                    她给人的距离感是天然流露的：说话不急，情绪不吵，边界感清楚。亲近通常很轻，不闹也不热烈。她习惯先自己想清楚，再决定说不说。不是回避交流，而是不喜欢把思考过程全摊在人前。
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-3 tracking-widest text-[var(--paper)]">日常的少女感</h3>
+                                <p class="text-sm leading-relaxed text-white/70 text-justify">
+                                    休息时，她会找个树桩坐着，晃晃腿，或者单纯发呆。真正放松时会显得很松，甚至有一点少女气的散漫。这与她“高冷精灵法师”的第一印象形成了反差。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="relative pt-20 md:pt-40 parallax-el z-10" data-speed="0.05">
+                    <h2 class="font-divine text-2xl mb-8 tracking-[0.2em] text-[var(--astral-blue-light)]">ASTRAL NODE</h2>
+                    
+                    <ul class="space-y-12 relative border-l-[0.5px] border-[var(--astral-blue)]/30 pl-8 ml-2">
+                        
+                        <div class="absolute w-2 h-2 bg-[var(--star-gold)] rotate-45 -left-[4.5px] top-2"></div>
+                        <div class="absolute w-1.5 h-1.5 border border-[var(--astral-blue)] rotate-45 -left-[3.5px] top-36 bg-[var(--paper)]"></div>
+                        <div class="absolute w-1.5 h-1.5 border border-[var(--astral-blue)] rotate-45 -left-[3.5px] top-64 bg-[var(--paper)]"></div>
+
+                        <li class="parallax-el" data-speed="-0.02">
+                            <h4 class="font-bold text-md mb-2">学识核心</h4>
+                            <p class="text-sm text-[var(--astral-blue)]/80 leading-relaxed text-justify">在文字、理论、法术等概念理解上拥有最完整的框架，解释与整理的工作往往自然落到她这里。</p>
+                        </li>
+                        <li class="parallax-el" data-speed="-0.04">
+                            <h4 class="font-bold text-md mb-2">法术使用者</h4>
+                            <p class="text-sm text-[var(--astral-blue)]/80 leading-relaxed text-justify">施法与整体知识体系相连，面对复杂问题时，能同时从法术与逻辑两个方向切入。</p>
+                        </li>
+                        <li class="parallax-el" data-speed="-0.06">
+                            <h4 class="font-bold text-md mb-2">队伍中“清楚的人”</h4>
+                            <p class="text-sm text-[var(--astral-blue)]/80 leading-relaxed text-justify">不一定最主动发言，但常能把事说到点子上。不刻意领导，但在队伍混乱时，总能将其理顺，是稳定的一块骨架。</p>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        
+        <section class="relative w-full min-h-screen py-32 mt-20 overflow-hidden">
+            <div class="bg-text-massive bottom-[-10%] right-[10%] font-divine parallax-el text-hollow" data-speed="0.25">III.</div>
+            
+            <div class="text-center mb-32 parallax-el" data-speed="-0.1">
+                <h2 class="font-divine text-4xl md:text-5xl tracking-[0.3em] text-[var(--astral-blue)] text-hollow relative inline-block">
+                    RESONANCE
+                    <svg class="absolute -top-6 -right-8 w-6 h-6 text-[var(--star-gold)] opacity-30" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0 C12 8 16 12 24 12 C16 12 12 16 12 24 C12 16 8 12 0 12 C8 12 12 8 12 0 Z"/>
+                    </svg>
+                </h2>
+                <p class="mt-4 text-xs tracking-widest text-[var(--astral-blue-light)]">INTERTWINED FATES</p>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 h-auto md:h-[800px] relative">
+                
+                <div class="relative h-full flex justify-center md:items-start pt-0">
+                    <div class="thread h-full -top-32 hidden md:block opacity-50"></div>
+                    <div class="glass-card p-8 w-full max-w-sm relative z-10 parallax-el" data-speed="-0.15">
+                        <div class="text-[var(--star-gold)] font-divine text-sm mb-2">01</div>
+                        <h3 class="font-bold text-xl mb-4 text-[var(--astral-blue-light)]">雪露 <span class="font-editorial text-sm italic font-normal text-[var(--astral-blue)]/60">Shirul</span></h3>
+                        <p class="text-sm leading-relaxed text-justify mb-4">
+                            她最特殊的人。几乎从雪露出生起就陪在身边，看着她的意志慢慢长出。
+                        </p>
+                        <p class="text-sm leading-relaxed text-justify text-[var(--astral-blue)]/70">
+                            早期接近照看与引导；后来趋向平等并行。不会替雪露做决定，但在雪露面前，她那层对外的距离感会自然消失，是一种习惯了彼此存在的自然。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative h-full flex justify-center md:items-center pt-12 md:pt-0">
+                    <div class="thread h-[150%] -top-40 hidden md:block opacity-50"></div>
+                    <div class="glass-card p-8 w-full max-w-sm relative z-10 parallax-el" data-speed="-0.28">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--astral-blue)] rotate-45"></div>
+                        <div class="text-[var(--star-gold)] font-divine text-sm mb-2">02</div>
+                        <h3 class="font-bold text-xl mb-4 text-[var(--astral-blue-light)]">芙勒维拉 <span class="font-editorial text-sm italic font-normal text-[var(--astral-blue)]/60">Flavilar</span></h3>
+                        <p class="text-sm leading-relaxed text-justify mb-4">
+                            接近安静稳定的教导关系。承担起为失忆的她解释基础认知的责任。
+                        </p>
+                        <p class="text-sm leading-relaxed text-justify text-[var(--astral-blue)]/70">
+                            态度认真，将其视为“正在重新把自己搭起来”的人，而不是迟钝者。关系不算热烈，却有着很稳定的尊重感。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative h-full flex justify-center md:items-end pt-12 md:pt-0 pb-20">
+                    <div class="thread h-full -top-20 hidden md:block opacity-50"></div>
+                    <div class="glass-card p-8 w-full max-w-sm relative z-10 parallax-el border-t-[var(--star-gold)]" data-speed="-0.1">
+                        <div class="text-[var(--star-gold)] font-divine text-sm mb-2">03</div>
+                        <h3 class="font-bold text-xl mb-4 text-[var(--astral-blue-light)]">风芦旅人 <span class="font-editorial text-sm italic font-normal text-[var(--astral-blue)]/60">Travelers</span></h3>
+                        <p class="text-sm leading-relaxed text-justify mb-4">
+                            不是最先把“我们”挂在嘴边的人，保留着自己的节奏与边界。
+                        </p>
+                        <p class="text-sm leading-relaxed text-justify text-[var(--astral-blue)]/70">
+                            但早就已经在这段同行里了。对她来说，这不是非要说得很响的归属，而是一种已经存在、默认会继续下去的自然同行。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="w-full py-20 relative z-20">
+            <div class="max-w-4xl mx-auto flex flex-col items-center opacity-60 parallax-el" data-speed="-0.05">
+                <svg class="w-8 h-8 text-[var(--astral-blue)] mb-6" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.5">
+                    <circle cx="50" cy="50" r="40"/>
+                    <circle cx="50" cy="50" r="10" fill="currentColor"/>
+                    <path d="M50 0 L50 100 M0 50 L100 50" />
+                </svg>
+                <p class="font-divine tracking-[0.5em] text-sm text-[var(--astral-blue)]">END OF CHRONICLE</p>
+                <p class="font-editorial text-xs mt-4 text-[var(--astral-blue)]/60">Recorded in the Astral Archives</p>
+                <p class="text-xs mt-6 text-[var(--astral-blue)]/40 leading-relaxed">角色人设 / Character by SSnO · 界面与文案 / Page & Copy by Lavro</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            const lenis = new Lenis({
+                autoRaf: true,
+                lerp: 0.085,
+                smoothWheel: finePointer && !reducedMotion,
+                syncTouch: false,
+            });
+
+            const parallaxEls = document.querySelectorAll('.parallax-el');
+            const astrolabe = document.getElementById('astrolabe');
+            const heroEls = document.querySelectorAll('.hero-enter');
+            const tweens = [];
+            const DURATION = 720;
+            let n = heroEls.length;
+            const letterContainer = document.querySelector('.font-divine.z-10');
+            let cumulative = 80;
+            heroEls.forEach((el, i) => {
+                const isUp = el.classList.contains('hero-enter-up');
+                const startY = isUp ? -window.innerHeight : window.innerHeight;
+                const settleY = parseFloat(getComputedStyle(el).getPropertyValue('--settle-y')) || 0;
+                const isLetter = letterContainer && letterContainer.contains(el);
+                if (!isLetter) {
+                    tweens.push({ el, startY, settleY, triggerAt: cumulative * 0.5 + 50, startTime: null, done: false });
+                } else {
+                    tweens.push({ el, startY, settleY, triggerAt: cumulative, startTime: null, done: false });
+                    const t = n > 1 ? i / (n - 1) : 0;
+                    const interval = 100 + 350 * Math.pow(t, 3);
+                    cumulative += interval + (Math.random() - 0.5) * 80;
+                }
+            });
+
+            const pageStart = performance.now();
+            function ease(t) {
+                return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+            }
+
+            let currentScrollY = 0;
+            const elOriginalTop = new Map();
+            parallaxEls.forEach(el => {
+                let top = 0, node = el;
+                while (node && node !== document.body) {
+                    top += node.offsetTop;
+                    node = node.offsetParent;
+                }
+                elOriginalTop.set(el, top);
+            });
+            tweens.forEach(tw => {
+                if (!elOriginalTop.has(tw.el)) {
+                    let top = 0, node = tw.el;
+                    while (node && node !== document.body) {
+                        top += node.offsetTop;
+                        node = node.offsetParent;
+                    }
+                    elOriginalTop.set(tw.el, top);
+                }
+            });
+
+            lenis.on('scroll', (e) => {
+                currentScrollY = e.scroll;
+                
+                if(astrolabe) {
+                    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                    const rotation = maxScroll > 0 ? (currentScrollY / maxScroll) * 90 : 0;
+                    astrolabe.style.transform = `translate(-50%, -50%) rotate(${-rotation}deg)`;
+                }
+            });
+
+            function getParallaxY(el, pScale) {
+                const speed = parseFloat(el.getAttribute('data-speed')) || 0;
+                const origTop = elOriginalTop.get(el) || 0;
+                const windowH = window.innerHeight;
+                const dist = (origTop - currentScrollY + windowH * 0.3) - (windowH / 2);
+                return dist * speed * pScale;
+            }
+
+            function update() {
+                const now = performance.now();
+                const elapsed = now - pageStart;
+                const pScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--p-scale').trim()) || 1;
+                parallaxEls.forEach(el => {
+                    if (el.classList.contains('hero-enter')) return;
+                    const speed = parseFloat(el.getAttribute('data-speed'));
+                    if (isNaN(speed)) return;
+                    const yOffset = getParallaxY(el, pScale);
+                    el.style.transform = `translate3d(0, ${yOffset}px, 0)`;
+                });
+                tweens.forEach(tw => {
+                    const parallaxY = getParallaxY(tw.el, pScale);
+
+                    if (elapsed < tw.triggerAt) {
+                        tw.el.style.opacity = '0';
+                        tw.el.style.transform = `translate3d(0, ${tw.startY + parallaxY}px, 0)`;
+                        return;
+                    }
+
+                    if (!tw.startTime) tw.startTime = now;
+                    const progress = Math.min((now - tw.startTime) / DURATION, 1);
+                    const e = ease(progress);
+
+                    const tweenY = tw.startY + (tw.settleY - tw.startY) * e;
+                    tw.el.style.opacity = String(Math.min(e * 2.5, 1));
+                    tw.el.style.transform = `translate3d(0, ${tweenY + parallaxY}px, 0)`;
+
+                    if (progress >= 1) tw.done = true;
+                });
+
+                requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+            
+            lenis.emit();
+        });
+    </script>
+</body>
+</html>

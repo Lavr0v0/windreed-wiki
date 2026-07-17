@@ -24,6 +24,7 @@ export type ArchiveManifestEntry = {
   monogram: string;
   accent: string;
   characterRole?: CharacterRole;
+  personalPage?: string;
   presentation?: "archive" | "glossary";
   facts?: Array<{ label: string; value: string }>;
 };
@@ -78,6 +79,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     monogram: "雪",
     accent: "#78a99a",
     characterRole: "member",
+    personalPage: "/DnD/Shirul/",
     facts: [
       { label: "种族", value: "人类" },
       { label: "职业", value: "圣武士 · 古贤之誓" },
@@ -97,6 +99,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     monogram: "莉",
     accent: "#526b91",
     characterRole: "member",
+    personalPage: "/DnD/Alberina/",
     facts: [
       { label: "种族", value: "高精灵" },
       { label: "职业", value: "术士 · 银龙脉" },
@@ -116,6 +119,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     monogram: "芙",
     accent: "#58735c",
     characterRole: "member",
+    personalPage: "/DnD/Flavilar/",
     facts: [
       { label: "种族", value: "黑龙裔" },
       { label: "职业", value: "战士 · 战团大师" },

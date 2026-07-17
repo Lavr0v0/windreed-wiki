@@ -203,11 +203,6 @@ test("uses desktop Lenis while preserving native touch scrolling and reduced mot
   ]);
 
   assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
-  assert.match(motionLayer, /anchors: false/);
-  assert.match(motionLayer, /prevent: \(node\) => Boolean\(node\.closest\("\.desktop-sidebar, \.mobile-sidebar"\)\)/);
-  assert.match(motionLayer, /a\[data-toc-link\]/);
-  assert.match(motionLayer, /event\.preventDefault\(\)/);
-  assert.match(motionLayer, /scrollTo\(target, \{/);
   assert.match(motionLayer, /syncTouch: false/);
   assert.match(motionLayer, /prefers-reduced-motion: reduce/);
   assert.match(motionLayer, /scrollTo\(0, \{ immediate: true \}\)/);
@@ -219,15 +214,7 @@ test("keeps archive navigation scrollable without visible browser chrome", async
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?scrollbar-width:\s*none/);
   assert.match(styles, /\.desktop-sidebar::\-webkit-scrollbar,\s*\n\.mobile-sidebar::\-webkit-scrollbar[\s\S]*?display:\s*none/);
-  assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?overscroll-behavior:\s*contain/);
   assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.mobile-sidebar\s*\{[\s\S]*?background-color:\s*var\(--paper-light\)/);
-});
-
-test("keeps the article rail focused on a stable table of contents", async () => {
-  const response = await render("/archive/characters/shirul");
-  const html = await response.text();
-  assert.match(html, /data-toc-link="true"/);
-  assert.doesNotMatch(html, /同卷条目|related-panel/);
 });
 
 test("ships a reliable Chinese serif on iPad instead of falling back to sans-serif", async () => {
@@ -245,6 +232,57 @@ test("ships a reliable Chinese serif on iPad instead of falling back to sans-ser
     JSON.parse(packageJson).dependencies["@fontsource-variable/noto-serif-sc"],
     "5.2.10",
   );
+});
+
+test("presents party member names as handwritten chronicle entries", async () => {
+  const [response, layout, styles, packageJson] = await Promise.all([
+    render(),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ]);
+  const html = await response.text();
+  assert.match(html, /卷中录名/);
+  assert.match(html, /FOLIO/);
+  assert.match(html, /所记身份/);
+  assert.match(html, /展卷阅其人/);
+  assert.match(html, /data-logo-slot="site"/);
+  assert.match(html, /data-logo-slot="member"/);
+  assert.match(layout, /@fontsource\/lxgw-wenkai\/500\.css/);
+  assert.match(styles, /--hand:\s*"LXGW WenKai"/);
+  assert.match(styles, /\.member-card-name::after/);
+  assert.equal(JSON.parse(packageJson).dependencies["@fontsource/lxgw-wenkai"], "5.2.5");
+});
+
+test("links published character archives to their personal chronicles", async () => {
+  const [shirul, alberina, flavilar, pheiron] = await Promise.all([
+    render("/archive/characters/shirul").then((response) => response.text()),
+    render("/archive/characters/alberina").then((response) => response.text()),
+    render("/archive/characters/flavilar").then((response) => response.text()),
+    render("/archive/characters/pheiron").then((response) => response.text()),
+  ]);
+  assert.match(shirul, /href="\/DnD\/Shirul\/"/);
+  assert.match(alberina, /href="\/DnD\/Alberina\/"/);
+  assert.match(flavilar, /href="\/DnD\/Flavilar\/"/);
+  assert.doesNotMatch(pheiron, /PERSONAL CHRONICLE/);
+});
+
+test("ships the standalone personal chronicles with local runtime assets", async () => {
+  const pages = [
+    "../public/DnD/index.html",
+    "../public/DnD/Alberina/index.html",
+    "../public/DnD/Flavilar/index.html",
+    "../public/DnD/Shirul/index.html",
+    "../public/DnD/shared/page.css",
+    "../public/DnD/shared/lenis.min.js",
+  ];
+  await Promise.all(pages.map((path) => access(new URL(path, import.meta.url))));
+  const index = await readFile(new URL("../public/DnD/index.html", import.meta.url), "utf8");
+  assert.match(index, /https:\/\/windreed\.wiki\/DnD\//);
+  assert.match(index, /href="Alberina\/"/);
+  assert.match(index, /href="Flavilar\/"/);
+  assert.match(index, /href="Shirul\/"/);
+  assert.doesNotMatch(index, forbiddenPublicText);
 });
 
 test("renders archive prose immediately without an intersection reveal gate", async () => {

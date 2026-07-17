@@ -40,19 +40,35 @@ export function MemberCard({
       style={{
         "--member-accent": entry.accent,
         "--member-index": index,
+        "--name-angle": `${[-0.7, 0.25, -0.35, 0.55, -0.15, 0.4][index % 6]}deg`,
         "--reveal-delay": `${index * 55}ms`,
       } as React.CSSProperties}
     >
-      <span className="member-card-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-      <span className="member-card-seal" aria-hidden="true">{entry.monogram}</span>
+      <span className="member-card-number" aria-hidden="true">
+        <small>FOLIO</small>
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span className="member-card-seal" data-logo-slot="member" aria-hidden="true">
+        <span className="member-card-seal-fallback">{entry.monogram}</span>
+      </span>
       <span className="member-card-copy">
-        <span className="member-card-kicker">PARTY MEMBER</span>
-        <strong>{entry.title}</strong>
-        {entry.englishTitle && <small>{entry.englishTitle}</small>}
-        <span className="member-card-role">{entry.facts?.[1]?.value ?? "团员档案"}</span>
+        <span className="member-card-kicker">
+          <b>LIVES</b>
+          <i aria-hidden="true" />
+          <em>卷中录名</em>
+        </span>
+        <span className="member-card-name">
+          <strong>{entry.title}</strong>
+        </span>
+        {entry.englishTitle && <small className="member-card-transcription">{entry.englishTitle}</small>}
+        <span className="member-card-role">
+          <i>所记身份</i>
+          <b>{entry.facts?.[1]?.value ?? "团员档案"}</b>
+        </span>
         <span className="member-card-summary">{entry.summary}</span>
       </span>
-      <span className="member-card-enter">进入档案 <i aria-hidden="true">↗</i></span>
+      <span className="member-card-enter">展卷阅其人 <i aria-hidden="true">↗</i></span>
+      <span className="member-card-colophon" aria-hidden="true">RECORDED · 1492 DR</span>
       <span className="member-card-glow" aria-hidden="true" />
     </Link>
   );

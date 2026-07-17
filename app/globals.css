@@ -16,6 +16,7 @@
   --scroll-progress: 0;
   --scroll-shift: 0;
   --serif: "Noto Serif SC Variable", ui-serif, "Songti SC", "STSongti-SC-Regular", "STSongti-SC-Light", "STSong", "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", Georgia, serif;
+  --hand: "LXGW WenKai", "Kaiti SC", "STKaiti", "KaiTi", var(--serif);
   --sans: Inter, "Noto Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 }
 
@@ -147,6 +148,8 @@ summary {
   height: 38px;
   justify-content: center;
 }
+
+.brand-logo-fallback { display: block; line-height: 1; }
 
 .site-brand strong,
 .site-brand small {
@@ -864,14 +867,15 @@ details[open] > summary .tree-twist {
   --tilt-x: 0deg;
   --tilt-y: 0deg;
   background:
-    linear-gradient(145deg, rgba(255, 253, 247, 0.96), rgba(240, 234, 221, 0.72)),
+    linear-gradient(145deg, rgba(255, 253, 247, 0.97), rgba(240, 234, 221, 0.78)),
+    repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(69, 78, 70, 0.028) 30px),
     var(--paper-light);
   border: 1px solid color-mix(in srgb, var(--member-accent), transparent 68%);
   border-top: 2px solid color-mix(in srgb, var(--member-accent), white 18%);
   box-shadow: 0 16px 50px rgba(29, 42, 43, 0.07);
   display: grid;
   grid-template-columns: 1fr auto;
-  min-height: 292px;
+  min-height: 314px;
   overflow: hidden;
   padding: 33px 34px 29px;
   position: relative;
@@ -889,11 +893,11 @@ details[open] > summary .tree-twist {
 }
 
 .member-card::before {
-  background: linear-gradient(90deg, var(--member-accent), transparent 72%);
+  background: linear-gradient(180deg, transparent, var(--member-accent) 13%, var(--member-accent) 87%, transparent);
   bottom: 0;
   content: "";
   left: 0;
-  opacity: 0.6;
+  opacity: 0.72;
   position: absolute;
   top: 0;
   width: 3px;
@@ -913,12 +917,21 @@ details[open] > summary .tree-twist {
 .member-card-number {
   color: color-mix(in srgb, var(--member-accent), transparent 52%);
   font-family: Georgia, serif;
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  align-items: baseline;
+  display: flex;
+  font-size: 13px;
+  gap: 6px;
+  letter-spacing: 0.1em;
   position: absolute;
   right: 24px;
   top: 21px;
   z-index: 3;
+}
+
+.member-card-number small {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
 }
 
 .member-card-seal {
@@ -929,14 +942,15 @@ details[open] > summary .tree-twist {
   color: var(--member-accent);
   display: flex;
   font-family: var(--serif);
-  font-size: 48px;
-  height: 112px;
+  box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--member-accent), transparent 94%);
+  font-size: 42px;
+  height: 104px;
   justify-content: center;
-  margin: 39px 0 0 24px;
+  margin: 52px 0 0 28px;
   position: relative;
   transform: translateZ(20px);
   transition: transform 300ms cubic-bezier(0.2, 0.72, 0.25, 1);
-  width: 112px;
+  width: 104px;
   z-index: 2;
 }
 
@@ -946,6 +960,11 @@ details[open] > summary .tree-twist {
   content: "";
   inset: -8px;
   position: absolute;
+}
+
+.member-card-seal-fallback {
+  display: block;
+  line-height: 1;
 }
 
 .member-card-copy {
@@ -961,35 +980,90 @@ details[open] > summary .tree-twist {
   color: var(--member-accent);
   display: block;
   font-size: 9px;
+  align-items: center;
+  display: flex;
   font-weight: 700;
-  letter-spacing: 0.2em;
-  margin-bottom: 12px;
+  gap: 8px;
+  letter-spacing: 0.18em;
+  margin-bottom: 9px;
 }
 
-.member-card-copy strong {
+.member-card-kicker b { font: inherit; }
+.member-card-kicker i { background: currentColor; height: 1px; opacity: 0.48; width: 18px; }
+.member-card-kicker em { font-family: var(--serif); font-size: 9px; font-style: normal; letter-spacing: 0.14em; }
+
+.member-card-name {
   display: block;
-  font-family: var(--serif);
-  font-size: 31px;
-  font-weight: 500;
-  line-height: 1.1;
+  margin-left: -2px;
+  position: relative;
+  transform: rotate(var(--name-angle));
+  transform-origin: left center;
+  width: fit-content;
 }
 
-.member-card-copy small {
+.member-card-name strong {
+  display: block;
+  font-family: var(--hand);
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  line-height: 1.08;
+  position: relative;
+  text-shadow: 0.4px 0.5px 0 color-mix(in srgb, var(--member-accent), transparent 72%);
+  z-index: 1;
+}
+
+.member-card-name::after {
+  background: linear-gradient(90deg, transparent, var(--member-accent) 7%, var(--member-accent) 91%, transparent);
+  bottom: -4px;
+  content: "";
+  height: 2px;
+  left: -4px;
+  opacity: 0.48;
+  position: absolute;
+  transform: rotate(-1.2deg) scaleX(0.08);
+  transform-origin: left center;
+  transition: transform 850ms cubic-bezier(0.2, 0.72, 0.25, 1) calc(260ms + var(--reveal-delay));
+  width: calc(100% + 18px);
+}
+
+.member-card.is-revealed .member-card-name::after {
+  transform: rotate(-1.2deg) scaleX(1);
+}
+
+.member-card-transcription {
   color: #898b85;
   display: block;
   font-family: Georgia, serif;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  margin-top: 10px;
 }
 
 .member-card-role {
+  align-items: baseline;
+  border-top: 1px solid color-mix(in srgb, var(--member-accent), transparent 78%);
   color: var(--ink-soft);
-  display: block;
-  font-size: 10px;
+  display: flex;
+  gap: 11px;
+  margin-top: 17px;
+  padding-top: 11px;
+}
+
+.member-card-role i {
+  color: color-mix(in srgb, var(--member-accent), #6d726d 35%);
+  flex: 0 0 auto;
+  font-size: 8px;
+  font-style: normal;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  margin-top: 18px;
+  letter-spacing: 0.14em;
+}
+
+.member-card-role b {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
 }
 
 .member-card-summary {
@@ -998,7 +1072,7 @@ details[open] > summary .tree-twist {
   font-family: var(--serif);
   font-size: 12.5px;
   line-height: 1.75;
-  margin-top: 10px;
+  margin-top: 9px;
   max-width: 390px;
 }
 
@@ -1012,6 +1086,18 @@ details[open] > summary .tree-twist {
   letter-spacing: 0.1em;
   position: absolute;
   transform: translateZ(24px);
+  z-index: 2;
+}
+
+.member-card-colophon {
+  bottom: 27px;
+  color: color-mix(in srgb, var(--member-accent), transparent 48%);
+  font-family: Georgia, serif;
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  position: absolute;
+  right: 33px;
+  transform: translateZ(18px);
   z-index: 2;
 }
 
@@ -1224,6 +1310,57 @@ details[open] > summary .tree-twist {
 .fact-grid div:last-child { border-right: 0; }
 .fact-grid dt { color: #858b84; font-size: 9px; letter-spacing: 0.12em; }
 .fact-grid dd { font-family: var(--serif); font-size: 13px; margin: 6px 0 0; }
+
+.personal-chronicle-link {
+  align-items: center;
+  background:
+    linear-gradient(100deg, color-mix(in srgb, var(--entry-accent), white 91%), transparent 72%),
+    var(--paper-light);
+  border: 1px solid color-mix(in srgb, var(--entry-accent), transparent 68%);
+  color: var(--ink);
+  display: grid;
+  gap: 3px 18px;
+  grid-template-columns: 1fr auto;
+  margin: -14px 0 38px;
+  padding: 14px 17px 14px 19px;
+  position: relative;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  z-index: 1;
+}
+
+.personal-chronicle-link span {
+  color: var(--entry-accent);
+  font-family: Georgia, serif;
+  font-size: 8px;
+  font-weight: 700;
+  grid-column: 1;
+  letter-spacing: 0.17em;
+}
+
+.personal-chronicle-link b {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+  grid-column: 1;
+}
+
+.personal-chronicle-link i {
+  color: var(--entry-accent);
+  font-size: 19px;
+  font-style: normal;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  transition: transform 180ms ease;
+}
+
+.personal-chronicle-link:hover {
+  border-color: color-mix(in srgb, var(--entry-accent), transparent 35%);
+  box-shadow: 0 9px 24px color-mix(in srgb, var(--entry-accent), transparent 88%);
+  transform: translateY(-2px);
+}
+
+.personal-chronicle-link:hover i { transform: translate(2px, -2px); }
 
 .markdown-body {
   color: #2b3a3d;
@@ -1885,10 +2022,11 @@ details[open] > summary .tree-twist {
   .category-grid { grid-template-columns: 1fr; }
   .member-card { display: block; min-height: 320px; padding: 28px 25px 66px; }
   .member-card-copy { padding-right: 82px; }
-  .member-card-copy strong { font-size: 27px; }
+  .member-card-name strong { font-size: 34px; }
   .member-card-summary { margin-right: -82px; }
   .member-card-seal { font-size: 30px; height: 70px; margin: 0; position: absolute; right: 25px; top: 58px; width: 70px; }
   .member-card-enter { bottom: 25px; left: 25px; }
+  .member-card-colophon { bottom: 27px; right: 24px; }
   .person-card { gap: 12px; grid-template-columns: 52px 1fr auto; padding: 13px; }
   .person-monogram { height: 48px; width: 48px; }
   .article-header { display: block; }

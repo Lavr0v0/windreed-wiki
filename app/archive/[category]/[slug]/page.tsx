@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  archiveHref,
   archiveManifest,
   archiveSectionById,
   entryCollectionLabel,
@@ -40,12 +39,6 @@ export default async function ArchivePage({ params }: PageProps) {
   const entry = getArchiveEntry(category, slug);
   if (!entry) notFound();
 
-  const related = archiveManifest
-    .filter((candidate) => {
-      if (candidate.slug === entry.slug) return false;
-      return candidate.section === entry.section;
-    })
-    .slice(0, 4);
   const isMember = entry.characterRole === "member";
   const memberNumber = isMember
     ? partyMemberEntries().findIndex((candidate) => candidate.slug === entry.slug) + 1
@@ -119,6 +112,7 @@ export default async function ArchivePage({ params }: PageProps) {
               {entry.headings.map((heading) => (
                 <a
                   className={heading.level === 3 ? "toc-sub" : undefined}
+                  data-toc-link
                   href={`#${heading.id}`}
                   key={`${heading.level}-${heading.id}`}
                 >
@@ -126,17 +120,6 @@ export default async function ArchivePage({ params }: PageProps) {
                 </a>
               ))}
             </nav>
-          )}
-          {related.length > 0 && (
-            <div className="related-panel">
-              <span>同卷条目</span>
-              {related.map((candidate) => (
-                <Link href={archiveHref(candidate)} key={candidate.slug}>
-                  <i style={{ background: candidate.accent }} />
-                  <span>{candidate.title}</span>
-                </Link>
-              ))}
-            </div>
           )}
         </aside>
       </div>

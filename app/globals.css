@@ -257,6 +257,7 @@ summary {
   display: flex;
   flex-direction: column;
   -ms-overflow-style: none;
+  overscroll-behavior: contain;
   scrollbar-width: none;
 }
 
@@ -1484,14 +1485,12 @@ details[open] > summary .tree-twist {
   top: 104px;
 }
 
-.page-toc,
-.related-panel {
+.page-toc {
   border-left: 1px solid var(--line);
   padding-left: 20px;
 }
 
-.page-toc > span,
-.related-panel > span {
+.page-toc > span {
   color: #8b8e89;
   display: block;
   font-size: 9px;
@@ -1511,10 +1510,6 @@ details[open] > summary .tree-twist {
 
 .page-toc a:hover { color: var(--reed-dark); }
 .page-toc .toc-sub { font-size: 11px; padding-left: 11px; }
-.related-panel { margin-top: 32px; }
-.related-panel a { align-items: center; color: #586461; display: flex; font-size: 12px; gap: 9px; padding: 6px 0; }
-.related-panel a:hover { color: var(--reed-dark); }
-.related-panel i { border-radius: 50%; height: 5px; width: 5px; }
 
 .search-page { max-width: 1120px; }
 .search-header { margin: 38px 0 34px; }

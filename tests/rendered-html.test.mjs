@@ -203,6 +203,11 @@ test("uses desktop Lenis while preserving native touch scrolling and reduced mot
   ]);
 
   assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
+  assert.match(motionLayer, /anchors: false/);
+  assert.match(motionLayer, /prevent: \(node\) => Boolean\(node\.closest\("\.desktop-sidebar, \.mobile-sidebar"\)\)/);
+  assert.match(motionLayer, /a\[data-toc-link\]/);
+  assert.match(motionLayer, /event\.preventDefault\(\)/);
+  assert.match(motionLayer, /scrollTo\(target, \{/);
   assert.match(motionLayer, /syncTouch: false/);
   assert.match(motionLayer, /prefers-reduced-motion: reduce/);
   assert.match(motionLayer, /scrollTo\(0, \{ immediate: true \}\)/);
@@ -214,7 +219,15 @@ test("keeps archive navigation scrollable without visible browser chrome", async
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?scrollbar-width:\s*none/);
   assert.match(styles, /\.desktop-sidebar::\-webkit-scrollbar,\s*\n\.mobile-sidebar::\-webkit-scrollbar[\s\S]*?display:\s*none/);
+  assert.match(styles, /\.desktop-sidebar,\s*\n\.mobile-sidebar[\s\S]*?overscroll-behavior:\s*contain/);
   assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.mobile-sidebar\s*\{[\s\S]*?background-color:\s*var\(--paper-light\)/);
+});
+
+test("keeps the article rail focused on a stable table of contents", async () => {
+  const response = await render("/archive/characters/shirul");
+  const html = await response.text();
+  assert.match(html, /data-toc-link="true"/);
+  assert.doesNotMatch(html, /同卷条目|related-panel/);
 });
 
 test("ships a reliable Chinese serif on iPad instead of falling back to sans-serif", async () => {

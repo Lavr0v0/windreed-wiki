@@ -19,9 +19,10 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
       if (!finePointer.matches || reducedMotion.matches) return;
 
       lenisRef.current = new Lenis({
-        anchors: true,
+        anchors: false,
         autoRaf: true,
         lerp: 0.085,
+        prevent: (node) => Boolean(node.closest(".desktop-sidebar, .mobile-sidebar")),
         smoothWheel: true,
         syncTouch: false,
         wheelMultiplier: 0.9,
@@ -38,6 +39,56 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
       lenisRef.current?.destroy();
       lenisRef.current = null;
     };
+  }, []);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    function followTableOfContents(event: MouseEvent) {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) return;
+
+      const source = event.target;
+      if (!(source instanceof Element)) return;
+      const link = source.closest<HTMLAnchorElement>("a[data-toc-link]");
+      if (!link?.hash) return;
+
+      const id = decodeURIComponent(link.hash.slice(1));
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      event.preventDefault();
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}${link.hash}`,
+      );
+
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(target, {
+          immediate: reducedMotion.matches,
+          // Lenis already reads the heading's CSS scroll-margin-top.
+          offset: 0,
+        });
+        return;
+      }
+
+      const top = target.getBoundingClientRect().top + window.scrollY - 94;
+      window.scrollTo({
+        top,
+        left: 0,
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+      });
+    }
+
+    document.addEventListener("click", followTableOfContents);
+    return () => document.removeEventListener("click", followTableOfContents);
   }, []);
 
   useEffect(() => {

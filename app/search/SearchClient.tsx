@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, Fragment, useMemo, useTransition } from "react";
+import { FormEvent, Fragment, useEffect, useMemo, useRef, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   archiveSectionById,
@@ -55,6 +55,7 @@ export function SearchClient({
   index: SearchIndexItem[];
 }) {
   const router = useRouter();
+  const queryRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
   const [navigationPending, startNavigationTransition] = useTransition();
   const activeQuery = searchParams.get("q")?.trim() ?? "";
@@ -97,6 +98,12 @@ export function SearchClient({
       });
   }, [activeQuery, category, index]);
 
+  useEffect(() => {
+    if (window.innerWidth > 960 && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      queryRef.current?.focus({ preventScroll: true });
+    }
+  }, []);
+
   function submit(event: FormEvent) {
     event.preventDefault();
     const form = new FormData(event.currentTarget as HTMLFormElement);
@@ -122,13 +129,13 @@ export function SearchClient({
     <div className="search-page">
       <NavigationPendingSignal pending={navigationPending} />
       <div className="breadcrumbs"><PendingLink href={siteHref("/")} prefetch={false}>总览</PendingLink><span>/</span><span>全文索引</span></div>
-      <header className="search-header" data-reveal>
+      <header className="search-header">
         <span className="eyebrow">FULL TEXT INDEX</span>
         <h1>全文索引</h1>
         <p>检索所有已经进入公开目录的人物、地点、物件与事件。</p>
       </header>
 
-      <form className="search-panel" data-reveal onSubmit={submit} role="search">
+      <form className="search-panel" onSubmit={submit} role="search">
         <label htmlFor="archive-query">关键词</label>
         <div className="search-input-row">
           <span aria-hidden="true">⌕</span>
@@ -138,7 +145,7 @@ export function SearchClient({
             defaultValue={activeQuery}
             key={activeQuery}
             placeholder="例如：雪露、Neverwinter、誓言"
-            autoFocus
+            ref={queryRef}
           />
           <button type="submit">搜索</button>
         </div>

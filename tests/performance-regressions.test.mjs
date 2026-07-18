@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -43,7 +43,7 @@ test("queries compact publication metadata for navigation and home without rerea
   assert.match(publicArchive, /getPublicArchiveEntry = cache/);
 });
 
-test("removes the oversized handwriting font and edge-caches only public reads", async () => {
+test("loads future-proof Chinese font ranges and edge-caches only public reads", async () => {
   const [layout, packageJson, styles, worker] = await Promise.all([
     read("app/layout.tsx"),
     read("package.json"),
@@ -52,18 +52,27 @@ test("removes the oversized handwriting font and edge-caches only public reads",
   ]);
 
   assert.doesNotMatch(layout, /lxgw-wenkai/i);
-  assert.doesNotMatch(layout, /@fontsource-variable\/noto-serif-sc/);
+  assert.match(layout, /@fontsource-variable\/noto-serif-sc\/wght\.css/);
   assert.doesNotMatch(packageJson, /lxgw-wenkai/i);
   assert.doesNotMatch(styles, /@import\s+["']tailwindcss/);
   assert.match(styles, /--hand:\s*var\(--serif\)/);
-  assert.match(styles, /font-family:\s*"Windreed Noto Serif SC"/);
-  const subset = await stat(new URL("../public/fonts/windreed-noto-serif-sc.woff2", import.meta.url));
-  assert.ok(subset.size > 100_000 && subset.size < 800_000, `unexpected subset size: ${subset.size}`);
+  assert.match(styles, /--serif:\s*"Noto Serif SC Variable",\s*ui-serif/);
+  assert.doesNotMatch(styles, /windreed-noto-serif-sc\.woff2/);
+  assert.doesNotMatch(packageJson, /fonts:subset/);
   assert.match(worker, /request\.method !== "GET"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/api\/public\/"\)/);
   assert.match(worker, /workerCache\.match/);
   assert.match(worker, /workerCache\.put/);
   assert.match(worker, /X-Windreed-Cache/);
+});
+
+test("prefetches archive routes only after explicit pointer, focus, or touch intent", async () => {
+  const pendingLink = await read("app/components/PendingLink.tsx");
+  assert.match(pendingLink, /router\.prefetch\(href\)/);
+  assert.match(pendingLink, /onPointerEnter/);
+  assert.match(pendingLink, /onFocus/);
+  assert.match(pendingLink, /onTouchStart/);
+  assert.match(pendingLink, /setTimeout\(\(\) => setVisible\(true\), 180\)/);
 });
 
 test("uses global KV snapshots and D1 sessions for published archive reads", async () => {

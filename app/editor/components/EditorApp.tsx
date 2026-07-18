@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { RichEditor } from "./RichEditor";
-import { CollaboratorsPanel } from "./CollaboratorsPanel";
-import { ContentSyncPanel } from "./ContentSyncPanel";
+import { useModalDialog } from "../../components/useModalDialog";
 import { editorApi, errorMessage } from "../lib/client";
 import {
   EMPTY_ENTRY,
@@ -15,6 +13,12 @@ import {
   type EntryPayload,
   type RevisionItem,
 } from "../lib/types";
+
+const RichEditor = lazy(() => import("./RichEditor").then((module) => ({ default: module.RichEditor })));
+const CollaboratorsPanel = lazy(() => import("./CollaboratorsPanel").then((module) => ({ default: module.CollaboratorsPanel })));
+const ContentSyncPanel = lazy(() => import("./ContentSyncPanel").then((module) => ({ default: module.ContentSyncPanel })));
+
+type SaveStatus = "saved" | "dirty" | "saving" | "error";
 
 function freshEntry(): EntryPayload {
   return JSON.parse(JSON.stringify(EMPTY_ENTRY)) as EntryPayload;
@@ -33,7 +37,9 @@ export function EditorApp() {
   const [payload, setPayload] = useState<EntryPayload>(freshEntry);
   const [revision, setRevision] = useState(0);
   const [dirty, setDirty] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("saved");
   const [busy, setBusy] = useState(false);
+  const [busyAction, setBusyAction] = useState<"idle" | "saving" | "publishing">("idle");
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [message, setMessage] = useState("");
@@ -41,7 +47,19 @@ export function EditorApp() {
   const [showCollaborators, setShowCollaborators] = useState(false);
   const [showContentSync, setShowContentSync] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [catalogOpen, setCatalogOpen] = useState(false);
   const [revisions, setRevisions] = useState<RevisionItem[]>([]);
+  const catalogButtonRef = useRef<HTMLButtonElement>(null);
+  const catalogDialogRef = useRef<HTMLElement>(null);
+  const closeCatalog = useCallback(() => setCatalogOpen(false), []);
+
+  useModalDialog({
+    dialogRef: catalogDialogRef,
+    lockScroll: true,
+    onClose: closeCatalog,
+    open: catalogOpen,
+    triggerRef: catalogButtonRef,
+  });
 
   const selected = useMemo(
     () => entries.find((entry) => entry.id === selectedId) ?? null,
@@ -58,6 +76,12 @@ export function EditorApp() {
       entry.payload.aliases.join(" "),
     ].join(" ").toLocaleLowerCase("zh-CN").includes(query));
   }, [entries, filter]);
+  const saveStatusLabel: Record<SaveStatus, string> = {
+    saved: "已保存",
+    dirty: "未保存",
+    saving: "自动保存中",
+    error: "保存失败",
+  };
 
   useEffect(() => {
     Promise.all([
@@ -91,6 +115,7 @@ export function EditorApp() {
     setPayload(entry.payload);
     setRevision(entry.currentRevision);
     setDirty(false);
+    setSaveStatus("saved");
     setMessage("");
     setShowHistory(false);
   }
@@ -98,6 +123,7 @@ export function EditorApp() {
   function chooseEntry(entry: EntryListItem) {
     if (dirty && !window.confirm("当前卷页还有未保存的修改。确定要离开吗？")) return;
     selectLoaded(entry);
+    closeCatalog();
   }
 
   function beginNewEntry() {
@@ -106,13 +132,16 @@ export function EditorApp() {
     setPayload(freshEntry());
     setRevision(0);
     setDirty(false);
+    setSaveStatus("saved");
     setMessage("");
     setShowHistory(false);
+    closeCatalog();
   }
 
   function change<K extends keyof EntryPayload>(key: K, value: EntryPayload[K]) {
     setPayload((current) => ({ ...current, [key]: value }));
     setDirty(true);
+    setSaveStatus("dirty");
     setMessage("");
   }
 
@@ -128,6 +157,8 @@ export function EditorApp() {
   const save = useCallback(async (quiet = false): Promise<EntryListItem | null> => {
     if (busy || (!dirty && selectedId)) return selected;
     setBusy(true);
+    setBusyAction("saving");
+    setSaveStatus("saving");
     if (!quiet) setMessage("");
     try {
       const data = selectedId
@@ -144,15 +175,18 @@ export function EditorApp() {
       setRevision(data.entry.currentRevision);
       setPayload(data.entry.payload);
       setDirty(false);
+      setSaveStatus("saved");
       setMessageKind("ok");
-      setMessage(quiet ? "草稿已自动保存" : "草稿已经收进卷册");
+      if (!quiet) setMessage("草稿已经收进卷册");
       return data.entry;
     } catch (error) {
       setMessageKind("error");
       setMessage(errorMessage(error));
+      setSaveStatus("error");
       return null;
     } finally {
       setBusy(false);
+      setBusyAction("idle");
     }
   }, [busy, dirty, payload, revision, selected, selectedId]);
 
@@ -167,6 +201,7 @@ export function EditorApp() {
     if (dirty || !selectedId) current = await save(false);
     if (!current) return;
     setBusy(true);
+    setBusyAction("publishing");
     setMessage("");
     try {
       const data = await editorApi<{ entry: EntryListItem }>(`/api/admin/entries/${current.id}/publish`, {
@@ -185,6 +220,7 @@ export function EditorApp() {
       setMessage(errorMessage(error));
     } finally {
       setBusy(false);
+      setBusyAction("idle");
     }
   }
 
@@ -271,6 +307,15 @@ export function EditorApp() {
   return (
     <main className="editor-app">
       <header className="editor-topbar">
+        <div className="editor-topbar-start">
+        <button
+          aria-expanded={catalogOpen}
+          aria-label="打开卷册目录"
+          className="editor-catalog-trigger"
+          onClick={() => setCatalogOpen(true)}
+          ref={catalogButtonRef}
+          type="button"
+        >☰</button>
         <div className="editor-brand">
           <span className="editor-brand-mark" aria-hidden="true">
             <Image
@@ -284,13 +329,24 @@ export function EditorApp() {
           </span>
           <span><strong>The Windreed Wayfarers</strong><small>ARCHIVE SCRIPTORIUM · 档案修史室</small></span>
         </div>
+        </div>
+        <span aria-live="polite" className={`editor-save-status ${saveStatus}`}>
+          <i aria-hidden="true" />{saveStatusLabel[saveStatus]}
+        </span>
         <div className="editor-account">
           <span><strong>{identity?.displayName}</strong><small>{identity?.role === "admin" ? "管理员" : "协作者"}</small></span>
           <a href="/cdn-cgi/access/logout">退出</a>
         </div>
       </header>
 
-      <aside className="editor-sidebar">
+      <button
+        aria-label="关闭卷册目录"
+        className={catalogOpen ? "editor-catalog-scrim open" : "editor-catalog-scrim"}
+        onClick={closeCatalog}
+        tabIndex={catalogOpen ? 0 : -1}
+        type="button"
+      />
+      <aside className="editor-sidebar" data-state={catalogOpen ? "open" : "closed"} ref={catalogDialogRef} tabIndex={-1}>
         <div className="editor-sidebar-heading">
           <div><span className="editor-eyebrow">THE CATALOGUE</span><h1>卷册目录</h1></div>
           <button type="button" onClick={beginNewEntry} aria-label="新建词条">＋</button>
@@ -339,10 +395,10 @@ export function EditorApp() {
             <div className="entry-editor-actions">
               {selectedId && <button className="secondary-editor-button" type="button" onClick={openHistory}>版本历史</button>}
               <button className="secondary-editor-button" type="button" disabled={busy || (!dirty && Boolean(selectedId))} onClick={() => void save(false)}>
-                {busy ? "收卷中……" : "保存草稿"}
+                {busyAction === "saving" ? "收卷中……" : "保存草稿"}
               </button>
               <button className="primary-editor-button" type="button" disabled={busy || (selected ? !selected.canPublish : identity?.role !== "admin")} onClick={publish}>
-                发布这一版
+                {busyAction === "publishing" ? "发布中……" : "发布这一版"}
               </button>
             </div>
           </header>
@@ -360,6 +416,7 @@ export function EditorApp() {
                   const section = ENTRY_SECTIONS.find((item) => item.category === category)?.value ?? "lore";
                   setPayload((current) => ({ ...current, category, section }));
                   setDirty(true);
+                  setSaveStatus("dirty");
                 }}>
                   {ENTRY_CATEGORIES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
@@ -408,7 +465,9 @@ export function EditorApp() {
 
           <section className="body-editor-section">
             <div className="body-editor-heading"><span className="editor-eyebrow">THE RECORD</span><h3>正文</h3><p>可以直接像普通文档一样输入、选中文字并设置格式。</p></div>
-            <RichEditor value={payload.body} onChange={(body) => change("body", body)} entries={entries} entryId={selectedId} />
+            <Suspense fallback={<div className="editor-loading-card">正在展开正文编辑器……</div>}>
+              <RichEditor value={payload.body} onChange={(body) => change("body", body)} entries={entries} entryId={selectedId} />
+            </Suspense>
           </section>
         </div>
       </section>
@@ -429,13 +488,19 @@ export function EditorApp() {
         </aside>
       )}
       {showHistory && <button className="history-scrim" type="button" aria-label="关闭版本历史" onClick={() => setShowHistory(false)} />}
-      {showCollaborators && <CollaboratorsPanel onClose={() => setShowCollaborators(false)} />}
+      {showCollaborators && (
+        <Suspense fallback={<div className="editor-modal-loading" role="status">正在展开协作者面板……</div>}>
+          <CollaboratorsPanel onClose={() => setShowCollaborators(false)} />
+        </Suspense>
+      )}
       {showContentSync && (
-        <ContentSyncPanel
-          importDisabled={dirty}
-          onClose={() => setShowContentSync(false)}
-          onImported={refreshEntriesAfterSync}
-        />
+        <Suspense fallback={<div className="editor-modal-loading" role="status">正在展开内容同步……</div>}>
+          <ContentSyncPanel
+            importDisabled={dirty}
+            onClose={() => setShowContentSync(false)}
+            onImported={refreshEntriesAfterSync}
+          />
+        </Suspense>
       )}
     </main>
   );

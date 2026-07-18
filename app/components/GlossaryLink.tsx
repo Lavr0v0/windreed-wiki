@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PendingLink } from "./PendingLink";
+import { useModalDialog } from "./useModalDialog";
 
 type GlossaryLinkProps = {
   label: string;
@@ -21,7 +22,30 @@ export function GlossaryLink({
   aliases,
 }: GlossaryLinkProps) {
   const [open, setOpen] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
+  const dialogRef = useRef<HTMLSpanElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const close = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 960px)");
+    const update = () => setMobile(media.matches);
+    const frame = window.requestAnimationFrame(update);
+    media.addEventListener("change", update);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      media.removeEventListener("change", update);
+    };
+  }, []);
+
+  useModalDialog({
+    dialogRef,
+    lockScroll: mobile,
+    onClose: close,
+    open,
+    triggerRef,
+  });
 
   useEffect(() => {
     if (!open) return;
@@ -30,15 +54,9 @@ export function GlossaryLink({
       if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
     }
 
-    function closeFromKeyboard(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-
     window.addEventListener("pointerdown", closeFromOutside);
-    window.addEventListener("keydown", closeFromKeyboard);
     return () => {
       window.removeEventListener("pointerdown", closeFromOutside);
-      window.removeEventListener("keydown", closeFromKeyboard);
     };
   }, [open]);
 
@@ -54,14 +72,17 @@ export function GlossaryLink({
         aria-expanded={open}
         aria-haspopup="dialog"
         onClick={() => setOpen((value) => !value)}
+        ref={triggerRef}
       >
         {label}
       </button>
       {open && (
-        <span className="glossary-popover" role="dialog" aria-label={`${title}词条注释`}>
+        <>
+        <button aria-label="关闭词条注释" className="glossary-scrim" onClick={close} tabIndex={mobile ? 0 : -1} />
+        <span className="glossary-popover" ref={dialogRef} role="dialog" aria-label={`${title}词条注释`} tabIndex={-1}>
           <span className="glossary-popover-topline">
             <span>词条注释</span>
-            <button type="button" onClick={() => setOpen(false)} aria-label="关闭词条注释">
+            <button type="button" data-dialog-initial-focus onClick={close} aria-label="关闭词条注释">
               ×
             </button>
           </span>
@@ -75,6 +96,7 @@ export function GlossaryLink({
             查看完整词条 <span aria-hidden="true">→</span>
           </PendingLink>
         </span>
+        </>
       )}
     </span>
   );

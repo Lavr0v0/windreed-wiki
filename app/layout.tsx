@@ -3,10 +3,12 @@ import { siteHref } from "./archive-manifest";
 import { ArchiveShell } from "./components/ArchiveShell";
 import { MotionLayer } from "./components/MotionLayer";
 import "@fontsource-variable/cinzel/wght.css";
+import "@fontsource-variable/noto-serif-sc/wght.css";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://windreed.wiki"),
   title: {
     default: "The Windreed Wayfarers",
     template: "%s · The Windreed Wayfarers",
@@ -23,11 +25,14 @@ export const metadata: Metadata = {
     siteName: "The Windreed Wayfarers",
     type: "website",
     locale: "zh_CN",
+    url: "/",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "The Windreed Wayfarers" }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "The Windreed Wayfarers",
     description: "风芦旅人的人物生平、行程与共同经历公开档案。",
+    images: ["/og.png"],
   },
 };
 

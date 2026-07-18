@@ -12,8 +12,13 @@ test("keeps archive navigation animated, accessible, and prose free of drop caps
     read("app/components/PendingLink.tsx"),
   ]);
 
-  assert.match(shell, /className="tree-section-name"/);
+  assert.match(shell, /className="tree-disclosure-trigger"[\s\S]*?<span className="tree-section-name">/);
   assert.match(shell, /href=\{`\$\{siteHref\("\/search"\)\}\?section=\$\{section\.id\}`\}/);
+  assert.match(shell, /className="top-search-submit"[\s\S]*?查阅[\s\S]*?搜索与索引/);
+  assert.match(shell, /className="topbar-action top-search-link"/);
+  assert.doesNotMatch(shell, /top-index-link/);
+  assert.match(styles, /\.topbar-action\.top-search-link,\s*\n\.mobile-drawer-search[\s\S]*?display:\s*none/);
+  assert.match(styles, /@media \(max-width: 960px\)[\s\S]*?\.topbar-action\.top-search-link \{ display: inline-flex; \}/);
   assert.match(shell, /aria-expanded=\{open\}/);
   assert.match(shell, /aria-controls=\{panelId\}/);
   assert.match(styles, /\.tree-children-shell\s*\{[\s\S]*?grid-template-rows:\s*0fr/);
@@ -22,7 +27,7 @@ test("keeps archive navigation animated, accessible, and prose free of drop caps
   assert.doesNotMatch(styles, /::first-letter/);
 });
 
-test("provides route-level loading folios without adding artificial delays", async () => {
+test("provides route-level loading folios with a CSS-only delayed reveal", async () => {
   const [rootLoading, archiveLoading, searchLoading, loadingView] = await Promise.all([
     read("app/loading.tsx"),
     read("app/archive/loading.tsx"),
@@ -45,6 +50,24 @@ test("keeps touch-device first paint visible while retaining desktop reveals", a
 
   assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(motionLayer, /!finePointer/);
+  assert.match(motionLayer, /const revealFallback = window\.setTimeout/);
+  assert.match(motionLayer, /\}, 900\);/);
+  assert.match(motionLayer, /elements\.forEach\(\(element\) => element\.classList\.add\("is-revealed"\)\)/);
+  assert.match(motionLayer, /window\.clearTimeout\(revealFallback\)/);
   assert.match(styles, /@media \(hover: none\), \(pointer: coarse\)/);
   assert.match(styles, /\.route-stage \{ animation: none; \}/);
+});
+
+test("uses a single TOC scroll path with active and mobile chapter navigation", async () => {
+  const [motionLayer, toc, styles] = await Promise.all([
+    read("app/components/MotionLayer.tsx"),
+    read("app/components/ArticleToc.tsx"),
+    read("app/globals.css"),
+  ]);
+
+  assert.match(motionLayer, /a\[data-toc-link\]/);
+  assert.match(toc, /data-toc-link/);
+  assert.match(toc, /aria-current=\{activeId === heading\.id \? "location"/);
+  assert.match(toc, /mobile-toc-trigger/);
+  assert.match(styles, /\.mobile-toc-sheet/);
 });

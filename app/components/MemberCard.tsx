@@ -1,6 +1,6 @@
 "use client";
 
-import type { PointerEvent } from "react";
+import { type PointerEvent, useEffect, useRef } from "react";
 import { archiveHref, type ArchiveManifestEntry } from "../archive-manifest";
 import { PendingLink } from "./PendingLink";
 
@@ -11,20 +11,37 @@ export function MemberCard({
   entry: ArchiveManifestEntry;
   index: number;
 }) {
+  const frameRef = useRef(0);
+  const boundsRef = useRef<DOMRect | null>(null);
+
+  useEffect(() => () => window.cancelAnimationFrame(frameRef.current), []);
+
+  function prepareCard(event: PointerEvent<HTMLAnchorElement>) {
+    if (event.pointerType === "touch") return;
+    boundsRef.current = event.currentTarget.getBoundingClientRect();
+  }
+
   function moveCard(event: PointerEvent<HTMLAnchorElement>) {
     if (event.pointerType === "touch") return;
     const card = event.currentTarget;
-    const bounds = card.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width;
-    const y = (event.clientY - bounds.top) / bounds.height;
-    card.style.setProperty("--pointer-x", `${x * 100}%`);
-    card.style.setProperty("--pointer-y", `${y * 100}%`);
-    card.style.setProperty("--tilt-x", `${(0.5 - y) * 5}deg`);
-    card.style.setProperty("--tilt-y", `${(x - 0.5) * 6}deg`);
+    const bounds = boundsRef.current ?? card.getBoundingClientRect();
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+    window.cancelAnimationFrame(frameRef.current);
+    frameRef.current = window.requestAnimationFrame(() => {
+      const x = (clientX - bounds.left) / bounds.width;
+      const y = (clientY - bounds.top) / bounds.height;
+      card.style.setProperty("--pointer-x", `${x * 100}%`);
+      card.style.setProperty("--pointer-y", `${y * 100}%`);
+      card.style.setProperty("--tilt-x", `${(0.5 - y) * 5}deg`);
+      card.style.setProperty("--tilt-y", `${(x - 0.5) * 6}deg`);
+    });
   }
 
   function resetCard(event: PointerEvent<HTMLAnchorElement>) {
     const card = event.currentTarget;
+    boundsRef.current = null;
+    window.cancelAnimationFrame(frameRef.current);
     card.style.setProperty("--tilt-x", "0deg");
     card.style.setProperty("--tilt-y", "0deg");
   }
@@ -34,6 +51,7 @@ export function MemberCard({
       className="member-card"
       data-reveal
       href={archiveHref(entry)}
+      onPointerEnter={prepareCard}
       onPointerLeave={resetCard}
       onPointerMove={moveCard}
       prefetch={false}

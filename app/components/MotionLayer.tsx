@@ -156,7 +156,15 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
     );
 
     elements.forEach((element) => observer.observe(element));
+    // A reveal animation is decorative, so an observer callback must never be
+    // able to leave real content permanently transparent. Some desktop browser
+    // sessions can miss the initial intersection notification during hydration.
+    const revealFallback = window.setTimeout(() => {
+      elements.forEach((element) => element.classList.add("is-revealed"));
+    }, 900);
+
     return () => {
+      window.clearTimeout(revealFallback);
       observer.disconnect();
       root.classList.remove("motion-ready");
     };

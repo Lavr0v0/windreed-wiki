@@ -251,12 +251,11 @@ test("ships a reliable Chinese serif on iPad instead of falling back to sans-ser
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  assert.doesNotMatch(layout, /@fontsource-variable\/noto-serif-sc\/wght\.css/);
-  assert.match(styles, /--serif:\s*"Windreed Noto Serif SC",\s*"Noto Serif SC Variable",\s*ui-serif/);
-  assert.match(styles, /windreed-noto-serif-sc\.woff2/);
+  assert.match(layout, /@fontsource-variable\/noto-serif-sc\/wght\.css/);
+  assert.match(styles, /--serif:\s*"Noto Serif SC Variable",\s*ui-serif/);
+  assert.doesNotMatch(styles, /windreed-noto-serif-sc\.woff2/);
   assert.match(styles, /"Songti SC"/);
   assert.match(styles, /"STSongti-SC-Regular"/);
-  await access(new URL("../public/fonts/windreed-noto-serif-sc.woff2", import.meta.url));
 });
 
 test("presents party member names as recorded chronicle entries", async () => {

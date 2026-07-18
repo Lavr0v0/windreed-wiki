@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   archiveManifest,
+  archiveHref,
   archiveSectionById,
   entryCollectionLabel,
   siteHref,
@@ -9,6 +10,7 @@ import {
 import { getPublicArchiveEntry } from "../../../public-archive.server";
 import { MarkdownView } from "../../../components/MarkdownView";
 import { PendingLink } from "../../../components/PendingLink";
+import { ArticleToc } from "../../../components/ArticleToc";
 
 type PageProps = {
   params: Promise<{ category: string; slug: string }>;
@@ -28,11 +30,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { category, slug } = await params;
   const entry = await getPublicArchiveEntry(category, slug);
   if (!entry) return {};
+  const title = entry.englishTitle
+    ? `${entry.title} ${entry.englishTitle}`
+    : entry.title;
+  const href = archiveHref(entry);
   return {
-    title: entry.englishTitle
-      ? `${entry.title} ${entry.englishTitle}`
-      : entry.title,
+    title,
     description: entry.summary,
+    alternates: { canonical: href },
+    openGraph: {
+      title,
+      description: entry.summary,
+      type: "article",
+      url: href,
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: `${entry.title} · The Windreed Wayfarers` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: entry.summary,
+      images: ["/og.png"],
+    },
   };
 }
 
@@ -65,12 +83,12 @@ export default async function ArchivePage({ params }: PageProps) {
           style={{ "--entry-accent": entry.accent } as React.CSSProperties}
         >
           {isMember && (
-            <div className="member-article-ribbon" data-reveal>
+            <div className="member-article-ribbon">
               <span>PARTY MEMBER</span>
               <b>{String(memberNumber).padStart(2, "0")} / 06</b>
             </div>
           )}
-          <header className="article-header" data-reveal>
+          <header className="article-header">
             <div
               className="article-monogram"
               style={{ "--entry-accent": entry.accent } as React.CSSProperties}
@@ -89,7 +107,7 @@ export default async function ArchivePage({ params }: PageProps) {
           </header>
 
           {entry.facts && (
-            <dl className="fact-grid" data-reveal>
+            <dl className="fact-grid">
               {entry.facts.map((fact) => (
                 <div key={fact.label}>
                   <dt>{fact.label}</dt>
@@ -101,7 +119,6 @@ export default async function ArchivePage({ params }: PageProps) {
 
           {entry.personalPage && (
             <a
-              aria-label={`翻阅${entry.title}的人物专页`}
               className="personal-chronicle-link"
               href={siteHref(entry.personalPage)}
             >
@@ -120,22 +137,7 @@ export default async function ArchivePage({ params }: PageProps) {
           </footer>
         </article>
 
-        <aside className="article-rail">
-          {entry.headings.length > 0 && (
-            <nav className="page-toc" aria-label="本页目录">
-              <span>本页目录</span>
-              {entry.headings.map((heading) => (
-                <a
-                  className={heading.level === 3 ? "toc-sub" : undefined}
-                  href={`#${heading.id}`}
-                  key={`${heading.level}-${heading.id}`}
-                >
-                  {heading.title}
-                </a>
-              ))}
-            </nav>
-          )}
-        </aside>
+        <ArticleToc headings={entry.headings} />
       </div>
     </div>
   );

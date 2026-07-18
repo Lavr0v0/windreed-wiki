@@ -18,7 +18,7 @@
 
   const views = {
     full: { target: 0.295, theta: 18, phi: 78, radius: 112 },
-    blade: { target: 0.14, theta: 12, phi: 82, radius: 14 },
+    blade: { target: 0.14, theta: 2, phi: 82, radius: 14 },
     hilt: { target: -0.08, theta: 22, phi: 82, radius: 32 },
   };
 

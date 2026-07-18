@@ -20,7 +20,7 @@ export default async function Home() {
 
   return (
     <div className="home-page">
-      <section className="hero-panel" data-reveal>
+      <section className="hero-panel">
         <div className="hero-copy">
           <span className="eyebrow">THE SWORD COAST · 1492 DR</span>
           <h1>The Windreed<br />Wayfarers</h1>

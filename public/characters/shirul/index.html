@@ -11,21 +11,25 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:site_name" content="The Windreed Wayfarers">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://windreed.wiki/og.png">
+    <meta property="og:image:alt" content="The Windreed Wayfarers 公开档案">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="雪露 Shirul · 人物专页">
     <meta name="twitter:description" content="来自安柏弗的十五岁人类圣武士，立下古贤之誓。">
+    <meta name="twitter:image" content="https://windreed.wiki/og.png">
     <meta name="author" content="Lavro">
     <meta name="theme-color" content="#F8FAFC">
     <link rel="canonical" href="https://windreed.wiki/characters/shirul/">
     <meta property="og:url" content="https://windreed.wiki/characters/shirul/">
     <link rel="stylesheet" href="tailwind.css">
     <link rel="stylesheet" href="../shared/page.css">
-    <script src="../shared/lenis.min.js"></script>
+    <script defer src="../shared/lenis.min.js"></script>
+    <script defer src="../shared/page.js"></script>
 
     <style>
         @font-face {
             font-family: 'Cinzel';
-            src: url('../shared/Cinzel-VariableFont_wght.ttf') format('truetype');
+            src: url('../shared/Cinzel-VariableFont_wght.woff2') format('woff2');
             font-weight: 400 900;
             font-style: normal;
             font-display: swap;
@@ -122,18 +126,6 @@
             border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        /* 首字下沉 */
-        .drop-cap::first-letter {
-            float: left;
-            font-size: 3.5rem;
-            line-height: 0.8;
-            padding-top: 0.25rem;
-            margin-right: 0.6rem;
-            color: var(--cyan-accent);
-            font-family: 'Cinzel', serif;
-            font-weight: 600;
-        }
-
         /* Lenis */
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto; }
@@ -194,14 +186,18 @@
 
         @media (max-width: 560px) {
             .shirul-nav {
+                background: rgba(248, 250, 252, 0.94);
                 padding: 18px 16px;
             }
 
             .shirul-nav-links {
-                font-size: 10px;
+                color: #52677B;
+                font-size: 11px;
                 gap: 12px;
                 white-space: nowrap;
             }
+
+            .shirul-facts { color: #64748B; font-size: 11px; }
         }
     </style>
 </head>
@@ -337,7 +333,7 @@
                     安柏弗长大的十五岁<span class="text-[#0891B2]">人类圣武士</span>
                 </h2>
                 <div class="w-12 h-[1px] bg-[#06B6D4]/30 mx-auto mt-8 mb-8"></div>
-                <p class="font-cn text-sm text-[#64748B] tracking-wider max-w-2xl mx-auto leading-[2.2] drop-cap">
+                <p class="font-cn text-sm text-[#52677B] tracking-wider max-w-2xl mx-auto leading-[2.2]">
                     雪露出生在安柏弗的村长家，排行第三，父母、姐姐和哥哥都在。她很小便被送到教堂生活，在经文、祷辞和戒律中识字并形成信仰。她总想让自己显得成熟，也总想把自己该做的部分做好；最早把几名同路人称作“我们”的也是她。
                 </p>
             </div>

@@ -31,7 +31,8 @@ export async function writePublicArchiveCache<T>(key: string, value: T) {
   if (!cache) return;
   try {
     await cache.put(cacheKey(key), JSON.stringify(value));
-  } catch {
+  } catch (error) {
+    console.error("[public-archive-cache] write failed", error);
     // A cache failure must never make a public archive page unavailable.
   }
 }

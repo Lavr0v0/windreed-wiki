@@ -69,7 +69,11 @@ function publicCacheResponse(response: Response, status: "HIT" | "MISS") {
 }
 
 function defaultWorkerCache() {
-  return (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default ?? null;
+  try {
+    return (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default ?? null;
+  } catch {
+    return null;
+  }
 }
 
 // Image security config. SVG sources with .svg extension auto-skip the

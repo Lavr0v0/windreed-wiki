@@ -165,11 +165,15 @@ const worker = {
     }
 
     const shouldCachePublicResponse = isPublicCacheableRequest(request, url, editorHost);
-    const workerCache = shouldCachePublicResponse ? defaultWorkerCache() : null;
+    let workerCache = shouldCachePublicResponse ? defaultWorkerCache() : null;
     const cacheKey = workerCache ? await publicCacheKey(request) : null;
     if (workerCache && cacheKey) {
-      const cached = await workerCache.match(cacheKey);
-      if (cached) return publicCacheResponse(cached, "HIT");
+      try {
+        const cached = await workerCache.match(cacheKey);
+        if (cached) return publicCacheResponse(cached, "HIT");
+      } catch {
+        workerCache = null;
+      }
     }
 
     const response = await handler.fetch(request, env, ctx);
@@ -181,7 +185,11 @@ const worker = {
     }
     if (workerCache && cacheKey && response.ok && !response.headers.has("Set-Cookie")) {
       const cacheable = publicCacheResponse(response, "MISS");
-      ctx.waitUntil(workerCache.put(cacheKey, cacheable.clone()));
+      try {
+        ctx.waitUntil(workerCache.put(cacheKey, cacheable.clone()).catch(() => undefined));
+      } catch {
+        return response;
+      }
       return cacheable;
     }
     return response;

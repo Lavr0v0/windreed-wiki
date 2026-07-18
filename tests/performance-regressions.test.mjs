@@ -65,6 +65,8 @@ test("loads future-proof Chinese font ranges and edge-caches only public reads",
   assert.match(worker, /workerCache\.put/);
   assert.match(worker, /X-Windreed-Cache/);
   assert.match(worker, /function defaultWorkerCache\(\) \{[\s\S]*?try \{[\s\S]*?catch \{/);
+  assert.match(worker, /await workerCache\.match\(cacheKey\)[\s\S]*?workerCache = null/);
+  assert.match(worker, /workerCache\.put\(cacheKey, cacheable\.clone\(\)\)\.catch/);
 });
 
 test("prefetches archive routes only after explicit pointer, focus, or touch intent", async () => {

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers refined minimal mark</title>
+  <desc id="desc">A borderless monoline mark of three reeds bending into a clean wind curl above a restrained bilingual wordmark.</desc>
+
+  <!-- Borderless symbol: three reeds, one wind, one shore. -->
+  <g transform="translate(67 8)" fill="none" stroke="#162C33" stroke-linecap="round">
+    <g stroke-width="11">
+      <path d="M310 420C307 337 311 258 325 199"/>
+      <path d="M405 420C406 311 414 211 433 145"/>
+      <path d="M490 420C494 336 506 262 531 206"/>
+    </g>
+
+    <g fill="#162C33" stroke="none">
+      <ellipse cx="339" cy="167" rx="12" ry="34" transform="rotate(24 339 167)"/>
+      <ellipse cx="452" cy="113" rx="13" ry="37" transform="rotate(31 452 113)"/>
+      <ellipse cx="551" cy="180" rx="12" ry="33" transform="rotate(38 551 180)"/>
+    </g>
+
+    <path d="M471 249C545 224 603 234 646 208C670 193 679 169 665 159C652 149 634 160 635 176C637 189 649 193 659 185" stroke-width="8"/>
+    <path d="M460 299C526 280 581 286 627 267" stroke-width="5.5"/>
+    <path d="M245 434C342 419 433 425 516 422C572 420 615 424 648 416" stroke-width="8"/>
+  </g>
+
+  <!-- A small compass spark balances the windward side. -->
+  <path d="M242 323L248 338L263 344L248 350L242 365L236 350L221 344L236 338Z" fill="#A98F53"/>
+
+  <!-- Six members, expressed without adding detail to the reeds. -->
+  <g fill="#76917F">
+    <circle cx="397" cy="478" r="5"/>
+    <circle cx="430" cy="478" r="5"/>
+    <circle cx="463" cy="478" r="5"/>
+    <circle cx="496" cy="478" r="5"/>
+    <circle cx="529" cy="478" r="5"/>
+    <circle cx="562" cy="478" r="5"/>
+  </g>
+
+  <g fill="#162C33" text-anchor="middle">
+    <text x="480" y="584" font-family="Georgia, 'Times New Roman', serif" font-size="78" letter-spacing="13">WINDREED</text>
+    <text x="480" y="643" font-family="Georgia, 'Times New Roman', serif" font-size="27" letter-spacing="13">WAYFARERS</text>
+    <text x="480" y="690" font-family="'Noto Serif SC', 'Songti SC', SimSun, serif" font-size="21" letter-spacing="10" fill="#4E6B5C">风芦旅人</text>
+  </g>
+</svg>

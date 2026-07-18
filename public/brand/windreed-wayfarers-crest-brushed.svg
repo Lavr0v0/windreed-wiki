@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers brushed crest</title>
+  <desc id="desc">A formal navy and gold team crest containing the shared brushed reed-and-trail mark and six member points.</desc>
+
+  <defs>
+    <mask id="brush-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="white"/>
+      <path d="M80 335C88 338 95 341 103 344" fill="none" stroke="black" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M96 365C102 367 108 369 115 371" fill="none" stroke="black" stroke-width="1" stroke-linecap="round"/>
+    </mask>
+  </defs>
+
+  <!-- Formal badge frame. -->
+  <circle cx="512" cy="512" r="492" fill="#0D2026"/>
+  <circle cx="512" cy="512" r="470" fill="none" stroke="#D8C48E" stroke-width="14"/>
+  <circle cx="512" cy="512" r="438" fill="none" stroke="#A98F53" stroke-width="3"/>
+  <circle cx="512" cy="512" r="414" fill="none" stroke="#D8C48E" stroke-width="2" stroke-dasharray="2 20" stroke-linecap="round" opacity=".7"/>
+
+  <!-- The same core mark, recolored for the dark field. -->
+  <g transform="translate(166.4 166.4) scale(1.35)">
+    <path
+      d="M398 112
+         C329 42 229 32 148 77
+         C61 143 38 244 69 330
+         C101 419 196 464 290 448
+         C379 432 443 355 449 264
+         C451 231 447 204 440 184
+         C428 199 428 224 430 249
+         C427 329 370 399 291 413
+         C207 428 126 388 99 312
+         C72 236 93 152 157 108
+         C216 68 286 64 344 93
+         C366 102 385 110 398 112Z"
+      fill="#D8C48E"
+      mask="url(#brush-mask)"
+    />
+
+    <g fill="none" stroke="#D8C48E" stroke-width="14" stroke-linecap="round">
+      <path d="M172 400C170 337 165 289 139 243"/>
+      <path d="M232 408C232 321 224 259 181 197"/>
+      <path d="M288 407C289 350 284 309 261 267"/>
+    </g>
+    <g fill="#A98F53" stroke="#F4EFE4" stroke-width="2">
+      <rect x="116" y="192" width="22" height="57" rx="11" transform="rotate(-28 127 220.5)"/>
+      <rect x="153" y="141" width="24" height="67" rx="12" transform="rotate(-33 165 174.5)"/>
+      <rect x="238" y="218" width="22" height="55" rx="11" transform="rotate(-28 249 245.5)"/>
+    </g>
+
+    <g fill="none" stroke="#76917F" stroke-width="8" stroke-linecap="round">
+      <path d="M303 414C310 382 309 352 326 327C345 300 371 284 392 263"/>
+      <path d="M359 414C356 388 361 363 367 339C375 313 396 286 416 267"/>
+    </g>
+    <g fill="none" stroke="#D8C48E" stroke-linecap="round">
+      <path d="M332 397C330 384 331 373 335 362" stroke-width="6"/>
+      <path d="M349 334C355 324 361 316 368 308" stroke-width="5"/>
+      <path d="M397 290L406 280" stroke-width="4"/>
+    </g>
+  </g>
+
+  <!-- Wayfinding star and six formal members. -->
+  <g transform="translate(512 155)" fill="#D8C48E">
+    <path d="M0-36L8-9L0 0L-8-9Z"/>
+    <path d="M36 0L9 8L0 0L9-8Z" opacity=".75"/>
+    <path d="M0 36L-8 9L0 0L8 9Z" opacity=".75"/>
+    <path d="M-36 0L-9-8L0 0L-9 8Z" opacity=".75"/>
+    <circle r="6" fill="#F4EFE4"/>
+  </g>
+  <g fill="#D8C48E">
+    <circle cx="276" cy="120" r="8"/>
+    <circle cx="748" cy="120" r="8"/>
+    <circle cx="905" cy="690" r="8"/>
+    <circle cx="680" cy="920" r="8"/>
+    <circle cx="344" cy="920" r="8"/>
+    <circle cx="119" cy="690" r="8"/>
+  </g>
+</svg>

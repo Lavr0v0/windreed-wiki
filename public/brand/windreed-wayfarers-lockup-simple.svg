@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers simplified logo</title>
+  <desc id="desc">Horizontal logo with a simplified three-reed crest and bilingual wordmark.</desc>
+
+  <defs>
+    <clipPath id="field-clip">
+      <circle cx="260" cy="260" r="196"/>
+    </clipPath>
+  </defs>
+
+  <g id="crest">
+    <circle cx="260" cy="260" r="248" fill="#0D2026"/>
+    <circle cx="260" cy="260" r="237" fill="none" stroke="#D8C48E" stroke-width="7"/>
+    <circle cx="260" cy="260" r="221" fill="none" stroke="#A98F53" stroke-width="2"/>
+    <circle cx="260" cy="260" r="208" fill="none" stroke="#D8C48E" stroke-width="1.5" stroke-dasharray="1 10" stroke-linecap="round" opacity=".7"/>
+    <circle cx="260" cy="260" r="196" fill="#162C33" stroke="#4E6B5C" stroke-width="3"/>
+
+    <g clip-path="url(#field-clip)">
+      <path d="M83 176C150 155 205 166 267 153C329 140 375 145 437 122" fill="none" stroke="#D8C48E" stroke-width="7" stroke-linecap="round"/>
+      <path d="M76 207C145 188 205 198 269 185C330 172 381 177 443 155" fill="none" stroke="#76917F" stroke-width="4" stroke-linecap="round"/>
+
+      <g fill="none" stroke="#D8C48E" stroke-width="7" stroke-linecap="round">
+        <path d="M195 385C195 315 192 250 180 196"/>
+        <path d="M260 385C260 295 263 219 274 163"/>
+        <path d="M325 385C325 318 328 263 341 213"/>
+      </g>
+      <g fill="#A98F53" stroke="#E8D9AE" stroke-width="2">
+        <rect x="172" y="168" width="15" height="44" rx="8" transform="rotate(-11 179.5 190)"/>
+        <rect x="267" y="134" width="15" height="45" rx="8" transform="rotate(8 274.5 156.5)"/>
+        <rect x="333" y="186" width="15" height="42" rx="8" transform="rotate(12 340.5 207)"/>
+      </g>
+      <g fill="#76917F" stroke="#AFC1AE" stroke-width="1.5">
+        <path d="M195 356C165 331 146 305 131 276C166 293 188 318 196 342Z"/>
+        <path d="M260 344C277 309 297 284 319 265C304 295 285 322 260 362Z"/>
+        <path d="M325 359C349 329 372 309 398 296C375 321 353 342 325 374Z"/>
+      </g>
+      <path d="M128 393Q260 373 392 393" fill="none" stroke="#4E6B5C" stroke-width="5" stroke-linecap="round"/>
+      <g fill="#D8C48E">
+        <circle cx="171" cy="409" r="4.5"/>
+        <circle cx="207" cy="404" r="4.5"/>
+        <circle cx="242" cy="401" r="4.5"/>
+        <circle cx="278" cy="401" r="4.5"/>
+        <circle cx="313" cy="404" r="4.5"/>
+        <circle cx="349" cy="409" r="4.5"/>
+      </g>
+    </g>
+
+    <g transform="translate(260 88)" fill="#D8C48E">
+      <path d="M0-23L5-6L0 0L-5-6Z"/>
+      <path d="M23 0L6 5L0 0L6-5Z" opacity=".75"/>
+      <path d="M0 23L-5 6L0 0L5 6Z" opacity=".75"/>
+      <path d="M-23 0L-6-5L0 0L-6 5Z" opacity=".75"/>
+      <circle r="3.5" fill="#F4EFE4"/>
+    </g>
+  </g>
+
+  <g transform="translate(585 0)">
+    <path d="M0 111H890" stroke="#A98F53" stroke-width="2"/>
+    <text x="0" y="220" fill="#162C33" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3">THE WINDREED</text>
+    <text x="0" y="323" fill="#162C33" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3">WAYFARERS</text>
+    <g transform="translate(4 378)">
+      <path d="M0 17H68" stroke="#76917F" stroke-width="4"/>
+      <text x="91" y="32" fill="#4E6B5C" font-family="'Noto Serif SC', 'Songti SC', SimSun, serif" font-size="38" letter-spacing="12">风芦旅人</text>
+      <circle cx="410" cy="17" r="5" fill="#A98F53"/>
+      <text x="435" y="29" fill="#5D696B" font-family="Georgia, 'Times New Roman', serif" font-size="23" letter-spacing="7">EST. 1491 DR</text>
+    </g>
+  </g>
+</svg>

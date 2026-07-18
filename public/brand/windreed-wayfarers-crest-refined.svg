@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers refined crest</title>
+  <desc id="desc">A precise circular crest with three wind-bent reeds, a restrained wind curl, a compass star, and six member marks.</desc>
+
+  <defs>
+    <clipPath id="field-clip">
+      <circle cx="512" cy="512" r="386"/>
+    </clipPath>
+  </defs>
+
+  <g id="crest">
+    <!-- Engraved border retained from the earlier roundel. -->
+    <circle cx="512" cy="512" r="492" fill="#0D2026"/>
+    <circle cx="512" cy="512" r="470" fill="none" stroke="#D8C48E" stroke-width="14"/>
+    <circle cx="512" cy="512" r="438" fill="none" stroke="#A98F53" stroke-width="3"/>
+    <circle cx="512" cy="512" r="414" fill="none" stroke="#D8C48E" stroke-width="2" stroke-dasharray="2 20" stroke-linecap="round" opacity=".7"/>
+    <circle cx="512" cy="512" r="386" fill="#162C33" stroke="#4E6B5C" stroke-width="6"/>
+
+    <g clip-path="url(#field-clip)">
+      <!-- Three reeds share one line weight and one wind direction. -->
+      <g fill="none" stroke="#D8C48E" stroke-width="14" stroke-linecap="round">
+        <path d="M360 727C358 616 361 510 380 431"/>
+        <path d="M473 727C474 581 484 447 508 358"/>
+        <path d="M574 727C579 615 594 516 626 441"/>
+      </g>
+
+      <g fill="#A98F53">
+        <ellipse cx="397" cy="393" rx="15" ry="43" transform="rotate(24 397 393)"/>
+        <ellipse cx="532" cy="316" rx="16" ry="47" transform="rotate(31 532 316)"/>
+        <ellipse cx="650" cy="408" rx="15" ry="41" transform="rotate(38 650 408)"/>
+      </g>
+
+      <!-- The hooked terminal makes this read as wind rather than a road. -->
+      <g fill="none" stroke="#76917F" stroke-linecap="round">
+        <path d="M555 501C646 470 717 483 770 451C799 433 810 404 793 392C777 381 755 394 757 413C759 429 774 434 786 424" stroke-width="10"/>
+        <path d="M542 561C623 537 690 545 746 521" stroke-width="7"/>
+      </g>
+
+      <!-- One clean shoreline anchors the mark. -->
+      <path d="M283 745C403 726 515 733 617 729C686 726 739 731 779 722" fill="none" stroke="#D8C48E" stroke-width="10" stroke-linecap="round"/>
+    </g>
+
+    <!-- Wayfinding star. -->
+    <g transform="translate(512 172)" fill="#D8C48E">
+      <path d="M0-46L10-11L0 0L-10-11Z"/>
+      <path d="M46 0L11 10L0 0L11-10Z" opacity=".75"/>
+      <path d="M0 46L-10 11L0 0L10 11Z" opacity=".75"/>
+      <path d="M-46 0L-11-10L0 0L-11 10Z" opacity=".75"/>
+      <circle r="7" fill="#F4EFE4"/>
+    </g>
+
+    <!-- Cardinal cuts and six evenly distributed member marks. -->
+    <g fill="#D8C48E">
+      <path d="M512 52L522 72L512 92L502 72Z"/>
+      <path d="M972 512L952 522L932 512L952 502Z"/>
+      <path d="M512 972L502 952L512 932L522 952Z"/>
+      <path d="M52 512L72 502L92 512L72 522Z"/>
+      <circle cx="276" cy="120" r="8"/>
+      <circle cx="748" cy="120" r="8"/>
+      <circle cx="905" cy="690" r="8"/>
+      <circle cx="680" cy="920" r="8"/>
+      <circle cx="344" cy="920" r="8"/>
+      <circle cx="119" cy="690" r="8"/>
+    </g>
+  </g>
+</svg>

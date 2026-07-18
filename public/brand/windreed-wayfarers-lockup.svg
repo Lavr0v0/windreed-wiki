@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers logo</title>
+  <desc id="desc">Horizontal logo with a circular six-reed crest, English wordmark, and Chinese name.</desc>
+
+  <defs>
+    <clipPath id="field-clip">
+      <circle cx="260" cy="260" r="196"/>
+    </clipPath>
+    <linearGradient id="field" x1="86" y1="80" x2="432" y2="447" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B3941"/>
+      <stop offset="1" stop-color="#0D2026"/>
+    </linearGradient>
+    <linearGradient id="road" x1="230" y1="245" x2="290" y2="440" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8C48E"/>
+      <stop offset="1" stop-color="#F4EFE4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Compact rendition of the crest -->
+  <g id="crest">
+    <circle cx="260" cy="260" r="248" fill="#0D2026"/>
+    <circle cx="260" cy="260" r="237" fill="none" stroke="#D8C48E" stroke-width="7"/>
+    <circle cx="260" cy="260" r="221" fill="none" stroke="#A98F53" stroke-width="2"/>
+    <circle cx="260" cy="260" r="208" fill="none" stroke="#D8C48E" stroke-width="1.5" stroke-dasharray="1 10" stroke-linecap="round" opacity=".7"/>
+    <circle cx="260" cy="260" r="196" fill="url(#field)" stroke="#4E6B5C" stroke-width="3"/>
+
+    <g clip-path="url(#field-clip)">
+      <path d="M60 164C134 128 182 156 242 139C317 118 378 138 463 93" fill="none" stroke="#D8C48E" stroke-width="7" stroke-linecap="round"/>
+      <path d="M46 191C121 160 175 185 243 168C319 148 378 163 448 132" fill="none" stroke="#F4EFE4" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+      <path d="M87 217C148 196 194 215 247 202C300 189 343 196 394 177" fill="none" stroke="#76917F" stroke-width="4" stroke-linecap="round"/>
+
+      <path d="M261 436C332 385 199 349 270 303C297 285 290 262 266 245" fill="none" stroke="#08191E" stroke-width="27" stroke-linecap="round" opacity=".32"/>
+      <path d="M261 436C332 385 199 349 270 303C297 285 290 262 266 245" fill="none" stroke="url(#road)" stroke-width="16" stroke-linecap="round"/>
+
+      <path d="M56 423C128 396 174 411 260 404C344 396 400 403 465 429V486H56Z" fill="#10282E"/>
+      <path d="M57 422C133 400 191 415 260 406C332 397 391 407 464 428" fill="none" stroke="#4E6B5C" stroke-width="4"/>
+
+      <g fill="none" stroke="#D8C48E" stroke-width="5" stroke-linecap="round">
+        <path d="M154 419C154 356 152 267 134 184"/>
+        <path d="M191 415C191 340 188 265 175 209"/>
+        <path d="M226 410C226 325 224 239 214 170"/>
+        <path d="M294 410C294 319 298 236 308 176"/>
+        <path d="M329 415C329 338 333 265 346 207"/>
+        <path d="M366 419C366 350 371 261 387 185"/>
+      </g>
+      <g fill="#A98F53" stroke="#E8D9AE" stroke-width="1.5">
+        <rect x="126" y="156" width="13" height="39" rx="7" transform="rotate(-12 132.5 175.5)"/>
+        <rect x="169" y="184" width="12" height="36" rx="6" transform="rotate(-8 175 202)"/>
+        <rect x="208" y="143" width="13" height="40" rx="7" transform="rotate(-7 214.5 163)"/>
+        <rect x="303" y="149" width="13" height="40" rx="7" transform="rotate(8 309.5 169)"/>
+        <rect x="340" y="182" width="12" height="36" rx="6" transform="rotate(10 346 200)"/>
+        <rect x="381" y="157" width="13" height="39" rx="7" transform="rotate(13 387.5 176.5)"/>
+      </g>
+      <g fill="#76917F" stroke="#AFC1AE" stroke-width="1">
+        <path d="M153 382C130 341 114 314 91 292C121 304 144 329 154 362Z"/>
+        <path d="M158 355C168 320 181 297 198 277C186 307 173 337 158 374Z"/>
+        <path d="M190 370C169 334 156 307 140 278C168 299 186 325 192 353Z"/>
+        <path d="M225 362C209 330 200 303 191 275C213 297 225 321 226 346Z"/>
+        <path d="M294 356C302 323 315 298 331 276C321 305 309 332 294 374Z"/>
+        <path d="M329 370C349 334 362 307 379 279C351 300 334 325 328 353Z"/>
+        <path d="M367 382C390 341 407 315 430 293C399 304 376 329 366 362Z"/>
+        <path d="M362 355C351 320 339 297 322 277C333 307 347 337 362 374Z"/>
+      </g>
+    </g>
+
+    <g transform="translate(260 88)" fill="#D8C48E">
+      <path d="M0-23L5-6L0 0L-5-6Z"/>
+      <path d="M23 0L6 5L0 0L6-5Z" opacity=".75"/>
+      <path d="M0 23L-5 6L0 0L5 6Z" opacity=".75"/>
+      <path d="M-23 0L-6-5L0 0L-6 5Z" opacity=".75"/>
+      <circle r="3.5" fill="#F4EFE4"/>
+    </g>
+  </g>
+
+  <!-- Wordmark. Text remains editable for localization and can be outlined before print. -->
+  <g transform="translate(585 0)">
+    <path d="M0 111H890" stroke="#A98F53" stroke-width="2"/>
+    <text x="0" y="220" fill="#162C33" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3">THE WINDREED</text>
+    <text x="0" y="323" fill="#162C33" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3">WAYFARERS</text>
+    <g transform="translate(4 378)">
+      <path d="M0 17H68" stroke="#76917F" stroke-width="4"/>
+      <text x="91" y="32" fill="#4E6B5C" font-family="'Noto Serif SC', 'Songti SC', SimSun, serif" font-size="38" letter-spacing="12">风芦旅人</text>
+      <circle cx="410" cy="17" r="5" fill="#A98F53"/>
+      <text x="435" y="29" fill="#5D696B" font-family="Georgia, 'Times New Roman', serif" font-size="23" letter-spacing="7">EST. 1491 DR</text>
+    </g>
+  </g>
+</svg>

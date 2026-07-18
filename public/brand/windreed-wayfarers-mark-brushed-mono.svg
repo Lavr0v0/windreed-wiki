@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" color="#16323B" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers monochrome mark</title>
+  <desc id="desc">A single-color open brush circle with three reeds and a perspective trail.</desc>
+  <defs>
+    <mask id="brush-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="white"/>
+      <path d="M80 335C88 338 95 341 103 344" fill="none" stroke="black" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M96 365C102 367 108 369 115 371" fill="none" stroke="black" stroke-width="1" stroke-linecap="round"/>
+    </mask>
+  </defs>
+  <path d="M398 112C329 42 229 32 148 77C61 143 38 244 69 330C101 419 196 464 290 448C379 432 443 355 449 264C451 231 447 204 440 184C428 199 428 224 430 249C427 329 370 399 291 413C207 428 126 388 99 312C72 236 93 152 157 108C216 68 286 64 344 93C366 102 385 110 398 112Z" fill="currentColor" mask="url(#brush-mask)"/>
+  <g fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round">
+    <path d="M172 400C170 337 165 289 139 243"/>
+    <path d="M232 408C232 321 224 259 181 197"/>
+    <path d="M288 407C289 350 284 309 261 267"/>
+  </g>
+  <g fill="currentColor">
+    <rect x="116" y="192" width="22" height="57" rx="11" transform="rotate(-28 127 220.5)"/>
+    <rect x="153" y="141" width="24" height="67" rx="12" transform="rotate(-33 165 174.5)"/>
+    <rect x="238" y="218" width="22" height="55" rx="11" transform="rotate(-28 249 245.5)"/>
+  </g>
+  <g fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round">
+    <path d="M303 414C310 382 309 352 326 327C345 300 371 284 392 263"/>
+    <path d="M359 414C356 388 361 363 367 339C375 313 396 286 416 267"/>
+  </g>
+  <g fill="none" stroke="currentColor" stroke-linecap="round">
+    <path d="M332 397C330 384 331 373 335 362" stroke-width="6"/>
+    <path d="M349 334C355 324 361 316 368 308" stroke-width="5"/>
+    <path d="M397 290L406 280" stroke-width="4"/>
+  </g>
+</svg>

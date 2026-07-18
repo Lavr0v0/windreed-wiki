@@ -34,6 +34,12 @@ const localBindingConfig = {
         },
       ]
     : [],
+  kv_namespaces: [
+    {
+      binding: "PUBLIC_ARCHIVE_CACHE",
+      id: "00000000000000000000000000000000",
+    },
+  ],
 };
 
 export default defineConfig(async () => {

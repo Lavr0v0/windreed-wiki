@@ -1,8 +1,8 @@
 "use client";
 
 import type { PointerEvent } from "react";
-import Link from "next/link";
 import { archiveHref, type ArchiveManifestEntry } from "../archive-manifest";
+import { PendingLink } from "./PendingLink";
 
 export function MemberCard({
   entry,
@@ -30,13 +30,13 @@ export function MemberCard({
   }
 
   return (
-    <Link
-      aria-label={`阅读${entry.title}的团员档案`}
+    <PendingLink
       className="member-card"
       data-reveal
       href={archiveHref(entry)}
       onPointerLeave={resetCard}
       onPointerMove={moveCard}
+      prefetch={false}
       style={{
         "--member-accent": entry.accent,
         "--member-index": index,
@@ -70,6 +70,6 @@ export function MemberCard({
       <span className="member-card-enter">展卷阅其人 <i aria-hidden="true">↗</i></span>
       <span className="member-card-colophon" aria-hidden="true">RECORDED · 1492 DR</span>
       <span className="member-card-glow" aria-hidden="true" />
-    </Link>
+    </PendingLink>
   );
 }

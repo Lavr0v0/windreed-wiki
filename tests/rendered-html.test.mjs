@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
+import { mergeCanonicalCoreInfo } from "../app/core-info.js";
 
 const projectRoot = new URL("../", import.meta.url);
 
@@ -47,6 +48,26 @@ const routes = [
 const forbiddenPublicText =
   /ChatGPT|Claude|人工智能|问卷|答卷|待定|待补|银月城|现有资料|现有档案|候选方案|工作记录|待跑团|均填|留白|当前均无资料|当前不增加|codex-preview|starter project|your site is taking shape|答卷\/|\.md\b|\.xlsx\b/i;
 
+test("merges one canonical core-information block into published character prose", () => {
+  const canonical = `> [!info] 核心信息
+> - **姓名**：Skamos / 斯卡摩斯
+> - **种族**：提夫林
+
+## 简介
+
+静态正文。`;
+  const missing = mergeCanonicalCoreInfo("## 简介\n\n数据库旧正文。", canonical);
+  const stale = mergeCanonicalCoreInfo(
+    "> [!info] 核心信息\n> - **姓名**：旧名字\n\n## 简介\n\n数据库旧正文。",
+    canonical,
+  );
+
+  assert.equal((missing.match(/\[!info\] 核心信息/g) ?? []).length, 1);
+  assert.match(missing, /Skamos \/ 斯卡摩斯/);
+  assert.equal((stale.match(/\[!info\] 核心信息/g) ?? []).length, 1);
+  assert.doesNotMatch(stale, /旧名字/);
+});
+
 test("renders the finished archive home page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
@@ -71,6 +92,14 @@ test("every published archive route renders and passes the content policy", asyn
     assert.match(html, /THE WINDREED CHRONICLES/, route);
     assert.doesNotMatch(html, forbiddenPublicText, route);
     assert.doesNotMatch(html, /芦溪村|银桦林/, route);
+  }
+});
+
+test("shows one canonical core-information panel on every character archive", async () => {
+  for (const route of routes.filter((candidate) => candidate.startsWith("/archive/characters/"))) {
+    const response = await render(route);
+    const html = await response.text();
+    assert.equal((html.match(/callout-title">核心信息/g) ?? []).length, 1, route);
   }
 });
 
@@ -115,10 +144,9 @@ test("uses the fixed bilingual archive and story navigation", async () => {
     lastPosition = position;
   }
 
-  const treeGroups = [...tree.matchAll(/<details[^>]*>[\s\S]*?<\/details>/g)].map((match) => match[0]);
-  const memberGroup = treeGroups.find((group) => group.includes("LIVES")) ?? "";
-  const associateGroup = treeGroups.find((group) => group.includes("COMPANIONS")) ?? "";
-  const placesGroup = treeGroups.find((group) => group.includes("PLACES")) ?? "";
+  const memberGroup = tree.slice(tree.indexOf("LIVES"), tree.indexOf("COMPANIONS"));
+  const associateGroup = tree.slice(tree.indexOf("COMPANIONS"), tree.indexOf("PLACES"));
+  const placesGroup = tree.slice(tree.indexOf("PLACES"), tree.indexOf("RELICS"));
   assert.match(memberGroup, /雪露/);
   assert.match(memberGroup, /阿瑞尔/);
   assert.doesNotMatch(memberGroup, /梅莉艾尔/);
@@ -218,23 +246,20 @@ test("keeps archive navigation scrollable without visible browser chrome", async
 });
 
 test("ships a reliable Chinese serif on iPad instead of falling back to sans-serif", async () => {
-  const [layout, styles, packageJson] = await Promise.all([
+  const [layout, styles] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
-  assert.match(layout, /@fontsource-variable\/noto-serif-sc\/wght\.css/);
-  assert.match(styles, /--serif:\s*"Noto Serif SC Variable",\s*ui-serif/);
+  assert.doesNotMatch(layout, /@fontsource-variable\/noto-serif-sc\/wght\.css/);
+  assert.match(styles, /--serif:\s*"Windreed Noto Serif SC",\s*"Noto Serif SC Variable",\s*ui-serif/);
+  assert.match(styles, /windreed-noto-serif-sc\.woff2/);
   assert.match(styles, /"Songti SC"/);
   assert.match(styles, /"STSongti-SC-Regular"/);
-  assert.equal(
-    JSON.parse(packageJson).dependencies["@fontsource-variable/noto-serif-sc"],
-    "5.2.10",
-  );
+  await access(new URL("../public/fonts/windreed-noto-serif-sc.woff2", import.meta.url));
 });
 
-test("presents party member names as handwritten chronicle entries", async () => {
+test("presents party member names as recorded chronicle entries", async () => {
   const [response, layout, styles, packageJson] = await Promise.all([
     render(),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -248,10 +273,10 @@ test("presents party member names as handwritten chronicle entries", async () =>
   assert.match(html, /展卷阅其人/);
   assert.match(html, /data-logo-slot="site"/);
   assert.match(html, /data-logo-slot="member"/);
-  assert.match(layout, /@fontsource\/lxgw-wenkai\/500\.css/);
-  assert.match(styles, /--hand:\s*"LXGW WenKai"/);
+  assert.doesNotMatch(layout, /lxgw-wenkai/i);
+  assert.match(styles, /--hand:\s*var\(--serif\)/);
   assert.match(styles, /\.member-card-name::after/);
-  assert.equal(JSON.parse(packageJson).dependencies["@fontsource/lxgw-wenkai"], "5.2.5");
+  assert.equal(JSON.parse(packageJson).dependencies["@fontsource/lxgw-wenkai"], undefined);
 });
 
 test("links published character archives to their personal chronicles", async () => {
@@ -261,28 +286,40 @@ test("links published character archives to their personal chronicles", async ()
     render("/archive/characters/flavilar").then((response) => response.text()),
     render("/archive/characters/pheiron").then((response) => response.text()),
   ]);
-  assert.match(shirul, /href="\/DnD\/Shirul\/"/);
-  assert.match(alberina, /href="\/DnD\/Alberina\/"/);
-  assert.match(flavilar, /href="\/DnD\/Flavilar\/"/);
+  assert.match(shirul, /href="\/characters\/shirul\/"/);
+  assert.match(alberina, /href="\/characters\/alberina\/"/);
+  assert.match(flavilar, /href="\/characters\/flavilar\/"/);
   assert.doesNotMatch(pheiron, /PERSONAL CHRONICLE/);
 });
 
 test("ships the standalone personal chronicles with local runtime assets", async () => {
   const pages = [
-    "../public/DnD/index.html",
-    "../public/DnD/Alberina/index.html",
-    "../public/DnD/Flavilar/index.html",
-    "../public/DnD/Shirul/index.html",
-    "../public/DnD/shared/page.css",
-    "../public/DnD/shared/lenis.min.js",
+    "../public/characters/index.html",
+    "../public/characters/alberina/index.html",
+    "../public/characters/flavilar/index.html",
+    "../public/characters/shirul/index.html",
+    "../public/characters/shared/page.css",
+    "../public/characters/shared/lenis.min.js",
   ];
   await Promise.all(pages.map((path) => access(new URL(path, import.meta.url))));
-  const index = await readFile(new URL("../public/DnD/index.html", import.meta.url), "utf8");
-  assert.match(index, /https:\/\/windreed\.wiki\/DnD\//);
-  assert.match(index, /href="Alberina\/"/);
-  assert.match(index, /href="Flavilar\/"/);
-  assert.match(index, /href="Shirul\/"/);
+  const index = await readFile(new URL("../public/characters/index.html", import.meta.url), "utf8");
+  assert.match(index, /https:\/\/windreed\.wiki\/characters\//);
+  assert.match(index, /href="alberina\/"/);
+  assert.match(index, /href="flavilar\/"/);
+  assert.match(index, /href="shirul\/"/);
   assert.doesNotMatch(index, forbiddenPublicText);
+
+  const legacyRedirects = [
+    ["../public/DnD/index.html", "/characters/"],
+    ["../public/DnD/Alberina/index.html", "/characters/alberina/"],
+    ["../public/DnD/Flavilar/index.html", "/characters/flavilar/"],
+    ["../public/DnD/Shirul/index.html", "/characters/shirul/"],
+  ];
+  for (const [path, target] of legacyRedirects) {
+    const redirect = await readFile(new URL(path, import.meta.url), "utf8");
+    assert.match(redirect, /noindex,follow/);
+    assert.ok(redirect.includes(target));
+  }
 });
 
 test("renders archive prose immediately without an intersection reveal gate", async () => {

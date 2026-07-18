@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shirul · 雪露 · The Windreed Wayfarers</title>
+    <meta name="description" content="雪露 Shirul：来自安柏弗的十五岁人类圣武士，立下古贤之誓，是风芦旅人的情感核心。页面由 Lavro 制作。">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="雪露 Shirul · 人物专页">
+    <meta property="og:description" content="安柏弗、古贤之誓、神迹之光与大剑「枝桠」。页面由 Lavro 制作。">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="The Windreed Wayfarers">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="雪露 Shirul · 人物专页">
+    <meta name="twitter:description" content="来自安柏弗的十五岁人类圣武士，立下古贤之誓。">
+    <meta name="author" content="Lavro">
+    <meta name="theme-color" content="#F8FAFC">
+    <link rel="canonical" href="https://windreed.wiki/characters/shirul/">
+    <meta property="og:url" content="https://windreed.wiki/characters/shirul/">
+    <link rel="stylesheet" href="tailwind.css">
+    <link rel="stylesheet" href="../shared/page.css">
+    <script src="../shared/lenis.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Cinzel';
+            src: url('../shared/Cinzel-VariableFont_wght.ttf') format('truetype');
+            font-weight: 400 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'ShangShou';
+            src: url('ShangShou-subset.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --cyan-accent: #06B6D4;
+            --cyan-light: #22D3EE;
+            --cyan-pale: #67E8F9;
+            --cyan-bg: #ECFEFF;
+            --cyan-dark: #0891B2;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            font-family: 'ShangShou', 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+            line-height: 1.8;
+        }
+
+        .font-divine { font-family: 'Cinzel', serif; }
+        .font-cn { font-family: 'ShangShou', 'Noto Serif SC', serif; }
+
+        /* 渐现动画 */
+        .ethereal-reveal {
+            opacity: 0;
+            transform: translateY(48px);
+            transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .ethereal-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.15s; }
+        .reveal-delay-2 { transition-delay: 0.3s; }
+        .reveal-delay-3 { transition-delay: 0.45s; }
+
+        /* 纯净十字光晕 */
+        @keyframes pureCross {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.15)); opacity: 0.6; }
+            50% { filter: drop-shadow(0 0 40px rgba(6, 182, 212, 0.5)); opacity: 1; transform: scale(1.03); }
+        }
+        .animate-pure-cross {
+            animation: pureCross 6s ease-in-out infinite alternate;
+        }
+
+        /* 呼吸光晕 */
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.15); }
+        }
+        .animate-breathe {
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        /* 浮动 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* 极简网格背景 */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: -2;
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+        }
+
+        /* 玻璃卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* 首字下沉 */
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 3.5rem;
+            line-height: 0.8;
+            padding-top: 0.25rem;
+            margin-right: 0.6rem;
+            color: var(--cyan-accent);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+        }
+
+        /* Lenis */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        ::selection {
+            background: rgba(34, 211, 238, 0.3);
+            color: #0F172A;
+        }
+        ::-webkit-scrollbar { display: none; }
+
+        /* 噪点纹理 */
+        .bg-noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 60;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .shirul-progress {
+            position: fixed;
+            inset: 0 auto auto 0;
+            width: 100%;
+            height: 2px;
+            z-index: 80;
+            transform: scaleX(var(--shirul-progress, 0));
+            transform-origin: left center;
+            background: linear-gradient(90deg, #0891B2, #67E8F9, #D4AF62);
+        }
+
+        .shirul-facts {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .branch-showcase-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 24px;
+            padding: 11px 16px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            background: rgba(236, 254, 255, 0.62);
+            color: #087F96;
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-decoration: none;
+            transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+        .branch-showcase-link:hover,
+        .branch-showcase-link:focus-visible {
+            border-color: rgba(6, 182, 212, 0.62);
+            background: rgba(207, 250, 254, 0.78);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 560px) {
+            .shirul-nav {
+                padding: 18px 16px;
+            }
+
+            .shirul-nav-links {
+                font-size: 10px;
+                gap: 12px;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="archive-actions" aria-label="页面入口">
+        <a class="archive-return" href="../" aria-label="返回人物专页索引"><span aria-hidden="true">←</span><b>人物专页索引</b></a>
+        <a class="archive-return archive-return--main" href="/archive/characters/shirul" aria-label="返回雪露主站简明档案"><span aria-hidden="true">⌂</span><b>主站简明档案</b></a>
+    </div>
+    <div class="shirul-progress" aria-hidden="true"></div>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "雪露 Shirul · 人物专页",
+      "description": "来自安柏弗的十五岁人类圣武士，立下古贤之誓，是风芦旅人的情感核心。",
+      "genre": "Fan-made Original Character (OC)",
+      "author": { "@type": "Person", "name": "Lavro" },
+      "isPartOf": { "@type": "WebSite", "name": "The Windreed Wayfarers" }
+    }
+    </script>
+
+    <!-- 底层背景 -->
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+
+    <!-- 柔和环境光晕 -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-15%] left-[-15%] w-[700px] h-[700px] bg-[#CFFAFE] rounded-full blur-[150px] opacity-40"></div>
+        <div class="absolute top-[30%] right-[-15%] w-[600px] h-[600px] bg-white rounded-full blur-[120px] opacity-70"></div>
+        <div class="absolute bottom-[-10%] left-[30%] w-[500px] h-[500px] bg-[#E0F2FE] rounded-full blur-[130px] opacity-30"></div>
+    </div>
+
+    <!-- 粒子画布 -->
+    <canvas id="particles-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
+
+    <!-- 顶部导航 -->
+    <nav class="shirul-nav fixed w-full top-0 z-50 px-6 md:px-10 py-6 md:py-8 flex justify-between items-center bg-white/40 backdrop-blur-md border-b border-[#E2E8F0]/50">
+        <div class="flex items-center gap-2 text-[#0891B2]">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+            <span class="font-divine text-lg tracking-[0.3em] font-medium text-[#334155]">SHIRUL</span>
+        </div>
+        <div class="shirul-nav-links flex gap-8 font-cn text-xs tracking-widest text-[#64748B]">
+            <a href="#about" class="hover:text-[#06B6D4] transition-colors duration-500">安柏弗</a>
+            <a href="#weapon" class="hover:text-[#06B6D4] transition-colors duration-500">巨剑</a>
+            <a href="#bonds" class="hover:text-[#06B6D4] transition-colors duration-500">羁绊</a>
+        </div>
+    </nav>
+
+    <main id="main-content">
+
+    <!-- 第一屏：光之拱门与十字 -->
+    <section class="relative h-screen flex flex-col items-center justify-center z-10 overflow-hidden">
+        <!-- 视差拱门 — 与标题共享同一居中轴 -->
+        <div id="hero-arch" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[320px] h-[500px] md:w-[420px] md:h-[620px]">
+            <!-- 外层拱门 -->
+            <div class="absolute inset-0 border border-[#CBD5E1]/70 rounded-t-full bg-gradient-to-b from-white/60 to-transparent shadow-[0_0_60px_rgba(255,255,255,0.6)]"></div>
+            <!-- 内层青色修饰线 -->
+            <div class="absolute inset-5 border border-[#22D3EE]/15 rounded-t-[calc(999px-20px)]"></div>
+            <!-- 第三层极细装饰 -->
+            <div class="absolute inset-10 border border-[#CBD5E1]/20 rounded-t-[calc(999px-40px)]"></div>
+            <!-- 光之十字 -->
+            <div class="relative w-full h-full flex items-center justify-center animate-pure-cross">
+                <div class="absolute w-[1.5px] h-[60%] bg-gradient-to-b from-transparent via-[#06B6D4]/80 to-transparent"></div>
+                <div class="absolute h-[1.5px] w-[40%] top-[38%] bg-gradient-to-r from-transparent via-[#06B6D4]/80 to-transparent"></div>
+                <!-- 中心青芒 -->
+                <div class="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#67E8F9] rounded-full blur-2xl opacity-40 animate-breathe"></div>
+                <div class="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#06B6D4] rounded-full opacity-60"></div>
+            </div>
+        </div>
+
+        <!-- 前景标题 — 绝对居中 -->
+        <div class="relative text-center ethereal-reveal z-20 flex flex-col items-center justify-center">
+            <!-- 顶部装饰小十字 -->
+            <div class="mb-8 opacity-40 animate-float">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="7" y="0" width="2" height="16" fill="#06B6D4"/><rect x="0" y="7" width="16" height="2" fill="#06B6D4"/></svg>
+            </div>
+
+            <h1 class="font-cn text-6xl md:text-8xl font-light tracking-[0.5em] text-[#1E293B] drop-shadow-sm mb-4 pl-[0.5em]">
+                雪露
+            </h1>
+
+            <div class="flex items-center justify-center gap-4 md:gap-6 mb-6">
+                <div class="w-10 md:w-16 h-[1px] bg-gradient-to-r from-transparent to-[#94A3B8]"></div>
+                <p class="font-divine text-[10px] md:text-xs tracking-[0.4em] text-[#0891B2] uppercase">
+                    Oath of the Ancients
+                </p>
+                <div class="w-10 md:w-16 h-[1px] bg-gradient-to-l from-transparent to-[#94A3B8]"></div>
+            </div>
+
+            <div class="shirul-facts flex items-center gap-3 font-cn text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] text-[#94A3B8] mb-2 px-5">
+                <span>人类</span>
+                <div class="w-1 h-1 rounded-full bg-[#CBD5E1]"></div>
+                <span>圣武士</span>
+                <div class="w-1 h-1 rounded-full bg-[#CBD5E1]"></div>
+                <span>15岁</span>
+                <div class="w-1 h-1 rounded-full bg-[#CBD5E1]"></div>
+                <span>139cm</span>
+                <div class="w-1 h-1 rounded-full bg-[#CBD5E1]"></div>
+                <span>安柏弗</span>
+            </div>
+        </div>
+
+        <!-- 底部滚动提示 -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-40">
+            <span class="font-divine text-[9px] tracking-[0.3em] text-[#94A3B8] uppercase">Scroll</span>
+            <div class="w-[1px] h-10 bg-gradient-to-b from-[#94A3B8] to-transparent relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-[#06B6D4] animate-[slideHint_2s_ease-in-out_infinite]"></div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @keyframes slideHint {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(200%); opacity: 0; }
+        }
+    </style>
+
+    <!-- 第二屏：纯真底色与巨剑反差 -->
+    <section id="about" class="relative py-28 md:py-40 z-10 border-t border-[#E2E8F0]/50 bg-gradient-to-b from-transparent via-white/50 to-white">
+        <div class="max-w-5xl mx-auto px-6">
+
+            <!-- 章节标记 -->
+            <div class="text-center mb-6 ethereal-reveal">
+                <span class="font-divine text-[10px] tracking-[0.5em] text-[#CBD5E1] uppercase">Chapter I</span>
+            </div>
+
+            <div class="text-center mb-20 ethereal-reveal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-[#06B6D4] mb-6 w-6 h-6"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+                <h2 class="font-cn text-xl md:text-3xl leading-[2] tracking-[0.15em] font-light text-[#1E293B]">
+                    安柏弗长大的十五岁<span class="text-[#0891B2]">人类圣武士</span>
+                </h2>
+                <div class="w-12 h-[1px] bg-[#06B6D4]/30 mx-auto mt-8 mb-8"></div>
+                <p class="font-cn text-sm text-[#64748B] tracking-wider max-w-2xl mx-auto leading-[2.2] drop-cap">
+                    雪露出生在安柏弗的村长家，排行第三，父母、姐姐和哥哥都在。她很小便被送到教堂生活，在经文、祷辞和戒律中识字并形成信仰。她总想让自己显得成熟，也总想把自己该做的部分做好；最早把几名同路人称作“我们”的也是她。
+                </p>
+            </div>
+
+            <div id="weapon" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 mt-16">
+                <!-- 古贤之誓 -->
+                <div class="glass-card p-8 md:p-10 rounded-2xl shadow-[0_8px_32px_rgba(226,232,240,0.4)] ethereal-reveal hover:-translate-y-1 transition-all duration-500 group relative overflow-hidden">
+                    <!-- 背景装饰 -->
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-[#ECFEFF] rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-[#ECFEFF] rounded-full flex items-center justify-center mb-6 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-shadow duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#06B6D4] w-5 h-5"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                        </div>
+                        <h3 class="font-cn text-xl tracking-widest text-[#1E293B] mb-4">古贤之誓</h3>
+                        <p class="font-cn text-sm leading-[2.2] tracking-wider text-[#475569] text-justify">
+                            约 1490 DR、十三岁左右，她与阿尔贝莉娜一同外出，亲眼看见一束光落下，所照之处的万物飞快生长。她把这当作神迹，当场立下誓言。在她的理解中，这份誓言要求她守护生命、光与希望，并亲自承担守护者的责任。
+                        </p>
+                        <div class="mt-8 pt-5 border-t border-[#E2E8F0]/60 font-cn text-xs tracking-widest text-[#94A3B8] italic">
+                            约 1490 DR · 十三岁左右立誓
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 巨剑「枝桠」 -->
+                <div class="glass-card p-8 md:p-10 rounded-2xl shadow-[0_8px_32px_rgba(226,232,240,0.4)] ethereal-reveal reveal-delay-1 hover:-translate-y-1 transition-all duration-500 group relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-[#ECFEFF] rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-[#ECFEFF] rounded-full flex items-center justify-center mb-6 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-shadow duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#06B6D4] w-5 h-5"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>
+                        </div>
+                        <h3 class="font-cn text-xl tracking-widest text-[#1E293B] mb-4">巨剑「枝桠」</h3>
+                        <p class="font-cn text-sm leading-[2.2] tracking-wider text-[#475569] text-justify">
+                            她使用大型双手长剑「枝桠」。第一次试着挥剑时，她发现剑比想象中轻，双臂却还是抡不动。后来靠反复练习和硬撑，她才逐渐学会驾驭这柄剑；站在前排依靠的是誓言和意志，蛮力从来算不上她的长处。
+                        </p>
+                        <a class="branch-showcase-link font-cn" href="./branch/" aria-label="打开枝桠三维模型展示页">
+                            查看「枝桠」3D 展示 <span aria-hidden="true">↗</span>
+                        </a>
+                        <div class="mt-8 pt-5 border-t border-[#E2E8F0]/60 font-cn text-xs tracking-widest text-[#94A3B8] flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-[#06B6D4]"></div>
+                            在危险面前，本能地把自己摆在最前方。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 华丽分割线 -->
+    <div class="flex items-center justify-center w-full py-4 z-10 relative">
+        <div class="h-[1px] w-1/4 md:w-1/3 bg-gradient-to-r from-transparent to-[#06B6D4]/30"></div>
+        <div class="mx-4 flex items-center gap-3 text-[#06B6D4]/40">
+            <div class="w-2 h-2 rotate-45 border border-current"></div>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1"><circle cx="10" cy="10" r="8"/><path d="M10 2 L10 18 M2 10 L18 10"/></svg>
+            <div class="w-2 h-2 rotate-45 border border-current"></div>
+        </div>
+        <div class="h-[1px] w-1/4 md:w-1/3 bg-gradient-to-l from-transparent to-[#06B6D4]/30"></div>
+    </div>
+
+    <!-- 第三屏：旅途羁绊 -->
+    <section id="bonds" class="relative py-28 md:py-40 z-10 bg-[#F1F5F9]/80 border-t border-[#E2E8F0]/50">
+        <div class="max-w-5xl mx-auto px-6">
+
+            <!-- 章节标记 -->
+            <div class="text-center mb-6 ethereal-reveal">
+                <span class="font-divine text-[10px] tracking-[0.5em] text-[#CBD5E1] uppercase">Chapter II</span>
+            </div>
+
+            <div class="text-center mb-20 ethereal-reveal">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#06B6D4] w-5 h-5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                </div>
+                <span class="font-divine text-lg md:text-xl tracking-[0.3em] font-medium text-[#1E293B]">WIND REED TRAVELERS</span>
+                <h2 class="font-cn text-2xl tracking-[0.3em] text-[#64748B] mt-2">风 芦 旅 人</h2>
+                <div class="w-12 h-[1px] bg-[#06B6D4]/30 mx-auto mt-6"></div>
+                <p class="font-cn text-xs tracking-widest text-[#0891B2] mt-4">
+                    最早把同路人称作“我们”的人
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="companions-grid">
+                <!-- 阿尔贝莉娜 -->
+                <div class="glass-card p-7 rounded-xl hover:border-[#06B6D4]/40 transition-all duration-500 ethereal-reveal group hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(6,182,212,0.08)]">
+                    <div class="font-divine text-[9px] tracking-widest text-[#94A3B8] mb-1 group-hover:text-[#06B6D4] transition-colors duration-500">Alberina</div>
+                    <h3 class="font-cn text-base font-bold tracking-widest text-[#1E293B] mb-2">阿尔贝莉娜</h3>
+                    <div class="inline-block bg-[#ECFEFF] text-[#0891B2] font-cn text-[9px] tracking-widest px-2 py-0.5 mb-4 rounded-sm">家人 / 引路人</div>
+                    <p class="font-cn text-xs leading-[2.2] tracking-wider text-[#64748B] text-justify">
+                        雪露约五岁时与她相识，多年相处下来，已经把她视作家人和引路人。雪露想从她身后走到她身边，将来还想挡在她前面。
+                    </p>
+                </div>
+                <!-- 芙勒维拉 -->
+                <div class="glass-card p-7 rounded-xl hover:border-[#06B6D4]/40 transition-all duration-500 ethereal-reveal reveal-delay-1 group hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(6,182,212,0.08)]">
+                    <div class="font-divine text-[9px] tracking-widest text-[#94A3B8] mb-1 group-hover:text-[#06B6D4] transition-colors duration-500">Flavilar</div>
+                    <h3 class="font-cn text-base font-bold tracking-widest text-[#1E293B] mb-2">芙勒维拉</h3>
+                    <div class="inline-block bg-[#ECFEFF] text-[#0891B2] font-cn text-[9px] tracking-widest px-2 py-0.5 mb-4 rounded-sm">前排搭档</div>
+                    <p class="font-cn text-xs leading-[2.2] tracking-wider text-[#64748B] text-justify">
+                        两人常在前排并肩，也一起上课、一起认识这个世界。芙勒维拉不会站在长辈的位置照顾她，她们只管一起学着往前走。
+                    </p>
+                </div>
+                <!-- 佩伦 -->
+                <div class="glass-card p-7 rounded-xl hover:border-[#06B6D4]/40 transition-all duration-500 ethereal-reveal reveal-delay-2 group hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(6,182,212,0.08)]">
+                    <div class="font-divine text-[9px] tracking-widest text-[#94A3B8] mb-1 group-hover:text-[#06B6D4] transition-colors duration-500">Pheiron</div>
+                    <h3 class="font-cn text-base font-bold tracking-widest text-[#1E293B] mb-2">佩伦</h3>
+                    <div class="inline-block bg-[#ECFEFF] text-[#0891B2] font-cn text-[9px] tracking-widest px-2 py-0.5 mb-4 rounded-sm">抓包与教育</div>
+                    <p class="font-cn text-xs leading-[2.2] tracking-wider text-[#64748B] text-justify">
+                        佩伦爱小偷小摸，也擅长用几句话脱身；雪露会认真追究这些“不规矩”的举动，“抓包与说教”于是成了日常。
+                    </p>
+                </div>
+                <!-- 斯卡摩斯 -->
+                <div class="glass-card p-7 rounded-xl hover:border-[#06B6D4]/40 transition-all duration-500 ethereal-reveal reveal-delay-3 group hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(6,182,212,0.08)]">
+                    <div class="font-divine text-[9px] tracking-widest text-[#94A3B8] mb-1 group-hover:text-[#06B6D4] transition-colors duration-500">Skamos</div>
+                    <h3 class="font-cn text-base font-bold tracking-widest text-[#1E293B] mb-2">斯卡摩斯</h3>
+                    <div class="inline-block bg-[#ECFEFF] text-[#0891B2] font-cn text-[9px] tracking-widest px-2 py-0.5 mb-4 rounded-sm">从旁观到同行</div>
+                    <p class="font-cn text-xs leading-[2.2] tracking-wider text-[#64748B] text-justify">
+                        雪露很自然地把原先习惯站在人群外的斯卡摩斯算进自己人里；久而久之，他也留在了队伍中。
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    </main>
+
+    <!-- 极简底部 -->
+    <footer class="py-20 text-center z-10 bg-white border-t border-[#E2E8F0]/50 relative">
+        <div class="flex justify-center mb-6">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F8FAFC] border border-[#E2E8F0] shadow-[0_2px_12px_rgba(6,182,212,0.08)]">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#06B6D4] w-4 h-4"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
+            </div>
+        </div>
+        <div class="font-divine text-base tracking-[0.4em] font-medium text-[#1E293B] mb-3">
+            SHIRUL
+        </div>
+        <div class="font-cn text-[10px] tracking-[0.3em] text-[#94A3B8]">
+            THE WINDREED WAYFARERS · PAGE BY LAVRO
+        </div>
+        <div class="mt-6">
+            <a href="../" class="font-divine text-[9px] tracking-[0.3em] text-[#CBD5E1] hover:text-[#06B6D4] transition-colors duration-500 uppercase">← Back to Archives</a>
+        </div>
+    </footer>
+
+    <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+
+    const updateShirulProgress = () => {
+        const distance = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = distance > 0 ? Math.min(1, window.scrollY / distance) : 0;
+        document.documentElement.style.setProperty('--shirul-progress', progress);
+    };
+    window.addEventListener('scroll', updateShirulProgress, { passive: true });
+    window.addEventListener('pageshow', () => {
+        window.scrollTo(0, 0);
+        updateShirulProgress();
+    });
+
+    // --- 粒子系统 ---
+    (function() {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = Math.random() * 0.5 + 0.1;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = Math.random() > 0.4 ? 'rgba(255, 255, 255, ' : 'rgba(6, 182, 212, ';
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.opacity += (Math.random() - 0.5) * 0.01;
+                if (this.opacity < 0.1) this.opacity = 0.1;
+                if (this.opacity > 0.6) this.opacity = 0.6;
+                if (this.y > canvas.height + 10) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + this.opacity + ')';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color + '0.5)';
+                ctx.fill();
+            }
+        }
+
+        const particleCount = reducedMotion ? 0 : (window.innerWidth < 768 ? 28 : 70);
+        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        if (!reducedMotion) animate();
+    })();
+
+    // --- 视差滚动 ---
+    (function() {
+        const arch = document.getElementById('hero-arch');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.addEventListener('scroll', function() {
+            if (arch && !reducedMotion) {
+                const y = window.scrollY;
+                arch.style.transform = 'translate(-50%, -50%) translateY(' + (y * 0.2) + 'px)';
+            }
+        });
+    })();
+
+    // --- Scroll Reveal (IntersectionObserver) ---
+    (function() {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reducedMotion || !('IntersectionObserver' in window)) {
+            document.querySelectorAll('.ethereal-reveal').forEach(function(el) { el.classList.add('active'); });
+            return;
+        }
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.ethereal-reveal').forEach(function(el) {
+            observer.observe(el);
+        });
+    })();
+
+    // --- Lenis 平滑滚动 ---
+    (function() {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (finePointer && !reducedMotion && window.Lenis) {
+            new Lenis({
+                autoRaf: true,
+                lerp: 0.085,
+                smoothWheel: true,
+                syncTouch: false,
+            });
+        }
+    })();
+
+</script>
+</body>
+</html>

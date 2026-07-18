@@ -1,0 +1,132 @@
+@font-face {
+  font-display: swap;
+  font-family: "Archive Cinzel";
+  font-style: normal;
+  font-weight: 400 900;
+  src: url("Cinzel-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Archive Noto Serif SC";
+  font-style: normal;
+  font-weight: 300 700;
+  src: url("NotoSerifSC-subset.woff2") format("woff2");
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+.archive-actions {
+  align-items: center;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  display: flex;
+  gap: 8px;
+  left: 18px;
+  position: fixed;
+  z-index: 110;
+}
+
+.archive-return {
+  align-items: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(13, 32, 38, 0.9);
+  border: 1px solid rgba(169, 143, 83, 0.52);
+  box-shadow: 0 10px 30px rgba(4, 13, 20, 0.22);
+  color: #f4efe4;
+  display: inline-flex;
+  font-family: Georgia, "Archive Noto Serif SC", "Songti SC", serif;
+  font-size: 9px;
+  font-weight: 700;
+  gap: 9px;
+  letter-spacing: 0.12em;
+  min-height: 44px;
+  padding: 10px 13px;
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.archive-return--main {
+  background: rgba(244, 239, 228, 0.94);
+  color: #102541;
+}
+
+.archive-return:hover {
+  border-color: rgba(216, 196, 142, 0.92);
+  transform: translateY(-2px);
+}
+
+.skip-link {
+  background: #f8f3e8;
+  border: 2px solid #a98f53;
+  color: #12222b;
+  font-family: "Archive Noto Serif SC", "Songti SC", serif;
+  left: 16px;
+  padding: 11px 15px;
+  position: fixed;
+  text-decoration: none;
+  top: -90px;
+  z-index: 200;
+}
+
+.skip-link:focus {
+  top: 14px;
+}
+
+:where(a, button, input, summary, [tabindex]):focus-visible {
+  outline: 3px solid #d8c48e;
+  outline-offset: 4px;
+}
+
+@media (max-width: 560px) {
+  .archive-actions {
+    bottom: max(14px, env(safe-area-inset-bottom));
+    gap: 7px;
+    left: 14px;
+  }
+
+  .archive-return {
+    border-radius: 50%;
+    font-size: 14px;
+    height: 44px;
+    justify-content: center;
+    padding: 0;
+    width: 44px;
+  }
+
+  .archive-return b {
+    display: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .archive-return:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .parallax-el,
+  .hero-enter,
+  .reveal,
+  .ethereal-reveal {
+    filter: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1,7 +1,6 @@
 "use client";
 
-import { FormEvent, Fragment, useMemo } from "react";
-import Link from "next/link";
+import { FormEvent, Fragment, useMemo, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   archiveSectionById,
@@ -9,6 +8,7 @@ import {
   siteHref,
   type ArchiveSection,
 } from "../archive-manifest";
+import { NavigationPendingSignal, PendingLink } from "../components/PendingLink";
 
 export type SearchIndexItem = {
   title: string;
@@ -56,6 +56,7 @@ export function SearchClient({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [navigationPending, startNavigationTransition] = useTransition();
   const activeQuery = searchParams.get("q")?.trim() ?? "";
   const sectionParam = searchParams.get("section");
   const legacyCategory = searchParams.get("category");
@@ -103,19 +104,24 @@ export function SearchClient({
     const params = new URLSearchParams();
     if (trimmed) params.set("q", trimmed);
     if (category !== "all") params.set("section", category);
-    router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
+    startNavigationTransition(() => {
+      router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
+    });
   }
 
   function chooseCategory(value: SearchCollection) {
     const params = new URLSearchParams();
     if (activeQuery) params.set("q", activeQuery);
     if (value !== "all") params.set("section", value);
-    router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
+    startNavigationTransition(() => {
+      router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
+    });
   }
 
   return (
     <div className="search-page">
-      <div className="breadcrumbs"><Link href={siteHref("/")}>总览</Link><span>/</span><span>全文索引</span></div>
+      <NavigationPendingSignal pending={navigationPending} />
+      <div className="breadcrumbs"><PendingLink href={siteHref("/")} prefetch={false}>总览</PendingLink><span>/</span><span>全文索引</span></div>
       <header className="search-header" data-reveal>
         <span className="eyebrow">FULL TEXT INDEX</span>
         <h1>全文索引</h1>
@@ -164,7 +170,7 @@ export function SearchClient({
 
       <div className="search-results">
         {results.map((item) => (
-          <Link className="search-result" href={item.href} key={item.href}>
+          <PendingLink className="search-result" href={item.href} key={item.href} prefetch={false}>
             <div>
               <span className="result-category">
                 {archiveSectionById[item.section].english} · {archiveSectionById[item.section].chinese}
@@ -174,7 +180,7 @@ export function SearchClient({
               <p>{highlight(makeSnippet(item, activeQuery), activeQuery)}</p>
             </div>
             <span className="result-arrow" aria-hidden="true">→</span>
-          </Link>
+          </PendingLink>
         ))}
         {results.length === 0 && (
           <div className="empty-results">

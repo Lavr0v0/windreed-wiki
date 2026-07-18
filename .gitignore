@@ -28,6 +28,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 dev*.log
+editor-dev*.log
 .dev-server.pid
 
 # env files (can opt-in for committing if needed)
@@ -41,5 +42,7 @@ next-env.d.ts
 *.tsbuildinfo
 /dist/
 /.wrangler/
+/.windreed-sync/
+/content/incoming/
 /outputs/
 /work/

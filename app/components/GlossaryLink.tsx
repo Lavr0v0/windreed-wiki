@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { PendingLink } from "./PendingLink";
 
 type GlossaryLinkProps = {
   label: string;
@@ -71,9 +71,9 @@ export function GlossaryLink({
           {secondaryAliases.length > 0 && (
             <span className="glossary-aliases">亦见：{secondaryAliases.join(" · ")}</span>
           )}
-          <Link className="glossary-more" href={href}>
+          <PendingLink className="glossary-more" href={href} prefetch={false}>
             查看完整词条 <span aria-hidden="true">→</span>
-          </Link>
+          </PendingLink>
         </span>
       )}
     </span>

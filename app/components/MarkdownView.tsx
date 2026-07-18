@@ -1,8 +1,8 @@
 import { Fragment, type ReactNode } from "react";
-import Link from "next/link";
 import { headingId } from "../archive-content.server";
 import { archiveHref, archiveManifest } from "../archive-manifest";
 import { GlossaryLink } from "./GlossaryLink";
+import { PendingLink } from "./PendingLink";
 
 const glossaryEntriesByHref = new Map(
   archiveManifest
@@ -10,8 +10,18 @@ const glossaryEntriesByHref = new Map(
     .map((entry) => [archiveHref(entry), entry]),
 );
 
+function isSafePublicLink(href: string) {
+  if (href.startsWith("/") && !href.startsWith("//")) return true;
+  try {
+    const url = new URL(href);
+    return ["http:", "https:", "mailto:"].includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
 function renderInline(text: string): ReactNode[] {
-  const tokenPattern = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`)/g;
+  const tokenPattern = /(\*\*[^*]+\*\*|\*[^*\n]+\*|\[[^\]]+\]\([^)]+\)|`[^`]+`)/g;
   const output: ReactNode[] = [];
   let cursor = 0;
   let match: RegExpExecArray | null;
@@ -23,30 +33,38 @@ function renderInline(text: string): ReactNode[] {
 
     if (token.startsWith("**")) {
       output.push(<strong key={key}>{renderInline(token.slice(2, -2))}</strong>);
+    } else if (token.startsWith("*")) {
+      output.push(<em key={key}>{renderInline(token.slice(1, -1))}</em>);
     } else if (token.startsWith("`")) {
       output.push(<code key={key}>{token.slice(1, -1)}</code>);
     } else {
       const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
       if (link) {
-        const external = /^https?:\/\//.test(link[2]);
-        const glossaryEntry = glossaryEntriesByHref.get(link[2]);
+        const href = link[2];
+        if (!isSafePublicLink(href)) {
+          output.push(link[1]);
+          cursor = match.index + token.length;
+          continue;
+        }
+        const external = /^(?:https?:|mailto:)/.test(href);
+        const glossaryEntry = glossaryEntriesByHref.get(href);
         output.push(
           external ? (
-            <a key={key} href={link[2]} target="_blank" rel="noreferrer">
+            <a key={key} href={href} target={href.startsWith("mailto:") ? undefined : "_blank"} rel="noreferrer">
               {link[1]}
             </a>
           ) : glossaryEntry ? (
             <GlossaryLink
               key={key}
               label={link[1]}
-              href={link[2]}
+              href={href}
               title={glossaryEntry.title}
               englishTitle={glossaryEntry.englishTitle}
               summary={glossaryEntry.summary}
               aliases={glossaryEntry.aliases}
             />
           ) : (
-            <Link key={key} href={link[2]}>{link[1]}</Link>
+            <PendingLink key={key} href={href} prefetch={false}>{link[1]}</PendingLink>
           ),
         );
       }

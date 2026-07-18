@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  archiveHref,
   archiveManifest,
   archiveSectionById,
   entryCollectionLabel,
-  partyMemberEntries,
   siteHref,
 } from "../../../archive-manifest";
-import { getArchiveEntry } from "../../../archive-content.server";
+import { getPublicArchiveEntry } from "../../../public-archive.server";
 import { MarkdownView } from "../../../components/MarkdownView";
+import { PendingLink } from "../../../components/PendingLink";
 
 type PageProps = {
   params: Promise<{ category: string; slug: string }>;
 };
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return archiveManifest.map((entry) => ({
@@ -25,7 +26,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { category, slug } = await params;
-  const entry = getArchiveEntry(category, slug);
+  const entry = await getPublicArchiveEntry(category, slug);
   if (!entry) return {};
   return {
     title: entry.englishTitle
@@ -37,18 +38,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArchivePage({ params }: PageProps) {
   const { category, slug } = await params;
-  const entry = getArchiveEntry(category, slug);
+  const entry = await getPublicArchiveEntry(category, slug);
   if (!entry) notFound();
 
-  const related = archiveManifest
-    .filter((candidate) => {
-      if (candidate.slug === entry.slug) return false;
-      return candidate.section === entry.section;
-    })
-    .slice(0, 4);
   const isMember = entry.characterRole === "member";
   const memberNumber = isMember
-    ? partyMemberEntries().findIndex((candidate) => candidate.slug === entry.slug) + 1
+    ? archiveManifest.filter((candidate) => candidate.characterRole === "member")
+        .findIndex((candidate) => candidate.slug === entry.slug) + 1
     : 0;
   const collectionLabel = entryCollectionLabel(entry);
   const collection = archiveSectionById[entry.section];
@@ -56,9 +52,9 @@ export default async function ArchivePage({ params }: PageProps) {
   return (
     <div className="archive-page">
       <div className="breadcrumbs" aria-label="面包屑">
-        <Link href={siteHref("/")}>总览</Link>
+        <PendingLink href={siteHref("/")} prefetch={false}>总览</PendingLink>
         <span aria-hidden="true">/</span>
-        <Link href={`${siteHref("/search")}?section=${entry.section}`}>{collection.english} · {collectionLabel}</Link>
+        <PendingLink href={`${siteHref("/search")}?section=${entry.section}`} prefetch={false}>{collection.english} · {collectionLabel}</PendingLink>
         <span aria-hidden="true">/</span>
         <span>{entry.title}</span>
       </div>
@@ -138,17 +134,6 @@ export default async function ArchivePage({ params }: PageProps) {
                 </a>
               ))}
             </nav>
-          )}
-          {related.length > 0 && (
-            <div className="related-panel">
-              <span>同卷条目</span>
-              {related.map((candidate) => (
-                <Link href={archiveHref(candidate)} key={candidate.slug}>
-                  <i style={{ background: candidate.accent }} />
-                  <span>{candidate.title}</span>
-                </Link>
-              ))}
-            </div>
           )}
         </aside>
       </div>

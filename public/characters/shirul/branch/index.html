@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>枝桠 · 雪露的双手长剑 · The Windreed Wayfarers</title>
+  <meta name="description" content="雪露的双手长剑「枝桠」3D 展示：查看完整造型、根须蚀刻、缎面钢与皮革握柄。">
+  <meta name="theme-color" content="#eef8f8">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://windreed.wiki/characters/shirul/branch/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="The Windreed Wayfarers">
+  <meta property="og:title" content="枝桠 · 雪露的双手长剑">
+  <meta property="og:description" content="在浏览器中旋转查看「枝桠」的完整 3D 模型。">
+  <meta property="og:url" content="https://windreed.wiki/characters/shirul/branch/">
+  <meta property="og:image" content="https://windreed.wiki/characters/shirul/branch/branch-sword-poster.webp">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <link rel="stylesheet" href="./branch.css">
+</head>
+<body>
+  <a class="skip-link" href="#showcase">跳到武器展示</a>
+  <div class="page-progress" aria-hidden="true"><span id="page-progress-bar"></span></div>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="返回风芦旅人主站">
+      <span class="brand-mark" aria-hidden="true">W</span>
+      <span><b>Windreed</b><small>The Wayfarers Archive</small></span>
+    </a>
+    <nav aria-label="页面导航">
+      <a href="../">雪露 Shirul</a>
+      <a href="#craft">制作细节</a>
+      <a href="/archive/world/branch">道具档案</a>
+    </nav>
+  </header>
+
+  <main id="showcase">
+    <section class="hero" aria-labelledby="branch-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> Shirul's greatsword · 3D archive</p>
+        <h1 id="branch-title">枝桠</h1>
+        <p class="roman-name" aria-hidden="true">BRANCH</p>
+        <p class="lead">一柄为了挡在危险之前而被握住的剑。直身双刃，根部的蚀刻如植物脉络生长，锋线则在光下保持克制而清楚。</p>
+
+        <dl class="quick-specs" aria-label="枝桠的主要尺寸">
+          <div><dt>总长</dt><dd>1.270 <span>m</span></dd></div>
+          <div><dt>刃长</dt><dd>0.930 <span>m</span></dd></div>
+          <div><dt>估重</dt><dd>2.600 <span>kg</span></dd></div>
+        </dl>
+
+        <div class="hero-actions">
+          <a class="primary-action" href="#model-stage">查看三维模型 <span aria-hidden="true">↓</span></a>
+          <a class="text-action" href="../">返回雪露专页</a>
+        </div>
+      </div>
+
+      <div class="model-column" id="model-stage">
+        <div class="model-frame">
+          <div class="frame-corner frame-corner--tl" aria-hidden="true"></div>
+          <div class="frame-corner frame-corner--br" aria-hidden="true"></div>
+          <p class="model-label">Interactive object · 01</p>
+          <model-viewer
+            id="branch-model"
+            src="./branch-sword.glb?rev=2"
+            poster="./branch-sword-poster.webp?rev=2"
+            alt="大型双手长剑枝桠的三维模型；银灰色直身双刃、十字护手、深棕色皮革握柄和芽苞形剑首"
+            loading="eager"
+            reveal="auto"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            auto-rotate-delay="5000"
+            rotation-per-second="10deg"
+            camera-target="0m 0.295m 0m"
+            camera-orbit="18deg 78deg 112%"
+            min-camera-orbit="auto 45deg 24%"
+            max-camera-orbit="auto 112deg 180%"
+            field-of-view="25deg"
+            min-field-of-view="18deg"
+            max-field-of-view="42deg"
+            environment-image="legacy"
+            tone-mapping="neutral"
+            exposure="1.04"
+            shadow-intensity="0.72"
+            shadow-softness="0.86">
+            <div class="model-progress" slot="progress-bar" aria-hidden="true"><span id="model-progress-bar"></span></div>
+            <div class="model-error" slot="error">三维模型暂时无法载入，仍可查看静态展示图。</div>
+          </model-viewer>
+
+          <div class="viewer-toolbar" aria-label="模型视角控制">
+            <div class="view-presets" role="group" aria-label="预设视角">
+              <button type="button" class="is-active" data-view="full" aria-pressed="true">全剑</button>
+              <button type="button" data-view="blade" aria-pressed="false">刃纹</button>
+              <button type="button" data-view="hilt" aria-pressed="false">护手</button>
+            </div>
+            <button type="button" class="rotation-toggle" id="rotation-toggle" aria-pressed="false">
+              <span class="rotation-icon" aria-hidden="true">↻</span><span>暂停转动</span>
+            </button>
+          </div>
+          <p class="viewer-status" id="viewer-status" aria-live="polite">正在准备三维模型…</p>
+          <p class="viewer-hint">拖动旋转 · 滚轮或双指缩放</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="object-note" aria-label="物件说明">
+      <p class="section-index">01 / OBJECT NOTE</p>
+      <blockquote>“第一次握住它时，她只觉得剑比想象中轻；真正让它举起来的，后来一直都是誓言和意志。”</blockquote>
+      <p>「枝桠」属于雪露。它没有夸耀战绩的缺口，也没有刻意陈旧的锈色；近乎全新的表面，更接近她对守护这件事尚未磨损的相信。</p>
+    </section>
+
+    <section class="craft" id="craft" aria-labelledby="craft-title">
+      <div class="section-heading">
+        <p class="section-index">02 / CRAFT & FORM</p>
+        <h2 id="craft-title">从轮廓到刃纹</h2>
+        <p>精灵工艺被压在结构里，不靠繁复装饰抢夺视线。</p>
+      </div>
+
+      <div class="detail-grid">
+        <article>
+          <span class="detail-number">01</span>
+          <h3>直身双刃</h3>
+          <p>刃宽由根部平顺收向剑尖，中央凹陷式血槽提前开始收束，让反光保持连续。</p>
+        </article>
+        <article>
+          <span class="detail-number">02</span>
+          <h3>根须蚀刻</h3>
+          <p>深色脉络从护手上方生长，在中段拉成长纤维，接近前段时只留下极淡顺纹。</p>
+        </article>
+        <article>
+          <span class="detail-number">03</span>
+          <h3>皮革与芽苞</h3>
+          <p>深棕皮革包覆有效握持区；实心剑首收成克制的芽苞形，平衡整柄剑的视觉重量。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="data-strip" aria-label="模型与工程数据">
+      <div><span>有效握持区</span><strong>235 mm</strong></div>
+      <div><span>护手宽</span><strong>230 mm</strong></div>
+      <div><span>估算平衡点</span><strong>护手前 12.83 cm</strong></div>
+      <div><span>网页模型</span><strong>32,131 tris · 3.72 MB</strong></div>
+      <p>尺寸与质量为视觉模型的工程估算，不作为制造图纸。</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <p class="footer-kicker">The Windreed Wayfarers</p>
+      <p>枝桠 · 雪露的双手长剑</p>
+    </div>
+    <div class="footer-links">
+      <a href="../">雪露人物专页</a>
+      <a href="/archive/world/branch">道具档案</a>
+      <a href="#showcase">回到顶部 ↑</a>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "枝桠",
+    "alternateName": "Branch",
+    "description": "雪露所使用的大型双手长剑三维展示。",
+    "isPartOf": { "@type": "WebSite", "name": "The Windreed Wayfarers", "url": "https://windreed.wiki/" },
+    "image": "https://windreed.wiki/characters/shirul/branch/branch-sword-poster.webp"
+  }
+  </script>
+  <script src="./branch.js"></script>
+</body>
+</html>

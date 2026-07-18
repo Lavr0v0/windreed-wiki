@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers pathway mark</title>
+  <desc id="desc">A windswept open circle surrounds three golden reeds and a clear winding path cut through dark blue land.</desc>
+
+  <defs>
+    <mask id="pathway-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+      <rect width="1024" height="1024" fill="#fff"/>
+      <path
+        fill="#000"
+        d="M466 1024
+           L466 930
+           C469 864 518 817 591 786
+           C655 758 733 740 790 714
+           C812 704 823 693 813 684
+           C838 694 851 709 846 724
+           C837 749 792 771 744 798
+           C680 836 630 872 613 916
+           C597 958 619 998 651 1024Z"/>
+    </mask>
+  </defs>
+
+  <g fill="#102C45" mask="url(#pathway-cut)">
+    <!-- Main windswept circular stroke. Its pointed ends keep the mark open and directional. -->
+    <path
+      d="M781 219
+         C650 87 430 65 264 169
+         C72 289 66 584 214 789
+         C293 899 405 936 500 899
+         C431 856 349 811 292 713
+         C194 545 220 371 340 276
+         C453 153 628 141 781 219Z"/>
+
+    <!-- The separate leeward edge completes the circle without closing its upper-right opening. -->
+    <path
+      d="M849 354
+         C908 465 920 613 878 729
+         C842 826 775 885 699 903
+         C659 883 635 853 637 820
+         C715 792 777 741 813 667
+         C855 581 866 466 849 354Z"/>
+
+    <!-- Land mass: the pathway is removed from this shape by the mask above. -->
+    <path
+      d="M424 837
+         C511 766 617 696 716 653
+         C776 627 832 615 884 620
+         C901 704 873 793 804 854
+         C747 904 676 926 599 920
+         C536 916 482 885 424 837Z"/>
+
+    <!-- Reed stems are deliberately broad and join the ground as one continuous silhouette. -->
+    <path d="M344 826 C374 703 352 571 296 459 L314 446 C381 558 407 704 376 841Z"/>
+    <path d="M430 807 C465 670 438 514 369 385 L389 371 C471 505 503 676 466 828Z"/>
+    <path d="M519 765 C550 665 531 555 487 459 L507 446 C565 546 589 672 556 781Z"/>
+  </g>
+
+  <!-- A low horizon stroke gives the road a readable vanishing point at small sizes. -->
+  <path
+    fill="#102C45"
+    d="M653 650
+       C684 630 725 625 761 637
+       C737 637 714 642 695 653
+       C681 654 667 653 653 650Z"/>
+
+  <!-- Seed heads remain separate so the two-colour artwork is easy to recolour or print. -->
+  <g fill="#C9A143">
+    <rect x="270" y="384" width="40" height="96" rx="20" transform="rotate(-33 290 432)"/>
+    <rect x="341" y="282" width="46" height="109" rx="23" transform="rotate(-31 364 336.5)"/>
+    <rect x="469" y="408" width="42" height="101" rx="21" transform="rotate(-32 490 458.5)"/>
+  </g>
+</svg>

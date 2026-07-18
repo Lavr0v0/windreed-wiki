@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">The Windreed Wayfarers crest</title>
+  <desc id="desc">A circular navy and gold crest with six wind-bent reeds, a winding road, wind lines, and a compass star.</desc>
+
+  <defs>
+    <clipPath id="field-clip">
+      <circle cx="512" cy="512" r="386"/>
+    </clipPath>
+    <linearGradient id="field" x1="180" y1="160" x2="820" y2="870" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B3941"/>
+      <stop offset="1" stop-color="#0D2026"/>
+    </linearGradient>
+    <linearGradient id="road" x1="450" y1="480" x2="566" y2="860" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8C48E"/>
+      <stop offset="1" stop-color="#F4EFE4"/>
+    </linearGradient>
+  </defs>
+
+  <g id="crest">
+    <!-- Shield field and engraved rings -->
+    <circle cx="512" cy="512" r="492" fill="#0D2026"/>
+    <circle cx="512" cy="512" r="470" fill="none" stroke="#D8C48E" stroke-width="14"/>
+    <circle cx="512" cy="512" r="438" fill="none" stroke="#A98F53" stroke-width="3"/>
+    <circle cx="512" cy="512" r="414" fill="none" stroke="#D8C48E" stroke-width="2" stroke-dasharray="2 20" stroke-linecap="round" opacity=".7"/>
+    <circle cx="512" cy="512" r="386" fill="url(#field)" stroke="#4E6B5C" stroke-width="6"/>
+
+    <g clip-path="url(#field-clip)">
+      <!-- Distant wind: three currents, one for each stage of the company -->
+      <path d="M118 322C264 251 360 307 478 274C626 233 747 272 914 184" fill="none" stroke="#D8C48E" stroke-width="13" stroke-linecap="round" opacity=".92"/>
+      <path d="M91 378C239 317 347 365 480 331C630 293 747 322 884 260" fill="none" stroke="#F4EFE4" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+      <path d="M173 430C292 389 384 425 489 399C594 373 679 386 779 349" fill="none" stroke="#76917F" stroke-width="7" stroke-linecap="round" opacity=".82"/>
+
+      <!-- Wayfarer's road, narrowing toward the horizon -->
+      <path d="M514 858C655 757 393 687 533 596C587 561 574 516 527 482" fill="none" stroke="#08191E" stroke-width="52" stroke-linecap="round" opacity=".32"/>
+      <path d="M514 858C655 757 393 687 533 596C587 561 574 516 527 482" fill="none" stroke="url(#road)" stroke-width="32" stroke-linecap="round"/>
+      <path d="M514 858C655 757 393 687 533 596C587 561 574 516 527 482" fill="none" stroke="#A98F53" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+
+      <!-- Marsh bank -->
+      <path d="M111 833C253 779 344 815 512 800C678 785 788 798 916 849V955H111Z" fill="#10282E"/>
+      <path d="M113 832C262 789 376 819 511 802C654 785 771 804 914 846" fill="none" stroke="#4E6B5C" stroke-width="7" stroke-linecap="round"/>
+
+      <!-- Six reeds: one for every formal member -->
+      <g fill="none" stroke="#D8C48E" stroke-width="10" stroke-linecap="round">
+        <path d="M303 824C303 699 300 524 265 361"/>
+        <path d="M376 817C376 670 370 521 345 411"/>
+        <path d="M445 807C445 641 441 471 421 335"/>
+        <path d="M579 807C579 628 586 465 607 347"/>
+        <path d="M648 817C648 664 656 520 682 407"/>
+        <path d="M721 824C721 689 730 513 761 363"/>
+      </g>
+
+      <!-- Cattail heads -->
+      <g fill="#A98F53" stroke="#E8D9AE" stroke-width="3">
+        <rect x="249" y="306" width="25" height="78" rx="13" transform="rotate(-12 261.5 345)"/>
+        <rect x="334" y="362" width="24" height="72" rx="12" transform="rotate(-8 346 398)"/>
+        <rect x="410" y="282" width="25" height="79" rx="13" transform="rotate(-7 422.5 321.5)"/>
+        <rect x="597" y="294" width="25" height="79" rx="13" transform="rotate(8 609.5 333.5)"/>
+        <rect x="670" y="358" width="24" height="72" rx="12" transform="rotate(10 682 394)"/>
+        <rect x="751" y="309" width="25" height="78" rx="13" transform="rotate(13 763.5 348)"/>
+      </g>
+
+      <!-- Wind-bent leaves -->
+      <g fill="#76917F" stroke="#AFC1AE" stroke-width="2" stroke-linejoin="round">
+        <path d="M302 750C257 670 225 615 179 571C238 594 283 644 303 711Z"/>
+        <path d="M310 697C331 629 356 584 390 545C367 603 341 663 310 735Z"/>
+        <path d="M373 728C331 657 305 603 275 546C330 587 365 637 376 693Z"/>
+        <path d="M384 650C404 590 429 548 459 514C438 567 416 617 383 688Z"/>
+        <path d="M443 712C412 649 394 596 377 540C420 583 443 630 446 680Z"/>
+        <path d="M452 620C471 568 489 532 512 503C498 550 478 593 451 656Z"/>
+        <path d="M578 700C594 636 618 587 650 544C630 600 607 654 578 736Z"/>
+        <path d="M571 621C552 568 534 533 512 503C526 550 546 594 573 657Z"/>
+        <path d="M648 727C688 656 714 603 746 548C692 588 658 638 647 693Z"/>
+        <path d="M640 650C620 590 596 548 566 514C587 567 609 617 641 688Z"/>
+        <path d="M722 750C768 670 801 617 846 574C786 595 741 644 721 711Z"/>
+        <path d="M714 697C693 629 668 584 635 545C657 603 683 663 714 735Z"/>
+      </g>
+
+      <!-- Six grounding seeds echo the six-member company -->
+      <g fill="#D8C48E">
+        <circle cx="327" cy="841" r="7"/>
+        <circle cx="401" cy="830" r="7"/>
+        <circle cx="470" cy="826" r="7"/>
+        <circle cx="554" cy="826" r="7"/>
+        <circle cx="623" cy="830" r="7"/>
+        <circle cx="697" cy="841" r="7"/>
+      </g>
+    </g>
+
+    <!-- Compass star: the road is shared, not commanded -->
+    <g transform="translate(512 172)" fill="#D8C48E">
+      <path d="M0-46L10-11L0 0L-10-11Z"/>
+      <path d="M46 0L11 10L0 0L11-10Z" opacity=".75"/>
+      <path d="M0 46L-10 11L0 0L10 11Z" opacity=".75"/>
+      <path d="M-46 0L-11-10L0 0L-11 10Z" opacity=".75"/>
+      <circle r="7" fill="#F4EFE4"/>
+    </g>
+
+    <!-- Cardinal cuts and six-member marks -->
+    <g fill="#D8C48E">
+      <path d="M512 52L522 72L512 92L502 72Z"/>
+      <path d="M972 512L952 522L932 512L952 502Z"/>
+      <path d="M512 972L502 952L512 932L522 952Z"/>
+      <path d="M52 512L72 502L92 512L72 522Z"/>
+      <circle cx="276" cy="120" r="8"/>
+      <circle cx="748" cy="120" r="8"/>
+      <circle cx="905" cy="690" r="8"/>
+      <circle cx="680" cy="920" r="8"/>
+      <circle cx="344" cy="920" r="8"/>
+      <circle cx="119" cy="690" r="8"/>
+    </g>
+  </g>
+</svg>

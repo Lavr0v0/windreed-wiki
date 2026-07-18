@@ -7,6 +7,7 @@ import Lenis from "lenis";
 export function MotionLayer({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
+  const editorRoute = pathname === "/edit" || pathname.startsWith("/edit/");
 
   useEffect(() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -16,7 +17,7 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
       lenisRef.current?.destroy();
       lenisRef.current = null;
 
-      if (!finePointer.matches || reducedMotion.matches) return;
+      if (editorRoute || !finePointer.matches || reducedMotion.matches) return;
 
       lenisRef.current = new Lenis({
         anchors: false,
@@ -39,7 +40,7 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
       lenisRef.current?.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [editorRoute]);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -130,10 +131,14 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const root = document.documentElement;
     const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
 
-    if (reducedMotion || !("IntersectionObserver" in window)) {
+    // Touch devices show the initial document immediately. Their loading and
+    // drawer transitions still provide motion without delaying first paint.
+    if (reducedMotion || !finePointer || !("IntersectionObserver" in window)) {
+      root.classList.remove("motion-ready");
       elements.forEach((element) => element.classList.add("is-revealed"));
       return;
     }
@@ -151,7 +156,10 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
     );
 
     elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      root.classList.remove("motion-ready");
+    };
   }, [pathname]);
 
   return children;

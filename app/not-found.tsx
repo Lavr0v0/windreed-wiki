@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { siteHref } from "./archive-manifest";
+import { PendingLink } from "./components/PendingLink";
 
 export default function NotFound() {
   return (
@@ -20,12 +20,12 @@ export default function NotFound() {
           </p>
 
           <div className="not-found-actions">
-            <Link className="primary-action" href={siteHref("/")}>
+            <PendingLink className="primary-action" href={siteHref("/")} prefetch={false}>
               返回档案总览
-            </Link>
-            <Link className="secondary-action" href={siteHref("/search")}>
+            </PendingLink>
+            <PendingLink className="secondary-action" href={siteHref("/search")} prefetch={false}>
               检索公开档案
-            </Link>
+            </PendingLink>
           </div>
         </div>
 

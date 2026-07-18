@@ -8,12 +8,13 @@ import arielRaw from "../content/source/角色/阿瑞尔 Ariel.md?raw";
 import merielleRaw from "../content/source/NPC/梅莉艾尔 Merielle.md?raw";
 import oathRaw from "../content/source/设定/远古誓言.md?raw";
 import miracleLightRaw from "../content/source/设定/神迹之光.md?raw";
-import transfigurationRaw from "../content/source/设定/变形术.md?raw";
+import transfigurationRaw from "../content/source/设定/变身术.md?raw";
 import branchRaw from "../content/source/道具/「枝桠」.md?raw";
+import flasMishyChokerRaw from "../content/source/道具/小拉的咪西颈环.md?raw";
 import geographyRaw from "../content/source/设定/地理.md?raw";
 import emberfordRaw from "../content/source/地点/雪露的村庄.md?raw";
 import neverwinterRaw from "../content/source/地点/养病的城.md?raw";
-import evereskaRaw from "../content/source/势力/高精灵族群.md?raw";
+import evereskaRaw from "../content/source/地点/艾弗瑞斯卡 Evereska.md?raw";
 import timelineRaw from "../content/source/事件/风芦旅人时间线.md?raw";
 import {
   archiveHref,
@@ -67,7 +68,8 @@ const confirmedRelationships = `
 ## 设定关联
 
 - 雪露立誓时见到[[神迹之光]]，并长期持有[[「枝桠」]]。
-- 阿尔贝莉娜出生于[[高精灵族群|艾佛瑞斯卡]]，后来离开故乡。
+- 阿尔贝莉娜出生于[[艾弗瑞斯卡 Evereska|艾弗瑞斯卡]]，后来离开故乡，并将家中赠予的[[小拉的咪西颈环]]长期交给芙勒维拉同调。
+- 芙勒维拉戴着[[小拉的咪西颈环]]时会呈现固定的人类外貌，以此进入城镇。
 `;
 
 const sourceSpecs: Record<string, SourceSpec> = {
@@ -81,8 +83,12 @@ const sourceSpecs: Record<string, SourceSpec> = {
   merielle: { raw: merielleRaw, source: "NPC/梅莉艾尔 Merielle.md" },
   oath: { raw: oathRaw, source: "设定/远古誓言.md" },
   "miracle-light": { raw: miracleLightRaw, source: "设定/神迹之光.md" },
-  transfiguration: { raw: transfigurationRaw, source: "设定/变形术.md" },
+  transfiguration: { raw: transfigurationRaw, source: "设定/变身术.md" },
   branch: { raw: branchRaw, source: "道具/「枝桠」.md" },
+  "flas-mishy-choker": {
+    raw: flasMishyChokerRaw,
+    source: "道具/小拉的咪西颈环.md",
+  },
   emberford: { raw: emberfordRaw, source: "地点/雪露的村庄.md" },
   neverwinter: { raw: neverwinterRaw, source: "地点/养病的城.md" },
   redlarch: {
@@ -95,7 +101,7 @@ const sourceSpecs: Record<string, SourceSpec> = {
     source: "设定/地理.md",
     section: "芙勒维拉的来处 · 亡者之沼",
   },
-  evereska: { raw: evereskaRaw, source: "势力/高精灵族群.md" },
+  evereska: { raw: evereskaRaw, source: "地点/艾弗瑞斯卡 Evereska.md" },
   timeline: { raw: timelineRaw, source: "事件/风芦旅人时间线.md" },
   relationships: { raw: confirmedRelationships, source: "关系网.md" },
 };
@@ -115,6 +121,7 @@ targetRoutes.set("佩伦 pheiron", siteHref("/archive/characters/pheiron"));
 targetRoutes.set("斯卡摩斯 skamos", siteHref("/archive/characters/skamos"));
 targetRoutes.set("阿瑞尔 ariel", siteHref("/archive/characters/ariel"));
 targetRoutes.set("梅莉艾尔 merielle", siteHref("/archive/characters/merielle"));
+targetRoutes.set("艾弗瑞斯卡 evereska", siteHref("/archive/world/evereska"));
 targetRoutes.set("高精灵族群", siteHref("/archive/world/evereska"));
 
 const excludedSection = /^(未解|待定|待补|尚未确定|答卷视角|世界与设定索引)/;
@@ -219,12 +226,12 @@ function normalizePublicNames(markdown: string) {
     .replaceAll("贝尔杜斯克", "贝尔达斯克")
     .replaceAll("斯科努贝尔", "斯克努贝尔")
     .replaceAll("芦溪村", "安柏弗")
-    .replaceAll("银桦林", "村边林地")
     .replace(/^#\s+.*$/m, "");
 }
 
 function normalizeEditorialVoice(markdown: string) {
   return markdown
+    .replace(/^>\s*-\s*\*\*资料\*\*.*(?:问卷|答卷).*$/gmu, "")
     .replaceAll(
       "冒险结束后，他想找回失去的东西，具体所指没有说明。世上也没有哪件东西被他列为“给多少钱都不卖”。他最怕失去记忆和自我，噩梦是“变回从前的自己”。问到十年后的目标，他只写“实现目标”。梦想从未告诉任何人。他也不准备纠正别人眼中的那些毛病，原话是“那不是毛病，是他的一部分”。",
       "冒险结束后，他想找回失去的东西。他最怕失去记忆和自我，噩梦是“变回从前的自己”。梦想从未告诉任何人。他也不准备纠正别人眼中的那些毛病：“那不是毛病，是他的一部分”。",

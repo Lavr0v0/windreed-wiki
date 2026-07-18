@@ -1,20 +1,22 @@
-import Link from "next/link";
+import Image from "next/image";
 import {
-  associateEntries,
   archiveCollections,
   archiveHref,
-  archiveManifest,
   archiveSections,
-  partyMemberEntries,
   siteHref,
 } from "./archive-manifest";
 import { teamOverview } from "./archive-content.server";
+import { getPublicArchiveNavigationEntries } from "./public-archive.server";
 import { MarkdownView } from "./components/MarkdownView";
 import { MemberCard } from "./components/MemberCard";
+import { PendingLink } from "./components/PendingLink";
 
-export default function Home() {
-  const members = partyMemberEntries();
-  const associates = associateEntries();
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const publicEntries = await getPublicArchiveNavigationEntries();
+  const members = publicEntries.filter((entry) => entry.characterRole === "member");
+  const associates = publicEntries.filter((entry) => entry.characterRole === "associate");
 
   return (
     <div className="home-page">
@@ -26,22 +28,27 @@ export default function Home() {
             六名来路不同的旅人在路途中成为同伴。这是一份关于他们生平、行程与共同经历的公开档案。
           </p>
           <div className="hero-actions">
-            <Link className="primary-action" href={siteHref("/archive/characters/shirul")}>开始阅读</Link>
-            <Link className="secondary-action" href={siteHref("/search")}>浏览全部索引</Link>
+            <PendingLink className="primary-action" href={siteHref("/archive/characters/shirul")} prefetch={false}>开始阅读</PendingLink>
+            <PendingLink className="secondary-action" href={siteHref("/search")} prefetch={false}>浏览全部索引</PendingLink>
           </div>
         </div>
         <div className="hero-emblem" aria-hidden="true">
-          <span className="emblem-ring" />
-          <span className="emblem-w">W</span>
-          <span className="emblem-reed reed-one" />
-          <span className="emblem-reed reed-two" />
+          <Image
+            alt=""
+            className="hero-logo"
+            height={300}
+            priority
+            src={siteHref("/brand/final/windreed-logo-on-dark.svg")}
+            unoptimized
+            width={300}
+          />
           <small>EST. 1491 DR</small>
         </div>
       </section>
 
       <section className="archive-status" aria-label="档案概况" data-reveal>
         <div><strong>06</strong><span>正式成员</span></div>
-        <div><strong>{String(archiveManifest.length).padStart(2, "0")}</strong><span>公开条目</span></div>
+        <div><strong>{String(publicEntries.length).padStart(2, "0")}</strong><span>公开条目</span></div>
         <div><strong>1492</strong><span>当前纪年 · DR</span></div>
       </section>
 
@@ -66,10 +73,11 @@ export default function Home() {
                   .map((section) => {
                     const index = archiveSections.findIndex((candidate) => candidate.id === section.id);
                     return (
-                      <Link
+                      <PendingLink
                         className="category-card"
                         href={`${siteHref("/search")}?section=${section.id}`}
                         key={section.id}
+                        prefetch={false}
                         style={{ "--card-index": index } as React.CSSProperties}
                       >
                         <span className="card-number">{String(index + 1).padStart(2, "0")}</span>
@@ -77,7 +85,7 @@ export default function Home() {
                         <h3>{section.chinese}</h3>
                         <p>{section.description}</p>
                         <span className="card-link">打开卷页 <span>→</span></span>
-                      </Link>
+                      </PendingLink>
                     );
                   })}
               </div>
@@ -111,7 +119,7 @@ export default function Home() {
         </div>
         <div className="people-grid associate-grid">
           {associates.map((entry) => (
-            <Link className="person-card associate-card" href={archiveHref(entry)} key={entry.slug}>
+            <PendingLink className="person-card associate-card" href={archiveHref(entry)} key={entry.slug} prefetch={false}>
               <span className="person-monogram" style={{ "--entry-accent": entry.accent } as React.CSSProperties}>
                 {entry.monogram}
               </span>
@@ -121,7 +129,7 @@ export default function Home() {
                 <span>{entry.facts?.[1]?.value ?? "人物档案"}</span>
               </span>
               <span className="person-arrow" aria-hidden="true">↗</span>
-            </Link>
+            </PendingLink>
           ))}
         </div>
       </section>

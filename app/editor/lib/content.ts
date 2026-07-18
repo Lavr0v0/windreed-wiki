@@ -100,9 +100,7 @@ export function sanitizeEntryPayload(value: unknown): EntryPayload {
     ? input.category as EntryPayload["category"]
     : "world";
   const requestedSection = cleanString(input.section, 40);
-  const section = ENTRY_SECTIONS.some(
-    (candidate) => candidate.value === requestedSection && candidate.category === category,
-  )
+  const section = ENTRY_SECTIONS.some((candidate) => candidate.value === requestedSection)
     ? requestedSection
     : ENTRY_SECTIONS.find((candidate) => candidate.category === category)?.value ?? "lore";
   const title = cleanString(input.title, 120);

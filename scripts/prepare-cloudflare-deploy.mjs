@@ -24,6 +24,7 @@ if (missing.length) {
 }
 
 const config = JSON.parse(await readFile(sourcePath, "utf8"));
+delete config.legacy_env;
 config.name = process.env.CLOUDFLARE_WORKER_NAME?.trim() || "windreed-wiki";
 config.d1_databases = [
   {

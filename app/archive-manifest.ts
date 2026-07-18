@@ -57,9 +57,9 @@ export const archiveSections: Array<{
   { id: "relics", collection: "archives", english: "RELICS", chinese: "行囊", description: "有来历、值得收存的物品与信物。" },
   { id: "lore", collection: "archives", english: "LORE", chinese: "见闻", description: "神迹、誓言、血脉与法术等见闻。" },
   { id: "heraldry", collection: "archives", english: "HERALDRY", chinese: "纹章", description: "教会、族群与组织的纹章记录。" },
-  { id: "tales", collection: "stories", english: "TALES", chinese: "逸闻", description: "旅途中散落的短篇与片段。" },
+  { id: "tales", collection: "stories", english: "TALES", chinese: "逸闻", description: "不承担主线或个人线推进、可以独立阅读的短篇与片段。" },
   { id: "chronicle", collection: "stories", english: "THE CHRONICLE", chinese: "长路", description: "风芦旅人共同经历的主线编年史。" },
-  { id: "fortunes", collection: "stories", english: "FORTUNES", chinese: "际遇", description: "个人际遇、转折与命运的遭逢。" },
+  { id: "fortunes", collection: "stories", english: "FORTUNES", chinese: "际遇", description: "个人线、支线任务与改变命运的遭逢和转折。" },
 ];
 
 export const archiveSectionById = Object.fromEntries(
@@ -337,6 +337,18 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     presentation: "glossary",
   },
   {
+    slug: "alberina-biography",
+    category: "history",
+    section: "fortunes",
+    title: "银鳞落在书页之外",
+    englishTitle: "Alberina · A Life Beyond the Pages",
+    aliases: ["阿尔贝莉娜 Alberina · 人物传记", "阿尔贝莉娜人物传记", "阿尔贝莉娜传记", "Alberina Biography"],
+    summary: "从艾弗瑞斯卡的童年，到安柏弗与风芦旅人的长路。",
+    sourceId: "alberina-biography",
+    monogram: "莉",
+    accent: "#526b91",
+  },
+  {
     slug: "timeline",
     category: "history",
     section: "chronicle",
@@ -350,7 +362,7 @@ export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "relationships",
     category: "history",
-    section: "fortunes",
+    section: "lives",
     title: "关系档案",
     aliases: ["关系档案", "关系网", "人际关系"],
     summary: "六名正式成员、梅莉艾尔与核心设定之间已经确认的联系。",

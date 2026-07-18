@@ -112,9 +112,9 @@ function publishedSummaryFromRow(row: D1Row): PublishedEntrySummary {
 }
 
 const publishedSummaryColumns = `
-  e.slug,
-  e.category,
-  e.section,
+  json_extract(r.payload, '$.slug') AS slug,
+  json_extract(r.payload, '$.category') AS category,
+  json_extract(r.payload, '$.section') AS section,
   json_extract(r.payload, '$.title') AS title,
   json_extract(r.payload, '$.englishTitle') AS english_title,
   json_extract(r.payload, '$.aliases') AS aliases,
@@ -361,16 +361,19 @@ export async function listPublishedEntries() {
       ORDER BY e.category, e.section, e.slug
     `)
     .all<D1Row>();
-  return result.results.map((row: D1Row) => ({
-    id: String(row.id),
-    slug: String(row.slug),
-    category: String(row.category),
-    section: String(row.section),
-    publishedRevision: Number(row.published_revision),
-    publishedAt: isoDate(row.published_at),
-    plainText: String(row.plain_text),
-    payload: payloadFromRow(row),
-  }));
+  return result.results.map((row: D1Row) => {
+    const payload = payloadFromRow(row);
+    return {
+      id: String(row.id),
+      slug: payload.slug,
+      category: payload.category,
+      section: payload.section,
+      publishedRevision: Number(row.published_revision),
+      publishedAt: isoDate(row.published_at),
+      plainText: String(row.plain_text),
+      payload,
+    };
+  });
 }
 
 export async function listPublishedEntrySummaries() {
@@ -411,20 +414,21 @@ export async function getPublishedEntry(slug: string) {
       FROM entries e
       JOIN entry_revisions r
         ON r.entry_id = e.id AND r.revision = e.published_revision
-      WHERE e.status = 'published' AND e.slug = ?1
+      WHERE e.status = 'published' AND json_extract(r.payload, '$.slug') = ?1
     `)
     .bind(slug)
     .first<D1Row>();
   if (!row) return null;
+  const payload = payloadFromRow(row);
   return {
     id: String(row.id),
-    slug: String(row.slug),
-    category: String(row.category),
-    section: String(row.section),
+    slug: payload.slug,
+    category: payload.category,
+    section: payload.section,
     publishedRevision: Number(row.published_revision),
     publishedAt: isoDate(row.published_at),
     plainText: String(row.plain_text),
-    payload: payloadFromRow(row),
+    payload,
   };
 }
 

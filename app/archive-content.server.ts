@@ -1,21 +1,22 @@
 import teamRaw from "../content/source/风芦旅人.md?raw";
-import shirulRaw from "../content/source/角色/雪露 Shirul.md?raw";
-import alberinaRaw from "../content/source/角色/阿尔贝莉娜 Alberina.md?raw";
-import flavilarRaw from "../content/source/角色/芙勒维拉 Flavilar.md?raw";
-import pheironRaw from "../content/source/角色/佩伦 Pheiron.md?raw";
-import skamosRaw from "../content/source/角色/斯卡摩斯 Skamos.md?raw";
-import arielRaw from "../content/source/角色/阿瑞尔 Ariel.md?raw";
-import merielleRaw from "../content/source/NPC/梅莉艾尔 Merielle.md?raw";
-import oathRaw from "../content/source/设定/远古誓言.md?raw";
-import miracleLightRaw from "../content/source/设定/神迹之光.md?raw";
-import transfigurationRaw from "../content/source/设定/变身术.md?raw";
-import branchRaw from "../content/source/道具/「枝桠」.md?raw";
-import flasMishyChokerRaw from "../content/source/道具/小拉的咪西颈环.md?raw";
-import geographyRaw from "../content/source/设定/地理.md?raw";
-import emberfordRaw from "../content/source/地点/雪露的村庄.md?raw";
-import neverwinterRaw from "../content/source/地点/养病的城.md?raw";
-import evereskaRaw from "../content/source/地点/艾弗瑞斯卡 Evereska.md?raw";
-import timelineRaw from "../content/source/事件/风芦旅人时间线.md?raw";
+import shirulRaw from "../content/source/档案组/卷中人/雪露 Shirul.md?raw";
+import alberinaRaw from "../content/source/档案组/卷中人/阿尔贝莉娜 Alberina.md?raw";
+import alberinaBiographyRaw from "../content/source/故事集/际遇/银鳞落在书页之外.md?raw";
+import flavilarRaw from "../content/source/档案组/卷中人/芙勒维拉 Flavilar.md?raw";
+import pheironRaw from "../content/source/档案组/卷中人/佩伦 Pheiron.md?raw";
+import skamosRaw from "../content/source/档案组/卷中人/斯卡摩斯 Skamos.md?raw";
+import arielRaw from "../content/source/档案组/卷中人/阿瑞尔 Ariel.md?raw";
+import merielleRaw from "../content/source/档案组/同行者/梅莉艾尔 Merielle.md?raw";
+import oathRaw from "../content/source/档案组/见闻/远古誓言.md?raw";
+import miracleLightRaw from "../content/source/档案组/见闻/神迹之光.md?raw";
+import transfigurationRaw from "../content/source/档案组/见闻/变身术.md?raw";
+import branchRaw from "../content/source/档案组/行囊/「枝桠」.md?raw";
+import flasMishyChokerRaw from "../content/source/档案组/行囊/小拉的咪西颈环.md?raw";
+import geographyRaw from "../content/source/档案组/风物/地理.md?raw";
+import emberfordRaw from "../content/source/档案组/风物/雪露的村庄.md?raw";
+import neverwinterRaw from "../content/source/档案组/风物/养病的城.md?raw";
+import evereskaRaw from "../content/source/档案组/风物/艾弗瑞斯卡 Evereska.md?raw";
+import timelineRaw from "../content/source/故事集/长路/风芦旅人时间线.md?raw";
 import {
   archiveHref,
   archiveManifest,
@@ -40,6 +41,7 @@ type SourceSpec = {
   raw: string;
   source: string;
   section?: string;
+  filterEditorial?: boolean;
 };
 
 const confirmedRelationships = `
@@ -74,36 +76,41 @@ const confirmedRelationships = `
 
 const sourceSpecs: Record<string, SourceSpec> = {
   team: { raw: teamRaw, source: "风芦旅人.md" },
-  shirul: { raw: shirulRaw, source: "角色/雪露 Shirul.md" },
-  alberina: { raw: alberinaRaw, source: "角色/阿尔贝莉娜 Alberina.md" },
-  flavilar: { raw: flavilarRaw, source: "角色/芙勒维拉 Flavilar.md" },
-  pheiron: { raw: pheironRaw, source: "角色/佩伦 Pheiron.md" },
-  skamos: { raw: skamosRaw, source: "角色/斯卡摩斯 Skamos.md" },
-  ariel: { raw: arielRaw, source: "角色/阿瑞尔 Ariel.md" },
-  merielle: { raw: merielleRaw, source: "NPC/梅莉艾尔 Merielle.md" },
-  oath: { raw: oathRaw, source: "设定/远古誓言.md" },
-  "miracle-light": { raw: miracleLightRaw, source: "设定/神迹之光.md" },
-  transfiguration: { raw: transfigurationRaw, source: "设定/变身术.md" },
-  branch: { raw: branchRaw, source: "道具/「枝桠」.md" },
+  shirul: { raw: shirulRaw, source: "档案组/卷中人/雪露 Shirul.md" },
+  alberina: { raw: alberinaRaw, source: "档案组/卷中人/阿尔贝莉娜 Alberina.md" },
+  "alberina-biography": {
+    raw: alberinaBiographyRaw,
+    source: "故事集/际遇/银鳞落在书页之外.md",
+    filterEditorial: false,
+  },
+  flavilar: { raw: flavilarRaw, source: "档案组/卷中人/芙勒维拉 Flavilar.md" },
+  pheiron: { raw: pheironRaw, source: "档案组/卷中人/佩伦 Pheiron.md" },
+  skamos: { raw: skamosRaw, source: "档案组/卷中人/斯卡摩斯 Skamos.md" },
+  ariel: { raw: arielRaw, source: "档案组/卷中人/阿瑞尔 Ariel.md" },
+  merielle: { raw: merielleRaw, source: "档案组/同行者/梅莉艾尔 Merielle.md" },
+  oath: { raw: oathRaw, source: "档案组/见闻/远古誓言.md" },
+  "miracle-light": { raw: miracleLightRaw, source: "档案组/见闻/神迹之光.md" },
+  transfiguration: { raw: transfigurationRaw, source: "档案组/见闻/变身术.md" },
+  branch: { raw: branchRaw, source: "档案组/行囊/「枝桠」.md" },
   "flas-mishy-choker": {
     raw: flasMishyChokerRaw,
-    source: "道具/小拉的咪西颈环.md",
+    source: "档案组/行囊/小拉的咪西颈环.md",
   },
-  emberford: { raw: emberfordRaw, source: "地点/雪露的村庄.md" },
-  neverwinter: { raw: neverwinterRaw, source: "地点/养病的城.md" },
+  emberford: { raw: emberfordRaw, source: "档案组/风物/雪露的村庄.md" },
+  neverwinter: { raw: neverwinterRaw, source: "档案组/风物/养病的城.md" },
   redlarch: {
     raw: geographyRaw,
-    source: "设定/地理.md",
+    source: "档案组/风物/地理.md",
     section: "五人合流地点 · Redlarch",
   },
   "mere-kryptgarden": {
     raw: geographyRaw,
-    source: "设定/地理.md",
+    source: "档案组/风物/地理.md",
     section: "芙勒维拉的来处 · 亡者之沼",
   },
-  evereska: { raw: evereskaRaw, source: "地点/艾弗瑞斯卡 Evereska.md" },
-  timeline: { raw: timelineRaw, source: "事件/风芦旅人时间线.md" },
-  relationships: { raw: confirmedRelationships, source: "关系网.md" },
+  evereska: { raw: evereskaRaw, source: "档案组/风物/艾弗瑞斯卡 Evereska.md" },
+  timeline: { raw: timelineRaw, source: "故事集/长路/风芦旅人时间线.md" },
+  relationships: { raw: confirmedRelationships, source: "档案组/卷中人/关系档案.md" },
 };
 
 const targetRoutes = new Map<string, string>();
@@ -378,8 +385,10 @@ function sanitizeMarkdown(spec: SourceSpec) {
   markdown = selectSection(markdown, spec.section);
   markdown = removeExcludedSections(markdown);
   markdown = normalizePublicNames(markdown);
-  markdown = normalizeEditorialVoice(markdown);
-  markdown = removeEditorialBlocks(markdown);
+  if (spec.filterEditorial !== false) {
+    markdown = normalizeEditorialVoice(markdown);
+    markdown = removeEditorialBlocks(markdown);
+  }
   markdown = removeEmptyHeadings(markdown);
   markdown = convertWikiLinks(markdown);
   markdown = linkifyGlossaryTerms(markdown);

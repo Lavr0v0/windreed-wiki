@@ -27,6 +27,38 @@ test("keeps archive navigation animated, accessible, and prose free of drop caps
   assert.doesNotMatch(styles, /::first-letter/);
 });
 
+test("keeps Merielle with companions and publishes Alberina's biography under fortunes", async () => {
+  const [manifest, content] = await Promise.all([
+    read("app/archive-manifest.ts"),
+    read("app/archive-content.server.ts"),
+  ]);
+
+  assert.match(manifest, /slug: "merielle",[\s\S]*?category: "characters",[\s\S]*?section: "companions"/);
+  assert.match(manifest, /slug: "alberina-biography",[\s\S]*?category: "history",[\s\S]*?section: "fortunes",[\s\S]*?title: "银鳞落在书页之外"/);
+  assert.match(manifest, /slug: "relationships",[\s\S]*?category: "history",[\s\S]*?section: "lives"/);
+  assert.match(content, /content\/source\/故事集\/际遇\/银鳞落在书页之外\.md\?raw/);
+  assert.doesNotMatch(content, /content\/source\/(?:角色|传记|事件|地点|道具|设定|NPC)\//);
+});
+
+test("derives public navigation and routes from the published revision rather than a draft", async () => {
+  const repository = await read("app/editor/lib/repository.server.ts");
+
+  assert.match(repository, /json_extract\(r\.payload, '\$\.category'\) AS category/);
+  assert.match(repository, /json_extract\(r\.payload, '\$\.section'\) AS section/);
+  assert.match(repository, /category: payload\.category/);
+  assert.match(repository, /section: payload\.section/);
+});
+
+test("keeps stable URL categories independent from the nine archive sections", async () => {
+  const [content, editor] = await Promise.all([
+    read("app/editor/lib/content.ts"),
+    read("app/editor/components/EditorApp.tsx"),
+  ]);
+
+  assert.match(content, /ENTRY_SECTIONS\.some\(\(candidate\) => candidate\.value === requestedSection\)/);
+  assert.match(editor, /option\.category === payload\.category \|\| option\.value === payload\.section/);
+});
+
 test("provides route-level loading folios with a CSS-only delayed reveal", async () => {
   const [rootLoading, archiveLoading, searchLoading, loadingView] = await Promise.all([
     read("app/loading.tsx"),

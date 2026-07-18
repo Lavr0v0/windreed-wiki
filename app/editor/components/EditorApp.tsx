@@ -424,7 +424,9 @@ export function EditorApp() {
               <label>
                 <span>卷册 *</span>
                 <select value={payload.section} onChange={(event) => change("section", event.target.value)}>
-                  {ENTRY_SECTIONS.filter((option) => option.category === payload.category).map((option) => (
+                  {ENTRY_SECTIONS.filter((option) => (
+                    option.category === payload.category || option.value === payload.section
+                  )).map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>

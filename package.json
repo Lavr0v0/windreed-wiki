@@ -21,6 +21,7 @@
     "content:export-online": "node --env-file=.env.cloudflare scripts/export-online-sync.mjs",
     "content:import-drafts": "node --env-file=.env.cloudflare scripts/import-online-drafts.mjs --confirm",
     "content:publish": "node --env-file=.env.cloudflare scripts/publish-online-drafts.mjs --confirm",
+    "content:classify": "node --env-file=.env.cloudflare scripts/normalize-online-classification.mjs --confirm",
     "test:content-sync": "node --test tests/content-sync.test.mjs",
     "editor:seed:export": "node scripts/export-editor-seed.mjs",
     "db:generate": "drizzle-kit generate",

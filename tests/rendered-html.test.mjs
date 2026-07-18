@@ -197,7 +197,7 @@ test("gives every published entry its requested chronicle section", async () => 
   assert.match(html, /卷中人/);
   assert.match(visibleResults, /雪露/);
   assert.match(visibleResults, /阿瑞尔/);
-  assert.doesNotMatch(visibleResults, /梅莉艾尔/);
+  assert.doesNotMatch(visibleResults, /href="\/archive\/characters\/merielle"/);
 
   const memberResponse = await render("/archive/characters/shirul");
   const memberHtml = await memberResponse.text();
@@ -211,7 +211,7 @@ test("gives every published entry its requested chronicle section", async () => 
     ["relics", /「枝桠」/, /红松镇/],
     ["lore", /古贤之誓/, /队伍时间线/],
     ["chronicle", /队伍时间线/, /关系档案/],
-    ["fortunes", /关系档案/, /队伍时间线/],
+    ["fortunes", /银鳞落在书页之外/, /关系档案/],
   ];
   for (const [section, included, excluded] of sectionCases) {
     const sectionResponse = await render(`/search?section=${section}`);

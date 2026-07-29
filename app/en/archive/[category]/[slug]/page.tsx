@@ -16,6 +16,9 @@ type PageProps = {
   params: Promise<{ category: string; slug: string }>;
 };
 
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
 export function generateStaticParams() {
   return englishArchiveManifest.map((entry) => ({
     category: entry.category,

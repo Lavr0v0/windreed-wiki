@@ -9,7 +9,13 @@ type Heading = {
   title: string;
 };
 
-export function ArticleToc({ headings }: { headings: Heading[] }) {
+export function ArticleToc({
+  headings,
+  locale = "zh",
+}: {
+  headings: Heading[];
+  locale?: "en" | "zh";
+}) {
   const [activeId, setActiveId] = useState(headings[0]?.id ?? "");
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -66,8 +72,8 @@ export function ArticleToc({ headings }: { headings: Heading[] }) {
   return (
     <>
       <aside className="article-rail">
-        <nav className="page-toc" aria-label="本页目录">
-          <span>本页目录</span>
+        <nav className="page-toc" aria-label={locale === "en" ? "On this page" : "本页目录"}>
+          <span>{locale === "en" ? "ON THIS PAGE" : "本页目录"}</span>
           {links()}
         </nav>
       </aside>
@@ -81,13 +87,18 @@ export function ArticleToc({ headings }: { headings: Heading[] }) {
         type="button"
       >
         <span aria-hidden="true">☰</span>
-        <b>目录</b>
-        <small>{headings.find((heading) => heading.id === activeId)?.title ?? "本页章节"}</small>
+        <b>{locale === "en" ? "Contents" : "目录"}</b>
+        <small>{headings.find((heading) => heading.id === activeId)?.title ?? (locale === "en" ? "On this page" : "本页章节")}</small>
       </button>
       <div aria-hidden={!open} className="mobile-toc-layer" data-state={open ? "open" : "closed"} inert={!open}>
-        <button aria-label="关闭目录" className="mobile-toc-scrim" onClick={close} tabIndex={open ? 0 : -1} />
+        <button
+          aria-label={locale === "en" ? "Close contents" : "关闭目录"}
+          className="mobile-toc-scrim"
+          onClick={close}
+          tabIndex={open ? 0 : -1}
+        />
         <div
-          aria-label="本页目录"
+          aria-label={locale === "en" ? "On this page" : "本页目录"}
           aria-modal="true"
           className="mobile-toc-sheet"
           ref={dialogRef}
@@ -95,8 +106,8 @@ export function ArticleToc({ headings }: { headings: Heading[] }) {
           tabIndex={-1}
         >
           <div className="mobile-toc-heading">
-            <div><span>CONTENTS</span><strong>本页目录</strong></div>
-            <button aria-label="关闭本页目录" data-dialog-initial-focus onClick={close} type="button">×</button>
+            <div><span>CONTENTS</span><strong>{locale === "en" ? "On this page" : "本页目录"}</strong></div>
+            <button aria-label={locale === "en" ? "Close contents" : "关闭本页目录"} data-dialog-initial-focus onClick={close} type="button">×</button>
           </div>
           <nav>{links(true)}</nav>
         </div>

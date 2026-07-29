@@ -6,10 +6,14 @@ import { PendingLink } from "./PendingLink";
 
 export function MemberCard({
   entry,
+  href,
   index,
+  locale = "zh",
 }: {
   entry: ArchiveManifestEntry;
+  href?: string;
   index: number;
+  locale?: "en" | "zh";
 }) {
   const frameRef = useRef(0);
   const boundsRef = useRef<DOMRect | null>(null);
@@ -50,7 +54,7 @@ export function MemberCard({
     <PendingLink
       className="member-card"
       data-reveal
-      href={archiveHref(entry)}
+      href={href ?? archiveHref(entry)}
       onPointerEnter={prepareCard}
       onPointerLeave={resetCard}
       onPointerMove={moveCard}
@@ -73,19 +77,21 @@ export function MemberCard({
         <span className="member-card-kicker">
           <b>LIVES</b>
           <i aria-hidden="true" />
-          <em>卷中录名</em>
+          <em>{locale === "en" ? "RECORDED LIFE" : "卷中录名"}</em>
         </span>
         <span className="member-card-name">
           <strong>{entry.title}</strong>
         </span>
         {entry.englishTitle && <small className="member-card-transcription">{entry.englishTitle}</small>}
         <span className="member-card-role">
-          <i>所记身份</i>
-          <b>{entry.facts?.[1]?.value ?? "团员档案"}</b>
+          <i>{locale === "en" ? "ROLE" : "所记身份"}</i>
+          <b>{entry.facts?.[1]?.value ?? (locale === "en" ? "Party member" : "团员档案")}</b>
         </span>
         <span className="member-card-summary">{entry.summary}</span>
       </span>
-      <span className="member-card-enter">展卷阅其人 <i aria-hidden="true">↗</i></span>
+      <span className="member-card-enter">
+        {locale === "en" ? "Open this folio" : "展卷阅其人"} <i aria-hidden="true">↗</i>
+      </span>
       <span className="member-card-colophon" aria-hidden="true">RECORDED · 1492 DR</span>
       <span className="member-card-glow" aria-hidden="true" />
     </PendingLink>

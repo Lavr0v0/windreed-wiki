@@ -11,6 +11,11 @@ import {
   type ArchiveManifestEntry,
 } from "../archive-manifest";
 import { archiveManifest } from "../archive-manifest";
+import {
+  englishArchiveHref,
+  englishArchiveManifest,
+  englishSections,
+} from "../english-content";
 import { NavigationPendingSignal, PendingLink } from "./PendingLink";
 import { useModalDialog } from "./useModalDialog";
 
@@ -56,11 +61,13 @@ function loadNavigationEntries() {
 }
 
 function ArchiveTreeSection({
+  englishMode,
   entries,
   index,
   pathname,
   section,
 }: {
+  englishMode: boolean;
   entries: ArchiveManifestEntry[];
   index: number;
   pathname: string;
@@ -68,7 +75,9 @@ function ArchiveTreeSection({
 }) {
   const panelId = useId();
   const [open, setOpen] = useState(true);
-  const isCurrentSection = entries.some((entry) => pathname === archiveHref(entry));
+  const entryHref = (entry: ArchiveManifestEntry) =>
+    englishMode ? englishArchiveHref(entry) : archiveHref(entry);
+  const isCurrentSection = entries.some((entry) => pathname === entryHref(entry));
 
   useEffect(() => {
     if (!window.matchMedia("(max-width: 960px)").matches) return;
@@ -95,7 +104,9 @@ function ArchiveTreeSection({
         <button
           aria-controls={panelId}
           aria-expanded={open}
-          aria-label={`${open ? "收起" : "展开"}${section.english} ${section.chinese}`}
+          aria-label={englishMode
+            ? `${open ? "Collapse" : "Expand"} ${englishSections[section.id].title}`
+            : `${open ? "收起" : "展开"}${section.english} ${section.chinese}`}
           className="tree-disclosure-trigger"
           onClick={toggleSection}
           type="button"
@@ -104,7 +115,7 @@ function ArchiveTreeSection({
           <span className="tree-section-number">{String(index + 1).padStart(2, "0")}</span>
           <span className="tree-section-name">
             <strong>{section.english}</strong>
-            <small>{section.chinese}</small>
+            <small>{englishMode ? englishSections[section.id].title : section.chinese}</small>
           </span>
         </button>
       </div>
@@ -116,11 +127,11 @@ function ArchiveTreeSection({
       >
         <div className="tree-children-clip">
           <div className="tree-children">
-            <PendingLink className="tree-index-link" href={`${siteHref("/search")}?section=${section.id}`} prefetch={false}>
-              卷页索引
+            <PendingLink className="tree-index-link" href={`${englishMode ? "/en/search" : siteHref("/search")}?section=${section.id}`} prefetch={false}>
+              {englishMode ? "Section index" : "卷页索引"}
             </PendingLink>
             {entries.map((entry) => {
-              const href = archiveHref(entry);
+              const href = entryHref(entry);
               return (
                 <PendingLink
                   className={pathname === href ? "tree-link active" : "tree-link"}
@@ -130,7 +141,7 @@ function ArchiveTreeSection({
                 >
                   <span className="leaf-mark" style={{ background: entry.accent }} />
                   <span>{entry.title}</span>
-                  {entry.englishTitle && <small>{entry.englishTitle}</small>}
+                  {!englishMode && entry.englishTitle && <small>{entry.englishTitle}</small>}
                 </PendingLink>
               );
             })}
@@ -152,6 +163,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
   const [searchPending, startSearchTransition] = useTransition();
   const [navigationEntries, setNavigationEntries] = useState<ArchiveManifestEntry[]>(archiveManifest);
   const isEditorRoute = pathname === "/edit" || pathname.startsWith("/edit/");
+  const englishMode = pathname === "/en" || pathname.startsWith("/en/");
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   useModalDialog({
@@ -174,7 +186,18 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (isEditorRoute) return;
+    const previousLang = document.documentElement.lang;
+    document.documentElement.lang = englishMode ? "en" : "zh-CN";
+    return () => {
+      document.documentElement.lang = previousLang;
+    };
+  }, [englishMode]);
+
+  useEffect(() => {
+    if (isEditorRoute || englishMode) {
+      if (englishMode) setNavigationEntries(englishArchiveManifest);
+      return;
+    }
     let active = true;
     loadNavigationEntries()
       .then((entries) => {
@@ -182,7 +205,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
       })
       .catch(() => undefined);
     return () => { active = false; };
-  }, [isEditorRoute]);
+  }, [englishMode, isEditorRoute]);
 
   function submitSearch(event: FormEvent) {
     event.preventDefault();
@@ -191,48 +214,61 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
     startSearchTransition(() => {
       router.push(
         trimmed
-          ? `${siteHref("/search")}?q=${encodeURIComponent(trimmed)}`
-          : siteHref("/search"),
+          ? `${englishMode ? "/en/search" : siteHref("/search")}?q=${encodeURIComponent(trimmed)}`
+          : englishMode ? "/en/search" : siteHref("/search"),
       );
     });
   }
 
   if (isEditorRoute) return children;
 
+  const visibleNavigationEntries = englishMode ? englishArchiveManifest : navigationEntries;
+
   const sidebar = (
     <>
       <div className="nav-intro">
         <span className="nav-kicker">PUBLIC ARCHIVE</span>
-        <p>费伦 · 剑湾北境</p>
+        <p>{englishMode ? "Faerûn · Sword Coast North" : "费伦 · 剑湾北境"}</p>
         <span className="nav-year">1492 DR</span>
       </div>
       <form className="mobile-drawer-search" role="search" onSubmit={submitSearch}>
-        <label className="sr-only" htmlFor="mobile-site-search">搜索档案</label>
+        <label className="sr-only" htmlFor="mobile-site-search">
+          {englishMode ? "Search the archive" : "搜索档案"}
+        </label>
         <span aria-hidden="true">⌕</span>
         <input
           id="mobile-site-search"
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="搜索公开档案"
+          placeholder={englishMode ? "Search the public archive" : "搜索公开档案"}
           value={query}
         />
-        <button type="submit">搜索</button>
+        <button type="submit">{englishMode ? "Search" : "搜索"}</button>
       </form>
-      <nav className="archive-tree" aria-label="档案目录">
-        <PendingLink className={pathname === siteHref("/") ? "tree-home active" : "tree-home"} href={siteHref("/")} prefetch={false}>
+      <nav className="archive-tree" aria-label={englishMode ? "Archive catalogue" : "档案目录"}>
+        <PendingLink
+          className={pathname === (englishMode ? "/en" : siteHref("/")) ? "tree-home active" : "tree-home"}
+          href={englishMode ? "/en" : siteHref("/")}
+          prefetch={false}
+        >
           <span className="tree-glyph">⌂</span>
-          总览
+          {englishMode ? "Overview" : "总览"}
         </PendingLink>
         {navigationCollections.map((collection) => (
           <section className="tree-collection" key={collection.id}>
             <div className="tree-collection-heading">
               <strong>{collection.english}</strong>
-              <span>{collection.chinese}</span>
+              <span>
+                {englishMode
+                  ? collection.id === "archives" ? "People, places & lore" : "Tales, roads & fortunes"
+                  : collection.chinese}
+              </span>
             </div>
             {collection.sections.map((section) => {
-              const entries = navigationEntries.filter((entry) => entry.section === section.id);
+              const entries = visibleNavigationEntries.filter((entry) => entry.section === section.id);
               const index = archiveSections.findIndex((candidate) => candidate.id === section.id);
               return (
                 <ArchiveTreeSection
+                  englishMode={englishMode}
                   entries={entries}
                   index={index}
                   key={section.id}
@@ -256,7 +292,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
         <button
           className={menuOpen ? "menu-button open" : "menu-button"}
           type="button"
-          aria-label={menuOpen ? "关闭目录" : "打开目录"}
+          aria-label={englishMode
+            ? menuOpen ? "Close catalogue" : "Open catalogue"
+            : menuOpen ? "关闭目录" : "打开目录"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
           ref={menuButtonRef}
@@ -265,7 +303,12 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           <span />
           <span />
         </button>
-        <PendingLink className="site-brand" href={siteHref("/")} aria-label="The Windreed Wayfarers 首页" prefetch={false}>
+        <PendingLink
+          className="site-brand"
+          href={englishMode ? "/en" : siteHref("/")}
+          aria-label={englishMode ? "The Windreed Wayfarers home" : "The Windreed Wayfarers 首页"}
+          prefetch={false}
+        >
           <span className="brand-seal" data-logo-slot="site" aria-hidden="true">
             <Image
               alt=""
@@ -279,44 +322,61 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
           </span>
           <span>
             <strong>The Windreed Wayfarers</strong>
-            <small>风芦旅人 · 公开档案</small>
+            <small>{englishMode ? "English · Public Archive" : "风芦旅人 · 公开档案"}</small>
           </span>
         </PendingLink>
         <form className="top-search" role="search" onSubmit={submitSearch}>
-          <label className="sr-only" htmlFor="site-search">搜索档案</label>
+          <label className="sr-only" htmlFor="site-search">
+            {englishMode ? "Search the archive" : "搜索档案"}
+          </label>
           <span className="top-search-icon" aria-hidden="true"><SearchIcon /></span>
           <input
             id="site-search"
             ref={searchRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="搜索人物、地点或关键词"
+            placeholder={englishMode ? "Search people, places, or lore" : "搜索人物、地点或关键词"}
           />
           <kbd>/</kbd>
           <button className="top-search-submit" type="submit">
-            <strong>查阅</strong>
-            <small>搜索与索引</small>
+            <strong>{englishMode ? "Browse" : "查阅"}</strong>
+            <small>{englishMode ? "Search & index" : "搜索与索引"}</small>
           </button>
         </form>
-        <nav className="topbar-actions" aria-label="网站工具">
+        <nav className="topbar-actions" aria-label={englishMode ? "Site tools" : "网站工具"}>
           <PendingLink
-            aria-label="查阅档案：搜索与索引"
+            aria-label={englishMode ? "Browse the archive: search and index" : "查阅档案：搜索与索引"}
             className="topbar-action top-search-link"
-            href={siteHref("/search")}
+            href={englishMode ? "/en/search" : siteHref("/search")}
             prefetch={false}
-            title="搜索或浏览全部档案"
+            title={englishMode ? "Search or browse the archive" : "搜索或浏览全部档案"}
           >
             <span className="topbar-action-icon" aria-hidden="true"><SearchIcon /></span>
-            <span className="topbar-action-copy"><strong>查阅</strong><small>搜索与索引</small></span>
+            <span className="topbar-action-copy">
+              <strong>{englishMode ? "Browse" : "查阅"}</strong>
+              <small>{englishMode ? "Search & index" : "搜索与索引"}</small>
+            </span>
           </PendingLink>
-          <a
-            className="topbar-action top-edit-link"
-            href="https://edit.windreed.wiki/"
-            title="进入档案修史室"
-          >
-            <span className="topbar-action-icon" aria-hidden="true"><EditIcon /></span>
-            <span className="topbar-action-copy"><strong>编辑</strong><small>进入修史室</small></span>
-          </a>
+          {englishMode ? (
+            <PendingLink
+              className="topbar-action top-edit-link"
+              href={siteHref("/")}
+              prefetch={false}
+              title="阅读中文版"
+            >
+              <span className="topbar-action-icon" aria-hidden="true">中</span>
+              <span className="topbar-action-copy"><strong>中文版</strong><small>切换语言</small></span>
+            </PendingLink>
+          ) : (
+            <a
+              className="topbar-action top-edit-link"
+              href="https://edit.windreed.wiki/"
+              title="进入档案修史室"
+            >
+              <span className="topbar-action-icon" aria-hidden="true"><EditIcon /></span>
+              <span className="topbar-action-copy"><strong>编辑</strong><small>进入修史室</small></span>
+            </a>
+          )}
         </nav>
       </header>
 
@@ -330,13 +390,13 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
       >
           <button
             className="mobile-nav-scrim"
-            aria-label="关闭目录"
+            aria-label={englishMode ? "Close catalogue" : "关闭目录"}
             tabIndex={menuOpen ? 0 : -1}
             onClick={() => setMenuOpen(false)}
           />
           <aside
             className="mobile-sidebar"
-            aria-label="移动端档案目录"
+            aria-label={englishMode ? "Mobile archive catalogue" : "移动端档案目录"}
             aria-modal="true"
             ref={menuDialogRef}
             role="dialog"
@@ -346,7 +406,9 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
               }}
             >
               <button className="mobile-sidebar-close" data-dialog-initial-focus onClick={closeMenu} type="button">
-                <span>ARCHIVE CATALOGUE</span><strong>关闭目录</strong><i aria-hidden="true">×</i>
+                <span>ARCHIVE CATALOGUE</span>
+                <strong>{englishMode ? "Close catalogue" : "关闭目录"}</strong>
+                <i aria-hidden="true">×</i>
               </button>
               {sidebar}
             </aside>

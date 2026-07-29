@@ -8,6 +8,7 @@ import {
   siteHref,
   type ArchiveSection,
 } from "../archive-manifest";
+import { englishSections } from "../english-content";
 import { NavigationPendingSignal, PendingLink } from "../components/PendingLink";
 
 export type SearchIndexItem = {
@@ -51,8 +52,10 @@ function makeSnippet(item: SearchIndexItem, query: string) {
 
 export function SearchClient({
   index,
+  locale = "zh",
 }: {
   index: SearchIndexItem[];
+  locale?: "en" | "zh";
 }) {
   const router = useRouter();
   const queryRef = useRef<HTMLInputElement>(null);
@@ -91,12 +94,12 @@ export function SearchClient({
           .some((value) => String(value).toLowerCase().includes(needle));
       })
       .sort((a, b) => {
-        if (!needle) return a.title.localeCompare(b.title, "zh-CN");
+        if (!needle) return a.title.localeCompare(b.title, locale === "en" ? "en" : "zh-CN");
         const score = (item: SearchIndexItem) =>
           item.title.toLowerCase().includes(needle) ? 0 : item.aliases.join(" ").toLowerCase().includes(needle) ? 1 : 2;
         return score(a) - score(b);
       });
-  }, [activeQuery, category, index]);
+  }, [activeQuery, category, index, locale]);
 
   useEffect(() => {
     if (window.innerWidth > 960 && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -112,7 +115,8 @@ export function SearchClient({
     if (trimmed) params.set("q", trimmed);
     if (category !== "all") params.set("section", category);
     startNavigationTransition(() => {
-      router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
+      const searchPath = locale === "en" ? "/en/search" : siteHref("/search");
+      router.replace(params.size ? `${searchPath}?${params}` : searchPath);
     });
   }
 
@@ -121,22 +125,33 @@ export function SearchClient({
     if (activeQuery) params.set("q", activeQuery);
     if (value !== "all") params.set("section", value);
     startNavigationTransition(() => {
-      router.replace(params.size ? `${siteHref("/search")}?${params}` : siteHref("/search"));
+      const searchPath = locale === "en" ? "/en/search" : siteHref("/search");
+      router.replace(params.size ? `${searchPath}?${params}` : searchPath);
     });
   }
 
   return (
     <div className="search-page">
       <NavigationPendingSignal pending={navigationPending} />
-      <div className="breadcrumbs"><PendingLink href={siteHref("/")} prefetch={false}>总览</PendingLink><span>/</span><span>全文索引</span></div>
+      <div className="breadcrumbs">
+        <PendingLink href={locale === "en" ? "/en" : siteHref("/")} prefetch={false}>
+          {locale === "en" ? "Overview" : "总览"}
+        </PendingLink>
+        <span>/</span>
+        <span>{locale === "en" ? "Full archive index" : "全文索引"}</span>
+      </div>
       <header className="search-header">
         <span className="eyebrow">FULL TEXT INDEX</span>
-        <h1>全文索引</h1>
-        <p>检索所有已经进入公开目录的人物、地点、物件与事件。</p>
+        <h1>{locale === "en" ? "Full archive index" : "全文索引"}</h1>
+        <p>
+          {locale === "en"
+            ? "Search every person, place, relic, and event included in the English translation snapshot."
+            : "检索所有已经进入公开目录的人物、地点、物件与事件。"}
+        </p>
       </header>
 
       <form className="search-panel" onSubmit={submit} role="search">
-        <label htmlFor="archive-query">关键词</label>
+        <label htmlFor="archive-query">{locale === "en" ? "Keywords" : "关键词"}</label>
         <div className="search-input-row">
           <span aria-hidden="true">⌕</span>
           <input
@@ -144,12 +159,12 @@ export function SearchClient({
             name="q"
             defaultValue={activeQuery}
             key={activeQuery}
-            placeholder="例如：雪露、Neverwinter、誓言"
+            placeholder={locale === "en" ? "Try: Shirul, Neverwinter, oath" : "例如：雪露、Neverwinter、誓言"}
             ref={queryRef}
           />
-          <button type="submit">搜索</button>
+          <button type="submit">{locale === "en" ? "Search" : "搜索"}</button>
         </div>
-        <div className="search-filters" aria-label="分类筛选">
+        <div className="search-filters" aria-label={locale === "en" ? "Filter by section" : "分类筛选"}>
           {searchFilters.map((value) => (
             <button
               type="button"
@@ -158,11 +173,11 @@ export function SearchClient({
               key={value}
             >
               {value === "all" ? (
-                <><strong>ALL</strong><span>全部</span></>
+                <><strong>ALL</strong><span>{locale === "en" ? "All entries" : "全部"}</span></>
               ) : (
                 <>
                   <strong>{archiveSectionById[value].english}</strong>
-                  <span>{archiveSectionById[value].chinese}</span>
+                  <span>{locale === "en" ? englishSections[value].title : archiveSectionById[value].chinese}</span>
                 </>
               )}
             </button>
@@ -171,8 +186,14 @@ export function SearchClient({
       </form>
 
       <div className="search-result-meta">
-        <strong>{results.length}</strong> 个条目
-        {activeQuery && <Fragment>包含“<span>{activeQuery}</span>”</Fragment>}
+        <strong>{results.length}</strong> {locale === "en" ? (results.length === 1 ? "entry" : "entries") : "个条目"}
+        {activeQuery && (
+          <Fragment>
+            {locale === "en" ? " matching " : "包含“"}
+            <span>{activeQuery}</span>
+            {locale === "zh" && "”"}
+          </Fragment>
+        )}
       </div>
 
       <div className="search-results">
@@ -180,7 +201,9 @@ export function SearchClient({
           <PendingLink className="search-result" href={item.href} key={item.href} prefetch={false}>
             <div>
               <span className="result-category">
-                {archiveSectionById[item.section].english} · {archiveSectionById[item.section].chinese}
+                {archiveSectionById[item.section].english} · {locale === "en"
+                  ? englishSections[item.section].title
+                  : archiveSectionById[item.section].chinese}
               </span>
               <h2>{highlight(item.title, activeQuery)}</h2>
               {item.englishTitle && <small>{highlight(item.englishTitle, activeQuery)}</small>}
@@ -192,8 +215,12 @@ export function SearchClient({
         {results.length === 0 && (
           <div className="empty-results">
             <span>∅</span>
-            <h2>没有找到对应档案</h2>
-            <p>可以缩短关键词，或切换到“全部”分类后重试。</p>
+            <h2>{locale === "en" ? "No matching entry" : "没有找到对应档案"}</h2>
+            <p>
+              {locale === "en"
+                ? "Try a shorter keyword or switch the filter back to all entries."
+                : "可以缩短关键词，或切换到“全部”分类后重试。"}
+            </p>
           </div>
         )}
       </div>

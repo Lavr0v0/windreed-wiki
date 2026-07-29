@@ -45,6 +45,29 @@ const routes = [
   "/archive/history/relationships",
 ];
 
+const englishRoutes = [
+  "/en/archive/characters/shirul",
+  "/en/archive/characters/alberina",
+  "/en/archive/characters/flavilar",
+  "/en/archive/characters/pheiron",
+  "/en/archive/characters/skamos",
+  "/en/archive/characters/ariel",
+  "/en/archive/characters/merielle",
+  "/en/archive/world/oath-of-the-ancients",
+  "/en/archive/world/miracle-light",
+  "/en/archive/world/transfiguration",
+  "/en/archive/world/branch",
+  "/en/archive/world/flas-mishy-choker",
+  "/en/archive/world/emberford",
+  "/en/archive/world/neverwinter",
+  "/en/archive/world/redlarch",
+  "/en/archive/world/mere-kryptgarden",
+  "/en/archive/world/evereska",
+  "/en/archive/history/alberina-biography",
+  "/en/archive/history/timeline",
+  "/en/archive/history/relationships",
+];
+
 const forbiddenPublicText =
   /ChatGPT|Claude|人工智能|问卷|答卷|待定|待补|银月城|现有资料|现有档案|候选方案|工作记录|待跑团|均填|留白|当前均无资料|当前不增加|codex-preview|starter project|your site is taking shape|答卷\/|\.md\b|\.xlsx\b/i;
 
@@ -82,6 +105,32 @@ test("renders the finished archive home page", async () => {
   assert.doesNotMatch(html, forbiddenPublicText);
   assert.doesNotMatch(html, /世界与设定索引|雪露的村庄/);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/i);
+});
+
+test("renders the dated English translation snapshot and its full index", async () => {
+  const homeResponse = await render("/en");
+  assert.equal(homeResponse.status, 200);
+  const home = await homeResponse.text();
+  assert.match(home, /English Archive/);
+  assert.match(home, /TRANSLATION SNAPSHOT/);
+  assert.match(home, /29 July 2026/);
+  assert.match(home, /Later changes to the living Chinese archive may not appear here/);
+
+  const searchResponse = await render("/en/search");
+  assert.equal(searchResponse.status, 200);
+  const search = await searchResponse.text();
+  assert.match(search, /Full archive index/);
+  assert.match(search, /Search every person, place, relic, and event/);
+});
+
+test("every English snapshot route renders as translated archive content", async () => {
+  for (const route of englishRoutes) {
+    const response = await render(route);
+    assert.equal(response.status, 200, route);
+    const html = await response.text();
+    assert.match(html, /TRANSLATION SNAPSHOT/, route);
+    assert.match(html, /29 JULY 2026/, route);
+  }
 });
 
 test("every published archive route renders and passes the content policy", async () => {

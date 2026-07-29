@@ -285,7 +285,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="site-frame">
+    <div className="site-frame" data-locale={englishMode ? "en" : "zh"}>
       <header className="topbar">
         <span className="scroll-progress" aria-hidden="true" />
         <NavigationPendingSignal pending={searchPending} />

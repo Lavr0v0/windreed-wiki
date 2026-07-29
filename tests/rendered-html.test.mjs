@@ -115,6 +115,7 @@ test("renders the dated English translation snapshot and its full index", async 
   assert.match(home, /TRANSLATION SNAPSHOT/);
   assert.match(home, /29 July 2026/);
   assert.match(home, /Later changes to the living Chinese archive may not appear here/);
+  assert.match(home, /class="site-frame" data-locale="en"/);
 
   const searchResponse = await render("/en/search");
   assert.equal(searchResponse.status, 200);

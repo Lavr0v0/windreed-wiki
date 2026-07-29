@@ -38,6 +38,11 @@ body {
   min-width: 320px;
 }
 
+.site-frame[data-locale="en"] {
+  --sans: var(--serif);
+  font-family: var(--serif);
+}
+
 h1,
 h2,
 h3,

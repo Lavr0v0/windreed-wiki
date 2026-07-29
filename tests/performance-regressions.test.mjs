@@ -10,7 +10,7 @@ test("keeps the public shell on a compact, shared navigation request", async () 
 
   assert.match(shell, /fetch\("\/api\/public\/navigation"\)/);
   assert.match(shell, /let navigationEntriesRequest:/);
-  assert.match(shell, /\}, \[isEditorRoute\]\);/);
+  assert.match(shell, /\}, \[englishMode, isEditorRoute\]\);/);
   assert.doesNotMatch(shell, /fetch\("\/api\/public\/entries"/);
   assert.doesNotMatch(shell, /\}, \[pathname\]\);/);
 });

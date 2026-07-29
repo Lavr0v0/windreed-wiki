@@ -13,7 +13,7 @@ test("keeps archive navigation animated, accessible, and prose free of drop caps
   ]);
 
   assert.match(shell, /className="tree-disclosure-trigger"[\s\S]*?<span className="tree-section-name">/);
-  assert.match(shell, /href=\{`\$\{siteHref\("\/search"\)\}\?section=\$\{section\.id\}`\}/);
+  assert.match(shell, /href=\{`\$\{englishMode \? "\/en\/search" : siteHref\("\/search"\)\}\?section=\$\{section\.id\}`\}/);
   assert.match(shell, /className="top-search-submit"[\s\S]*?查阅[\s\S]*?搜索与索引/);
   assert.match(shell, /className="topbar-action top-search-link"/);
   assert.doesNotMatch(shell, /top-index-link/);

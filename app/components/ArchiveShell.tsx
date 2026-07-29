@@ -195,7 +195,6 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isEditorRoute || englishMode) {
-      if (englishMode) setNavigationEntries(englishArchiveManifest);
       return;
     }
     let active = true;

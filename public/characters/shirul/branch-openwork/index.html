@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>枝桠 · 精细化镂空版 · The Windreed Wayfarers</title>
-  <meta name="description" content="双手长剑「枝桠」的精细化镂空版：真实孔唇、实体浅金嵌线、酸蚀刃纹与皮革缠带。">
+  <meta name="description" content="双手长剑「枝桠」的精细化镂空版：真实孔唇、平整层流钢酸洗纹、叶饰护手与皮革缠带。">
   <meta name="theme-color" content="#eef8f8">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://windreed.wiki/characters/shirul/branch-openwork/">
@@ -20,7 +20,7 @@
       window.location.replace("http://127.0.0.1:4317/characters/shirul/branch-openwork/");
     }
   </script>
-  <link rel="stylesheet" href="./branch.css?rev=4">
+  <link rel="stylesheet" href="./branch.css?rev=5">
 </head>
 <body>
   <a class="skip-link" href="#showcase">跳到武器展示</a>
@@ -42,10 +42,10 @@
   <main id="showcase">
     <section class="hero" aria-labelledby="branch-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> Openwork refined · gallery study</p>
+        <p class="eyebrow"><span></span> Pattern-welded openwork · gallery study</p>
         <h1 id="branch-title">枝桠</h1>
         <p class="roman-name" aria-hidden="true">OPENWORK</p>
-        <p class="lead">这是在保留原版基础上完成的精细化镂空版本。刃根中央的修长六边形穿孔具有独立孔唇与内壁；成对主藤、浅金嵌线和护手叶饰围绕负形收束，握柄则改为真实皮革螺旋缠带。</p>
+        <p class="lead">这是在保留原版基础上完成的精细化镂空版本。刃根中央的修长六边形穿孔具有独立孔唇与内壁；刃面改为平整的层叠锻焊钢，酸洗只通过两种钢材的明暗与反射差显出连续流纹，握柄则采用真实皮革螺旋缠带。</p>
 
         <dl class="quick-specs" aria-label="枝桠的主要尺寸">
           <div><dt>总长</dt><dd>1.270 <span>m</span></dd></div>
@@ -63,17 +63,17 @@
         <div class="model-frame">
           <div class="frame-corner frame-corner--tl" aria-hidden="true"></div>
           <div class="frame-corner frame-corner--br" aria-hidden="true"></div>
-          <p class="model-label">Refined openwork · C</p>
+          <p class="model-label">Flat acid etch · C</p>
           <img
             class="model-poster"
             id="model-poster"
-            src="./branch-sword-openwork-poster.webp?rev=4"
+            src="./branch-sword-openwork-poster.webp?rev=5"
             alt="枝桠精细化镂空版的画廊式静态展示图">
           <model-viewer
             id="branch-model"
-            data-src="./branch-sword-openwork.glb?rev=4"
-            poster="./branch-sword-openwork-poster.webp?rev=4"
-            alt="枝桠精细化镂空版三维模型；修长六边形穿孔、独立孔唇、浅金藤蔓嵌线、叶饰护手和深棕皮革缠柄"
+            data-src="./branch-sword-openwork.glb?rev=5"
+            poster="./branch-sword-openwork-poster.webp?rev=5"
+            alt="枝桠精细化镂空版三维模型；修长六边形穿孔、独立孔唇、平整层流钢酸洗纹、叶饰护手和深棕皮革缠柄"
             loading="lazy"
             reveal="auto"
             camera-controls
@@ -88,15 +88,15 @@
             field-of-view="25deg"
             min-field-of-view="18deg"
             max-field-of-view="42deg"
-            environment-image="neutral"
-            tone-mapping="neutral"
+            environment-image="./branch-studio-softbox.hdr"
+            tone-mapping="agx"
             exposure="1.08"
-            shadow-intensity="0.84"
-            shadow-softness="0.68">
+            shadow-intensity="0.52"
+            shadow-softness="0.88">
             <div class="model-progress" slot="progress-bar" aria-hidden="true"><span id="model-progress-bar"></span></div>
           </model-viewer>
           <button class="model-load-action" id="model-load-action" type="button">
-            <span>加载三维模型</span><small>首次约 4.8 MB · 缓存后会更快</small>
+            <span>加载三维模型</span><small>首次约 3.8 MB · 缓存后会更快</small>
           </button>
 
           <div class="viewer-adjustments is-disabled" id="viewer-adjustments" aria-label="模型相机微调" aria-hidden="true">
@@ -141,8 +141,8 @@
     <section class="craft" id="craft" aria-labelledby="craft-title">
       <div class="section-heading">
         <p class="section-index">02 / CRAFT & FORM</p>
-        <h2 id="craft-title">镂空、嵌线与皮革</h2>
-        <p>用真实中尺度结构承接纹样：孔缘、藤蔓与皮革缠带各有独立厚度，微观变化再交给 PBR 材质。</p>
+        <h2 id="craft-title">镂空、层流钢与皮革</h2>
+        <p>真实中尺度结构只留给孔缘、护手叶饰与皮革缠带；刃面层纹保持平整，交由两档钢色、粗糙度与极浅微法线表现。</p>
       </div>
 
       <div class="detail-grid">
@@ -153,8 +153,8 @@
         </article>
         <article>
           <span class="detail-number">02</span>
-          <h3>酸蚀与实体嵌线</h3>
-          <p>刃根酸蚀以成对主藤控制方向，浅金藤枝与叶片做成实体嵌线；护手和护圈的叶饰延续同一套密度梯度。</p>
+          <h3>平整层流钢酸洗</h3>
+          <p>交替钢层在锻焊与折叠后形成连续流线，酸洗只拉开两种钢材的明暗与反射；刃面不再使用凸起藤枝或深黑刻线。</p>
         </article>
         <article>
           <span class="detail-number">03</span>
@@ -168,7 +168,7 @@
       <div><span>有效握持区</span><strong>235 mm</strong></div>
       <div><span>护手宽</span><strong>230 mm</strong></div>
       <div><span>估算平衡点</span><strong>护手前 13.33 cm</strong></div>
-      <div><span>网页模型</span><strong>23,157 tris · 4.73 MB</strong></div>
+      <div><span>网页模型</span><strong>21,565 tris · 3.76 MB</strong></div>
       <p>尺寸与质量为视觉模型的工程估算，不作为制造图纸。</p>
     </section>
   </main>

@@ -242,22 +242,36 @@ h1 {
 .model-column { min-width: 0; padding: clamp(24px, 4vw, 58px); }
 .model-frame {
   position: relative;
+  isolation: isolate;
   height: 100%;
   min-height: 660px;
   overflow: hidden;
   border: 1px solid rgba(37, 96, 108, 0.22);
   background:
-    radial-gradient(ellipse at 50% 39%, rgba(255, 255, 255, 0.96) 0%, rgba(244, 250, 247, 0.84) 43%, rgba(222, 237, 234, 0.66) 100%),
-    linear-gradient(155deg, rgba(211, 235, 236, 0.46), rgba(250, 245, 232, 0.34));
+    radial-gradient(ellipse at 50% 38%, rgba(167, 193, 190, 0.38), transparent 48%),
+    linear-gradient(90deg, #e9e1d4 0 12%, #506f73 12% 88%, #e9e1d4 88% 100%);
   box-shadow:
-    inset 0 -80px 100px rgba(42, 80, 82, 0.055),
-    0 30px 80px rgba(38, 84, 90, 0.10);
+    inset 0 -90px 120px rgba(21, 48, 51, 0.14),
+    0 30px 80px rgba(38, 84, 90, 0.14);
 }
 .model-frame::before {
   position: absolute;
   inset: 14px;
   z-index: 2;
   border: 1px solid rgba(37, 96, 108, 0.08);
+  pointer-events: none;
+  content: "";
+}
+.model-frame::after {
+  position: absolute;
+  inset: 58px 12.5% 36px;
+  z-index: 0;
+  border: 1px solid rgba(195, 155, 76, 0.70);
+  border-radius: 48% 48% 12px 12px / 23% 23% 12px 12px;
+  background: linear-gradient(180deg, rgba(32, 65, 69, 0.08), rgba(15, 43, 47, 0.26));
+  box-shadow:
+    inset 0 0 0 10px rgba(219, 195, 145, 0.055),
+    0 0 0 1px rgba(14, 44, 48, 0.12);
   pointer-events: none;
   content: "";
 }
@@ -293,8 +307,9 @@ model-viewer::part(default-progress-bar) { height: 2px; background-color: var(--
 .model-poster {
   height: 100%;
   inset: 0;
-  object-fit: contain;
-  padding: clamp(40px, 7vw, 86px);
+  object-fit: cover;
+  object-position: center;
+  padding: 0;
   position: absolute;
   pointer-events: none;
   transition: opacity 280ms ease;

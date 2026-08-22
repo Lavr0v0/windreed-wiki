@@ -71,14 +71,14 @@ const englishCopy: Record<string, EnglishCopy> = {
       "The company’s youngest member, an Oath of the Ancients paladin who was the first to call a loose group of travelers “us.”",
     aliases: ["Shirul", "the little knight"],
     facts: [
-      { label: "Ancestry", value: "Human" },
+      { label: "Ancestry", value: "Human · one-eighth halfling through her mother’s line" },
       { label: "Calling", value: "Paladin · Oath of the Ancients" },
       { label: "Age", value: "15" },
       { label: "From", value: "Emberford" },
     ],
     body: `## At a glance
 
-Shirul is the youngest of the Windreed Wayfarers. She was born into the village headman’s family in Emberford and spent much of her childhood at the local church, where she learned to read through scripture, prayer, and the language of vows. Her education is modest and her experience of the wider world still narrow, but she takes every duty seriously.
+Shirul is the youngest of the Windreed Wayfarers. One branch of her mother’s family is halfling, giving Shirul one-eighth halfling ancestry. Her mother worships Sheela Peryroyl, so that faith was part of life at home. Shirul later entered Emberford’s church of Sune, learned to read through scripture and prayer, and chose Sune for herself. Her education is modest and her experience of the wider world still narrow, but she takes every duty seriously.
 
 The others were still deciding whether they could trust one another when Shirul had already begun saying “we.” That instinct made her the company’s emotional center.
 
@@ -90,7 +90,9 @@ She tries hard to appear grown-up. On duty she straightens her back, recites the
 
 ## Oath and road
 
-Around 1490 DR, when Shirul was thirteen, she and Alberina saw a column of light fall across the land. Everything it touched began to grow with impossible speed. Shirul understood it as a miracle and swore her oath on the spot. Her power answered the promise itself.
+Around 1490 DR, when Shirul was thirteen, she and Alberina found an injured Flavilar in Neverwinter Wood. Shirul chose first: she would not leave this life behind. She made a vow to protect life while the rescue was still underway. Only then did a restrained miracle appear. Flavilar’s injuries stabilized, and a few nearby plants put out new shoots.
+
+The danger that injured Flavilar, Shirul’s exact words, and the source of the power remain unsettled. Shirul understands what happened as Sune’s answer to her vow.
 
 She believes the oath asks her to preserve life, light, and hope. She will reason with an enemy when she can, offer a way back when one remains, and still raise her sword when there is no other choice.
 
@@ -98,7 +100,7 @@ She believes the oath asks her to preserve life, light, and hope. She will reaso
 
 Shirul has known Alberina since she was about five. She calls the high elf “Sister Lina,” depends on her, and wants just as fiercely to prove that she can one day stand in front of the person who always protected her.
 
-Flavilar shares the front line with her. Pheiron calls her “little knight” after she caught him stealing and answered with a solemn lecture. Skamos was drawn into the company because Shirul kept treating him as though he already belonged. Ariel, a fellow child of Emberford, joined after she offered him the same unguarded invitation.
+Flavilar first entered Shirul’s life through the rescue in Neverwinter Wood; she later came to share the front line with her. Pheiron calls Shirul “little knight” after she caught him stealing and answered with a solemn lecture. Skamos was drawn into the company because Shirul kept treating him as though he already belonged. Ariel, a fellow child of Emberford, joined after she offered him the same unguarded invitation.
 
 Asked whom she would protect first, Shirul refused to choose. Her answer was everyone.`,
   },
@@ -135,7 +137,7 @@ Her explanations change with the listener. She keeps them plain for Shirul and F
 
 By 1492 DR, Alberina and Shirul have known one another for roughly ten years: eight in Emberford and two on the road. Alberina once stood mainly as a caretaker. As Shirul grew, she moved to her side and let the younger paladin choose her own direction.
 
-She also teaches Flavilar, whose language and social knowledge were damaged with her memory. Alberina never treats those gaps as stupidity. She lent Flavilar an enchanted silver choker so the dragonborn could enter towns without drawing immediate fear.
+In 1490 DR, Alberina and Shirul found and rescued an injured Flavilar in Neverwinter Wood. Alberina later taught her the language and social knowledge damaged with her memory. She never treats those gaps as stupidity, and she lent Flavilar an enchanted silver choker so the dragonborn could enter towns without drawing immediate fear.
 
 Alberina keeps her own pace and needs time alone, yet she has never stood outside the company. When Shirul chose the road, Alberina was already beside her.`,
   },
@@ -152,7 +154,7 @@ Alberina keeps her own pace and needs time alone, yet she has never stood outsid
     ],
     body: `## At a glance
 
-Flavilar is difficult for strangers to overlook. She stands about 2.7 meters tall, with a powerful build, black scales, and watchful green eyes. Years of surviving alone in a marsh remain in the way she moves: direct, alert, and quick to act.
+Flavilar is difficult for strangers to overlook. She stands about 2.7 meters tall, with a powerful build, black scales, and watchful green eyes. Years of surviving alone in the wild remain in the way she moves: direct, alert, and quick to act.
 
 She speaks in short sentences and rarely explains a feeling twice. Long language, social customs, and many ordinary assumptions had to be learned again after her memory was erased.
 
@@ -160,13 +162,13 @@ She speaks in short sentences and rarely explains a feeling twice. Long language
 
 Flavilar was born inside a hidden black-dragon domain in the Mere of Dead Men. Its drowned ruins, isolated ground, dragon lairs, and dependent communities followed an order shaped by strength.
 
-When she was thirteen or fourteen, someone deliberately stripped away her memory and cast her into the outer marsh. Language and much of her social understanding were damaged with it. She survived alone for three or four years before companions brought her back among other people.
+Around 1484–1485 DR, when she was thirteen or fourteen, someone deliberately stripped away her memory and cast her into the outer marsh. Language and much of her social understanding were damaged with it. She later traveled north and spent her final three or four solitary years hidden in Neverwinter Wood. Shirul and Alberina found and rescued her there in 1490 DR, when she was eighteen or nineteen.
 
 Flavilar does not make recovering the past her purpose. When asked what happened, she may think for a while and suggest something as simple as having fallen and hit her head. The present holds her attention more securely than the lost life behind her.
 
 ## Among other people
 
-Everyday life had to be rebuilt with help from the company: speech, reading, clothing, town manners, hot food, lessons, and the habit of sharing a road. Alberina became her most trusted teacher. Shirul became the friend who learned beside her instead of standing above her.
+Everyday life had to be rebuilt with help from the company: speech, reading, clothing, town manners, hot food, lessons, and the habit of sharing a road. Alberina became her most trusted teacher. Shirul was the person who had refused to abandon her and later became the friend who learned beside her instead of standing above her.
 
 In crowded places Flavilar wears Alberina’s enchanted choker. It gives her the fixed appearance of a tall, black-haired human woman. The disguise makes towns easier to enter, though she remains close to two meters tall.
 
@@ -311,11 +313,13 @@ The archive records Merielle among the company’s companions because her connec
   "oath-of-the-ancients": {
     title: "Oath of the Ancients",
     summary:
-      "Shirul’s paladin oath, centered on preserving life, light, hope, and the courage to stand before danger.",
+      "The paladin oath Shirul made while rescuing Flavilar in Neverwinter Wood, centered on preserving life, light, and hope.",
     aliases: ["Oath of the Ancients", "Ancients oath"],
     body: `## The oath
 
-Shirul swore the Oath of the Ancients at about thirteen years old, after witnessing the Miracle Light with Alberina around 1490 DR. In her understanding, the promise binds her to protect life, light, and hope.
+Around 1490 DR, Shirul and Alberina found an injured Flavilar in Neverwinter Wood. Shirul first chose not to abandon her and made a vow to protect life while the rescue was underway. The Miracle Light appeared afterward, stabilizing Flavilar’s injuries while a few nearby plants put out new shoots.
+
+The danger, the vow’s exact wording, and the source of its power remain unsettled. Shirul believes Sune answered her promise. In her understanding, it binds her to protect life, light, and hope.
 
 She does not read justice as a demand for easy execution. She reasons first when she can, leaves a path back when one remains, and still accepts that protection sometimes requires her to draw Branch and stand in the way.
 
@@ -326,17 +330,15 @@ In Dungeons & Dragons, the Oath of the Ancients is a paladin subclass associated
   "miracle-light": {
     title: "The Miracle Light",
     summary:
-      "A column of light seen around 1490 DR that caused living things to grow with impossible speed and moved Shirul to swear her oath.",
+      "A restrained miracle that followed Shirul’s vow, stabilizing Flavilar’s injuries and bringing a few new shoots from nearby plants.",
     aliases: ["Miracle Light", "the light"],
     body: `## What was seen
 
-Around 1490 DR, Shirul and Alberina witnessed a column of light descend across the land. Everything within it began to grow with extraordinary speed.
-
-Shirul understood the event as a miracle. She swore the oath that made her a paladin while the vision was still before her.
+Around 1490 DR, Shirul and Alberina found an injured Flavilar in Neverwinter Wood. Shirul refused to leave her and made a vow to protect life during the rescue. The miracle came afterward and remained close to them: Flavilar’s injuries stabilized, and a few nearby plants put out new shoots.
 
 ## What remains uncertain
 
-The archive preserves more than one possible explanation for the light. Its final origin has not been established. What can be stated with confidence is its effect on the land and the decision Shirul made in response.`,
+The danger that injured Flavilar, Shirul’s exact words, and the source of the power are not settled. Shirul regards the event as Sune’s answer, but the archive does not assign it to a particular deity or other source.`,
   },
   transfiguration: {
     title: "Alter Self",
@@ -392,13 +394,13 @@ The disguise reduces immediate alarm without asking Flavilar to treat her own bo
   emberford: {
     title: "Emberford",
     summary:
-      "A misted village on the eastern edge of Neverwinter Wood, home to Shirul and the household that raised her.",
+      "A misted village on the eastern edge of Neverwinter Wood, home to Shirul and the church of Sune where she chose her faith.",
     aliases: ["Emberford"],
     body: `## The village
 
 Emberford stands near the eastern edge of Neverwinter Wood. It is a small settlement shaped by springs, reed-lined water, family ties, and the road toward Neverwinter.
 
-Shirul was born in the headman’s household here. Merielle and Edric are her older siblings, and the local church supplied much of Shirul’s education.
+Shirul was born in the headman’s household here. One branch of her mother’s family is halfling, leaving Shirul with one-eighth halfling ancestry. Her mother worships Sheela Peryroyl, and Shirul first encountered that faith at home. She later entered the village church of Sune, received much of her education there, and chose Sune for herself.
 
 ## Springs and reeds
 
@@ -441,10 +443,10 @@ Around 1491 DR, Shirul and Alberina reached Red Larch with Flavilar after bringi
 A feast marked Skamos’s arrival. Pheiron attempted a theft that night, Shirul caught him, and the encounter left one more traveler on the road with them.`,
   },
   "mere-kryptgarden": {
-    title: "The Mere of Dead Men and Kryptgarden",
+    title: "The Mere of Dead Men and Neverwinter Wood",
     summary:
-      "The marsh and forest country tied to Flavilar’s birth, exile, solitary survival, and eventual return to company.",
-    aliases: ["Mere of Dead Men", "Kryptgarden Forest"],
+      "The marsh where Flavilar was born and exiled, and the northern forest where Shirul and Alberina later rescued her.",
+    aliases: ["Mere of Dead Men", "Neverwinter Wood"],
     body: `## The Mere
 
 The Mere of Dead Men is a vast salt marsh along the Sword Coast, wrapped in fog, ruins, dangerous water, and old histories.
@@ -453,9 +455,9 @@ Inside the Windreed setting, a hidden black-dragon domain lies within its deeper
 
 ## Exile
 
-After her memory was erased, Flavilar was cast into the outer marsh. She survived there alone for several years, unable to find the way back to the inner domain.
+Around 1484–1485 DR, Flavilar’s memory was erased and she was cast into the outer marsh at the age of thirteen or fourteen. She later traveled north and spent her final three or four solitary years hidden in Neverwinter Wood.
 
-Kryptgarden Forest belongs to the wider region through which her route and recovery are understood. The archive treats marsh and forest together because both frame the lost years before she rejoined other people.`,
+In 1490 DR, when Flavilar was eighteen or nineteen, Shirul and Alberina found her injured in the forest and rescued her. Shirul first refused to abandon her and made a vow to protect life. A restrained miracle followed, stabilizing Flavilar’s injuries while a few nearby plants put out new shoots. The danger, the vow’s wording, and the source of the power remain unsettled.`,
   },
   evereska: {
     title: "Evereska",
@@ -493,7 +495,9 @@ Alberina stopped near Emberford in 1482 DR as the Second Sundering unsettled roa
 
 ## IV · The Wayfarers
 
-When Shirul swore her oath and chose to leave, Alberina went with her. The silver dragon remained an unanswered question, but it no longer stood alone as the reason for the journey.
+In 1490 DR, Alberina accompanied thirteen-year-old Shirul into Neverwinter Wood. They found an injured Flavilar there. Shirul refused to leave her and made a vow to protect life while they tried to save her. A restrained miracle followed, stabilizing Flavilar’s injuries while a few nearby plants put out new shoots. The danger, the vow’s exact words, and the source of the power remain unsettled.
+
+Afterward Shirul chose to leave Emberford, and Alberina went with her. The silver dragon remained an unanswered question, but it no longer stood alone as the reason for the journey.
 
 By 1492 DR, Alberina had spent two years on the road with Shirul and the company that formed around them. She rarely named that bond aloud. She did not need to.`,
   },
@@ -515,8 +519,8 @@ By 1492 DR, Alberina had spent two years on the road with Shirul and the company
 
 - **1482 DR** · Alberina settles near Emberford and begins to care for the young Shirul.
 - **c. 1484–1485 DR** · Flavilar’s memory is erased and she is cast into the outer Mere of Dead Men.
-- **c. 1488–1489 DR** · Flavilar is brought back among other people.
-- **c. 1490 DR** · Shirul and Alberina witness the Miracle Light. Shirul swears the Oath of the Ancients.
+- **After c. 1484–1485 DR** · Flavilar travels north and spends her final three or four solitary years hidden in Neverwinter Wood.
+- **c. 1490 DR** · Shirul and Alberina find the injured, eighteen- or nineteen-year-old Flavilar in Neverwinter Wood. Shirul refuses to abandon her and makes a vow to protect life. A local miracle then stabilizes Flavilar’s injuries and brings out a few nearby shoots.
 
 ## The road joins
 
@@ -537,7 +541,7 @@ By 1492 DR, Alberina had spent two years on the road with Shirul and the company
 
 - **Alberina → Shirul** · Companion and guide since Shirul was about five.
 - **Shirul → Alberina** · Family, dependence, and the wish to become strong enough to protect her in return.
-- **Shirul ↔ Flavilar** · Partners on the front line and fellow students away from it.
+- **Shirul ↔ Flavilar** · Their bond begins with the 1490 DR rescue in Neverwinter Wood; they later become partners on the front line and fellow students away from it.
 - **Alberina → Flavilar** · Teacher, interpreter, and the lender of Fla’s Mishy Choker.
 - **Shirul → Pheiron** · Repeated thefts, repeated lectures, and the name “little knight.”
 - **Shirul → Skamos** · The invitation that kept an observer inside the company.
@@ -553,9 +557,9 @@ By 1492 DR, Alberina had spent two years on the road with Shirul and the company
 
 ## Places and objects
 
-- Shirul witnessed the Miracle Light, swore the Oath of the Ancients, and carries Branch.
+- Shirul first vowed not to abandon Flavilar; the Miracle Light followed during the rescue. Shirul also carries Branch.
 - Alberina left Evereska and later entrusted Fla’s Mishy Choker to Flavilar.
-- Flavilar’s lost years began in the Mere of Dead Men.`,
+- Flavilar’s lost years began in the Mere of Dead Men and ended in Neverwinter Wood.`,
   },
 };
 

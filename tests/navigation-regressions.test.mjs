@@ -60,16 +60,22 @@ test("keeps stable URL categories independent from the nine archive sections", a
 });
 
 test("provides route-level loading folios with a CSS-only delayed reveal", async () => {
-  const [rootLoading, archiveLoading, searchLoading, loadingView] = await Promise.all([
+  const [rootLoading, archiveLoading, searchLoading, englishLoading, englishArchiveLoading, englishSearchLoading, loadingView] = await Promise.all([
     read("app/loading.tsx"),
     read("app/archive/loading.tsx"),
     read("app/search/loading.tsx"),
+    read("app/en/loading.tsx"),
+    read("app/en/archive/loading.tsx"),
+    read("app/en/search/loading.tsx"),
     read("app/components/RouteLoading.tsx"),
   ]);
 
   assert.match(rootLoading, /variant="home"/);
   assert.match(archiveLoading, /variant="archive"/);
   assert.match(searchLoading, /variant="search"/);
+  assert.match(englishLoading, /locale="en" variant="home"/);
+  assert.match(englishArchiveLoading, /locale="en" variant="archive"/);
+  assert.match(englishSearchLoading, /locale="en" variant="search"/);
   assert.match(loadingView, /role="status"/);
   assert.doesNotMatch(loadingView, /setTimeout|sleep|delay\(/);
 });
@@ -102,4 +108,50 @@ test("uses a single TOC scroll path with active and mobile chapter navigation", 
   assert.match(toc, /aria-current=\{activeId === heading\.id \? "location"/);
   assert.match(toc, /mobile-toc-trigger/);
   assert.match(styles, /\.mobile-toc-sheet/);
+});
+
+test("keeps viewport-fixed mobile controls outside a retained route transform", async () => {
+  const styles = await read("app/globals.css");
+  const routeRule = styles.match(/\.route-stage\s*\{[\s\S]*?\}/)?.[0] ?? "";
+
+  assert.match(routeRule, /animation:[^;]+backwards/);
+  assert.doesNotMatch(routeRule, /\bboth\b/);
+  assert.match(styles, /\.mobile-toc-trigger\s*\{[\s\S]*?position:\s*fixed/);
+  assert.match(styles, /\.glossary-scrim\s*\{[\s\S]*?position:\s*fixed/);
+});
+
+test("uses one canonical member order across public navigation and folios", async () => {
+  const [manifest, publicArchive, article, personalIndex] = await Promise.all([
+    read("app/archive-manifest.ts"),
+    read("app/public-archive.server.ts"),
+    read("app/archive/[category]/[slug]/page.tsx"),
+    read("public/characters/index.html"),
+  ]);
+
+  assert.match(manifest, /function sortArchiveEntries/);
+  assert.match(manifest, /function memberFolioNumber/);
+  assert.match(publicArchive, /sortArchiveEntries\(entries\)/);
+  assert.match(article, /memberFolioNumber\(entry\.slug\)/);
+  assert.match(personalIndex, /href="shirul\/"[\s\S]*?FOLIO 01[\s\S]*?href="alberina\/"[\s\S]*?FOLIO 02[\s\S]*?href="flavilar\/"[\s\S]*?FOLIO 03/);
+});
+
+test("provides a single mobile search control and a keyboard skip link", async () => {
+  const shell = await read("app/components/ArchiveShell.tsx");
+  const mobileSearchIds = shell.match(/id="mobile-site-search"/g) ?? [];
+
+  assert.equal(mobileSearchIds.length, 1);
+  assert.match(shell, /className="skip-link" href="#site-content" onClick=\{skipToContent\}/);
+  assert.match(shell, /main\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(shell, /<main className="site-content" id="site-content" tabIndex=\{-1\}>/);
+});
+
+test("distinguishes intentionally empty sections from failed searches", async () => {
+  const search = await read("app/search/SearchClient.tsx");
+
+  assert.match(search, /aria-pressed=\{category === value\}/);
+  assert.match(search, /aria-live="polite" role="status"/);
+  assert.match(search, /const emptySection = !activeQuery/);
+  assert.match(search, /此卷尚未收录档案/);
+  assert.match(search, /首批公开档案仍在整理中/);
+  assert.match(search, /className="search-filter-count"/);
 });

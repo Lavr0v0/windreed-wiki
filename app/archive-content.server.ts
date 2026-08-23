@@ -1,3 +1,5 @@
+import "server-only";
+
 import teamRaw from "../content/source/风芦旅人.md?raw";
 import shirulRaw from "../content/source/档案组/卷中人/雪露 Shirul.md?raw";
 import alberinaRaw from "../content/source/档案组/卷中人/阿尔贝莉娜 Alberina.md?raw";
@@ -23,12 +25,7 @@ import {
   siteHref,
   type ArchiveManifestEntry,
 } from "./archive-manifest";
-
-export type ArchiveHeading = {
-  id: string;
-  level: 2 | 3;
-  title: string;
-};
+import { headingId, type ArchiveHeading } from "./archive-heading";
 
 export type ArchiveEntry = ArchiveManifestEntry & {
   body: string;
@@ -393,15 +390,6 @@ function sanitizeMarkdown(spec: SourceSpec) {
   markdown = convertWikiLinks(markdown);
   markdown = linkifyGlossaryTerms(markdown);
   return tidyMarkdown(markdown);
-}
-
-export function headingId(title: string) {
-  return title
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/[「」“”‘’（）()·：:，,。.!！?？]/g, "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-");
 }
 
 function extractHeadings(markdown: string): ArchiveHeading[] {

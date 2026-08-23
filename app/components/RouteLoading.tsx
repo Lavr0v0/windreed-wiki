@@ -2,22 +2,42 @@ import Image from "next/image";
 import { siteHref } from "../archive-manifest";
 
 type LoadingVariant = "home" | "archive" | "search";
+type LoadingLocale = "en" | "zh";
 
-const loadingCopy: Record<LoadingVariant, { kicker: string; title: string; note: string }> = {
-  home: {
-    kicker: "THE WINDREED WAYFARERS",
-    title: "正在展开旅途长卷",
-    note: "清风正翻开故事的第一页",
+const loadingCopy: Record<LoadingLocale, Record<LoadingVariant, { kicker: string; title: string; note: string }>> = {
+  zh: {
+    home: {
+      kicker: "THE WINDREED WAYFARERS",
+      title: "正在展开旅途长卷",
+      note: "清风正翻开故事的第一页",
+    },
+    archive: {
+      kicker: "ARCHIVE FOLIO",
+      title: "正在查阅卷中档案",
+      note: "墨迹将沿旧日行迹重新显现",
+    },
+    search: {
+      kicker: "FULL TEXT INDEX",
+      title: "正在检索抄本索引",
+      note: "修史者正在逐行核对卷页",
+    },
   },
-  archive: {
-    kicker: "ARCHIVE FOLIO",
-    title: "正在查阅卷中档案",
-    note: "墨迹将沿旧日行迹重新显现",
-  },
-  search: {
-    kicker: "FULL TEXT INDEX",
-    title: "正在检索抄本索引",
-    note: "修史者正在逐行核对卷页",
+  en: {
+    home: {
+      kicker: "THE WINDREED WAYFARERS",
+      title: "Opening the wayfarers’ chronicle",
+      note: "The first page is coming into view",
+    },
+    archive: {
+      kicker: "ARCHIVE FOLIO",
+      title: "Opening this archive folio",
+      note: "Following the ink along an older road",
+    },
+    search: {
+      kicker: "FULL TEXT INDEX",
+      title: "Searching the archive index",
+      note: "Checking each public folio",
+    },
   },
 };
 
@@ -82,8 +102,14 @@ function SearchLoadingSketch() {
   );
 }
 
-export function RouteLoading({ variant }: { variant: LoadingVariant }) {
-  const copy = loadingCopy[variant];
+export function RouteLoading({
+  locale = "zh",
+  variant,
+}: {
+  locale?: LoadingLocale;
+  variant: LoadingVariant;
+}) {
+  const copy = loadingCopy[locale][variant];
   return (
     <section className={`route-loading route-loading-${variant}`} role="status" aria-live="polite">
       <span className="sr-only">{copy.title}</span>

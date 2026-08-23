@@ -3,7 +3,7 @@ import { PendingLink } from "./components/PendingLink";
 
 export default function NotFound() {
   return (
-    <main className="not-found-page">
+    <div className="not-found-page">
       <section className="not-found-card" aria-labelledby="not-found-title">
         <div className="not-found-mark" aria-hidden="true">
           <span>404</span>
@@ -34,6 +34,6 @@ export default function NotFound() {
           <i />
         </div>
       </section>
-    </main>
+    </div>
   );
 }

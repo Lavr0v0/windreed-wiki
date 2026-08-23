@@ -5,6 +5,8 @@ import {
   archiveHref,
   archiveSectionById,
   entryCollectionLabel,
+  memberFolioNumber,
+  partyMemberEntries,
   siteHref,
 } from "../../../archive-manifest";
 import { getPublicArchiveEntry } from "../../../public-archive.server";
@@ -60,10 +62,8 @@ export default async function ArchivePage({ params }: PageProps) {
   if (!entry) notFound();
 
   const isMember = entry.characterRole === "member";
-  const memberNumber = isMember
-    ? archiveManifest.filter((candidate) => candidate.characterRole === "member")
-        .findIndex((candidate) => candidate.slug === entry.slug) + 1
-    : 0;
+  const memberNumber = isMember ? memberFolioNumber(entry.slug) : null;
+  const memberCount = partyMemberEntries().length;
   const collectionLabel = entryCollectionLabel(entry);
   const collection = archiveSectionById[entry.section];
 
@@ -85,7 +85,7 @@ export default async function ArchivePage({ params }: PageProps) {
           {isMember && (
             <div className="member-article-ribbon">
               <span>PARTY MEMBER</span>
-              <b>{String(memberNumber).padStart(2, "0")} / 06</b>
+              <b>{`${String(memberNumber).padStart(2, "0")} / ${String(memberCount).padStart(2, "0")}`}</b>
             </div>
           )}
           <header className="article-header">

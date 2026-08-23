@@ -1,9 +1,13 @@
+import "server-only";
+
 import {
   archiveManifest,
   type ArchiveManifestEntry,
-  type ArchiveSection,
 } from "./archive-manifest";
-import { headingId, type ArchiveHeading } from "./archive-content.server";
+import { headingId, type ArchiveHeading } from "./archive-heading";
+import { englishArchiveHref } from "./english-navigation";
+
+export { englishArchiveHref, englishSections } from "./english-navigation";
 
 export const englishSnapshotDate = "29 July 2026";
 
@@ -20,48 +24,6 @@ type EnglishCopy = {
   aliases?: string[];
   facts?: Array<{ label: string; value: string }>;
   body: string;
-};
-
-export const englishSections: Record<
-  ArchiveSection,
-  { title: string; description: string }
-> = {
-  lives: {
-    title: "Lives",
-    description: "Complete profiles of the people whose paths make up the company.",
-  },
-  companions: {
-    title: "Companions",
-    description: "People closely connected to the Wayfarers beyond the six core members.",
-  },
-  places: {
-    title: "Places",
-    description: "Villages, cities, forests, and waypoints along the road.",
-  },
-  relics: {
-    title: "Relics",
-    description: "Weapons, keepsakes, and enchanted objects with a history of their own.",
-  },
-  lore: {
-    title: "Lore",
-    description: "Oaths, miracles, bloodlines, and magic encountered along the way.",
-  },
-  heraldry: {
-    title: "Heraldry",
-    description: "Recorded emblems of churches, peoples, and organizations.",
-  },
-  tales: {
-    title: "Tales",
-    description: "Short pieces and self-contained moments away from the main chronicle.",
-  },
-  chronicle: {
-    title: "The Chronicle",
-    description: "The shared road of the Windreed Wayfarers, arranged in time.",
-  },
-  fortunes: {
-    title: "Fortunes",
-    description: "Personal histories, side roads, and encounters that changed a life.",
-  },
 };
 
 const englishCopy: Record<string, EnglishCopy> = {
@@ -511,8 +473,8 @@ By 1492 DR, Alberina had spent two years on the road with Shirul and the company
 - **c. 1361 DR** · Pheiron is born.
 - **c. 1387 DR** · Alberina is born in Evereska.
 - **c. 1455 DR** · Skamos is born among the ruins of Yûlash.
-- **1475 DR** · Alberina leaves Evereska.
 - **c. 1474 DR** · Ariel is born.
+- **1475 DR** · Alberina leaves Evereska.
 - **1475–1481 DR** · Alberina travels north along settled routes.
 
 ## Emberford and the marsh
@@ -616,10 +578,6 @@ Shirul named the bond first. Alberina brought learning and judgment. Flavilar he
 ## 1492 DR
 
 The public archive records the company in 1492 DR on the Sword Coast. It collects their lives, places, possessions, encounters, and the chronology that connects them.`;
-
-export function englishArchiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug">) {
-  return `/en/archive/${entry.category}/${entry.slug}`;
-}
 
 export function getEnglishArchiveEntry(category: string, slug: string) {
   return englishArchiveManifest.find(

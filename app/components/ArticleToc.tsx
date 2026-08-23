@@ -30,22 +30,25 @@ export function ArticleToc({
       .filter((target): target is HTMLElement => Boolean(target));
     if (!targets.length) return;
 
+    let frame = 0;
+
     function updateFromScroll() {
+      frame = 0;
       const current = [...targets].reverse().find((target) => target.getBoundingClientRect().top <= 128);
       setActiveId((current ?? targets[0]).id);
     }
 
-    const observer = new IntersectionObserver(updateFromScroll, {
-      rootMargin: "-104px 0px -68% 0px",
-      threshold: [0, 1],
-    });
-    targets.forEach((target) => observer.observe(target));
+    function requestUpdate() {
+      if (!frame) frame = window.requestAnimationFrame(updateFromScroll);
+    }
 
-    updateFromScroll();
-    window.addEventListener("scroll", updateFromScroll, { passive: true });
+    requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate, { passive: true });
     return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", updateFromScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
     };
   }, [headings]);
 

@@ -18,13 +18,13 @@ npm run lint
 npm test
 ```
 
-生成供 GitHub Pages 使用的纯静态网站：
+生成包含动态路由与公开 API 的生产构建：
 
 ```bash
-GITHUB_PAGES=true npm run build
+npm run build
 ```
 
-构建结果位于 `dist/client/`。推送到 `main` 后，仓库中的 GitHub Actions 工作流会自动完成构建与发布。
+构建结果位于 `dist/`。当前网站依赖动态首页、搜索、修史室 API 与 D1，不能导出为 GitHub Pages 纯静态站。推送和拉取请求会运行类型、代码风格、生产构建与全部回归测试；正式发布按 `docs/PUBLISHING.md` 的 Cloudflare 流程执行。
 
 ## 内容发布原则
 

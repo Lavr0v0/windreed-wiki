@@ -254,7 +254,7 @@ test("gives every published entry its requested chronicle section", async () => 
   assert.match(memberHtml, /PARTY MEMBER/);
   assert.match(memberHtml, /LIVES/);
   assert.match(memberHtml, /卷中人/);
-  assert.match(memberHtml, /01(?:<!-- -->)? \/ 06/);
+  assert.match(memberHtml, /01 \/ 06/);
 
   const sectionCases = [
     ["places", /红松镇/, /「枝桠」/],
@@ -283,8 +283,9 @@ test("uses desktop Lenis while preserving native touch scrolling and reduced mot
   assert.match(motionLayer, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(motionLayer, /syncTouch: false/);
   assert.match(motionLayer, /prefers-reduced-motion: reduce/);
-  assert.match(motionLayer, /scrollTo\(0, \{ immediate: true \}\)/);
-  assert.match(motionLayer, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
+  assert.match(motionLayer, /await import\("lenis"\)/);
+  assert.doesNotMatch(motionLayer, /scrollTo\(0, \{ immediate: true \}\)/);
+  assert.doesNotMatch(motionLayer, /document\.body\.scrollTop = 0/);
   assert.equal(JSON.parse(packageJson).dependencies.lenis, "1.3.25");
 });
 
@@ -392,8 +393,9 @@ test("renders a styled archive 404", async () => {
 
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   const titleRule = styles.match(/\.not-found-copy h1\s*\{[\s\S]*?\}/)?.[0] ?? "";
-  assert.match(titleRule, /white-space:\s*nowrap/);
-  assert.match(titleRule, /word-break:\s*keep-all/);
+  assert.match(titleRule, /white-space:\s*normal/);
+  assert.match(titleRule, /text-wrap:\s*balance/);
+  assert.doesNotMatch(titleRule, /word-break:\s*keep-all/);
   assert.match(styles, /@media \(max-width: 1220px\)[\s\S]*?\.not-found-card/);
 });
 

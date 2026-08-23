@@ -6,9 +6,9 @@ import {
   getArchiveEntries,
   getArchiveEntry,
   getSearchIndex,
-  headingId,
   type ArchiveEntry,
 } from "./archive-content.server";
+import { headingId } from "./archive-heading";
 import { getRuntimeEnv } from "@/db";
 import { documentToMarkdown } from "./editor/lib/content";
 import {
@@ -18,7 +18,11 @@ import {
   listPublishedSearchEntries,
   type PublishedEntrySummary,
 } from "./editor/lib/repository.server";
-import { archiveHref, type ArchiveManifestEntry } from "./archive-manifest";
+import {
+  archiveHref,
+  sortArchiveEntries,
+  type ArchiveManifestEntry,
+} from "./archive-manifest";
 import { mergeCanonicalCoreInfo } from "./core-info";
 import type { EntryPayload } from "./editor/lib/types";
 import {
@@ -120,34 +124,34 @@ function staticManifestEntries() {
 }
 
 export async function getPublicArchiveEntries() {
-  if (!dynamicArchiveAvailable()) return getArchiveEntries();
+  if (!dynamicArchiveAvailable()) return sortArchiveEntries(getArchiveEntries());
   const cached = await readPublicArchiveCache<ArchiveEntry[]>(publicArchiveCacheKeys.entries);
-  if (cached) return cached;
+  if (cached) return sortArchiveEntries(cached);
   try {
     const rows = await listPublishedEntries();
     const entries = rows.length
       ? rows.map((row) => toArchiveEntry(row.payload, row.plainText))
       : getArchiveEntries();
     if (rows.length) await writePublicArchiveCache(publicArchiveCacheKeys.entries, entries);
-    return entries;
+    return sortArchiveEntries(entries);
   } catch {
-    return getArchiveEntries();
+    return sortArchiveEntries(getArchiveEntries());
   }
 }
 
 export async function getPublicArchiveNavigationEntries() {
-  if (!dynamicArchiveAvailable()) return staticManifestEntries();
+  if (!dynamicArchiveAvailable()) return sortArchiveEntries(staticManifestEntries());
   const cached = await readPublicArchiveCache<ArchiveManifestEntry[]>(publicArchiveCacheKeys.navigation);
-  if (cached) return cached;
+  if (cached) return sortArchiveEntries(cached);
   try {
     const rows = await listPublishedEntrySummaries();
     const entries = rows.length
       ? rows.map(toManifestEntry)
       : staticManifestEntries();
     if (rows.length) await writePublicArchiveCache(publicArchiveCacheKeys.navigation, entries);
-    return entries;
+    return sortArchiveEntries(entries);
   } catch {
-    return staticManifestEntries();
+    return sortArchiveEntries(staticManifestEntries());
   }
 }
 

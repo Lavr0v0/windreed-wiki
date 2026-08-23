@@ -69,3 +69,29 @@ test("publishes share and crawler metadata without generated portraits", async (
   assert.match(sitemap, /getPublicArchiveEntries/);
   assert.match(socialScript, /windreed-logo-on-dark\.svg/);
 });
+
+test("keeps the translated company timeline in chronological order", async () => {
+  const englishContent = await read("app/english-content.ts");
+  const arielBorn = englishContent.indexOf("**c. 1474 DR** · Ariel is born.");
+  const alberinaLeaves = englishContent.indexOf("**1475 DR** · Alberina leaves Evereska.");
+
+  assert.ok(arielBorn >= 0);
+  assert.ok(alberinaLeaves > arielBorn);
+});
+
+test("provides localized not-found pages and a recoverable render error state", async () => {
+  const [notFound, englishNotFound, englishCatchAll, errorBoundary] = await Promise.all([
+    read("app/not-found.tsx"),
+    read("app/en/not-found.tsx"),
+    read("app/en/[...notFound]/page.tsx"),
+    read("app/error.tsx"),
+  ]);
+
+  assert.doesNotMatch(notFound, /<main/);
+  assert.match(englishNotFound, /This road is not in the archive/);
+  assert.match(englishNotFound, /href="\/en\/search"/);
+  assert.match(englishCatchAll, /notFound\(\)/);
+  assert.match(errorBoundary, /role="alert"/);
+  assert.match(errorBoundary, /onClick=\{reset\}/);
+  assert.match(errorBoundary, /档案暂时无法展开/);
+});

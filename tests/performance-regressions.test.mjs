@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -93,4 +93,75 @@ test("uses global KV snapshots and D1 sessions for published archive reads", asy
   assert.match(publicArchive, /readPublicArchiveCache/);
   assert.match(publicArchive, /writePublicArchiveCache/);
   assert.match(deploy, /binding: "PUBLIC_ARCHIVE_CACHE"/);
+});
+
+test("keeps private source markdown behind the server boundary", async () => {
+  const [archiveSource, englishContent, shell, search, markdownView, layout] = await Promise.all([
+    read("app/archive-content.server.ts"),
+    read("app/english-content.ts"),
+    read("app/components/ArchiveShell.tsx"),
+    read("app/search/SearchClient.tsx"),
+    read("app/components/MarkdownView.tsx"),
+    read("app/layout.tsx"),
+  ]);
+
+  assert.match(archiveSource, /^import "server-only";/);
+  assert.match(englishContent, /^import "server-only";/);
+  assert.match(archiveSource, /from "\.\/archive-heading"/);
+  assert.match(markdownView, /from "\.\.\/archive-heading"/);
+  assert.doesNotMatch(shell, /english-content/);
+  assert.doesNotMatch(search, /english-content/);
+  assert.doesNotMatch(layout, /english-content/);
+  assert.match(shell, /englishNavigationManifest/);
+});
+
+test("does not publish filtered editorial notes in browser JavaScript", async () => {
+  const assetsUrl = new URL("../dist/client/_next/static/", import.meta.url);
+  const assetNames = (await readdir(assetsUrl)).filter((name) => name.endsWith(".js"));
+  const clientJavaScript = (await Promise.all(
+    assetNames.map((name) => readFile(new URL(name, assetsUrl), "utf8")),
+  )).join("\n");
+
+  for (const privateDraftPhrase of [
+    "动手者与原因仍未揭晓",
+    "立誓与得剑的先后未定",
+    "当前均无资料",
+  ]) {
+    assert.doesNotMatch(clientJavaScript, new RegExp(privateDraftPhrase));
+  }
+});
+
+test("defers optional smooth scrolling and throttles TOC measurements", async () => {
+  const [motion, toc] = await Promise.all([
+    read("app/components/MotionLayer.tsx"),
+    read("app/components/ArticleToc.tsx"),
+  ]);
+
+  assert.match(motion, /import type Lenis from "lenis"/);
+  assert.match(motion, /await import\("lenis"\)/);
+  assert.doesNotMatch(motion, /import Lenis from "lenis"/);
+  assert.doesNotMatch(motion, /document\.body\.scrollTop = 0/);
+  assert.match(toc, /requestAnimationFrame\(updateFromScroll\)/);
+  assert.doesNotMatch(toc, /new IntersectionObserver/);
+});
+
+test("runs every regression test in CI without invoking the obsolete static export", async () => {
+  const [packageJson, workflow] = await Promise.all([
+    read("package.json"),
+    read(".github/workflows/pages.yml"),
+  ]);
+
+  assert.match(packageJson, /"test": "npm run build && npm run test:all"/);
+  assert.match(packageJson, /"test:all": "node --test \\"tests\/\*\.test\.mjs\\""/);
+  assert.match(workflow, /npm run typecheck/);
+  assert.match(workflow, /npm run lint/);
+  assert.match(workflow, /npm test/);
+  assert.doesNotMatch(workflow, /GITHUB_PAGES|deploy-pages|upload-pages-artifact/);
+});
+
+test("uses the Vinext Windows static-cache fix for production assets", async () => {
+  const packageJson = await read("package.json");
+
+  assert.match(packageJson, /"vinext": "0\.0\.53"/);
+  assert.doesNotMatch(packageJson, /patch-package/);
 });

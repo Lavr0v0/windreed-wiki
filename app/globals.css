@@ -104,6 +104,24 @@ summary {
   min-height: 100vh;
 }
 
+.skip-link {
+  background: var(--paper-light);
+  border: 2px solid var(--gold);
+  color: var(--ink);
+  font-weight: 700;
+  left: 16px;
+  padding: 10px 16px;
+  position: fixed;
+  top: 12px;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 .topbar {
   --topbar-control-height: 42px;
   align-items: center;
@@ -701,7 +719,7 @@ summary {
 }
 
 .route-stage {
-  animation: route-arrive 380ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
+  animation: route-arrive 380ms cubic-bezier(0.2, 0.72, 0.25, 1) backwards;
   min-height: calc(100vh - 72px);
 }
 
@@ -1418,7 +1436,6 @@ summary {
 
 .member-card-kicker {
   color: var(--member-accent);
-  display: block;
   font-size: 9px;
   align-items: center;
   display: flex;
@@ -2101,9 +2118,10 @@ summary {
 .search-input-row input { background: transparent; border: 0; color: var(--ink); font-family: var(--serif); font-size: 20px; height: 54px; outline: 0; padding: 0 12px; }
 .search-input-row button { background: var(--navy); border: 0; color: white; cursor: pointer; font-size: 12px; padding: 10px 22px; }
 .search-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.search-filters button { align-items: flex-start; background: transparent; border: 1px solid var(--line); color: var(--ink-soft); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 104px; padding: 8px 11px; text-align: left; }
+.search-filters button { align-items: flex-start; background: transparent; border: 1px solid var(--line); color: var(--ink-soft); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 104px; padding: 8px 34px 8px 11px; position: relative; text-align: left; }
 .search-filters button strong { font-family: var(--display); font-size: 9px; letter-spacing: 0.08em; }
 .search-filters button span { font-family: var(--serif); font-size: 11px; }
+.search-filters .search-filter-count { font-family: var(--display); font-size: 9px; opacity: 0.66; position: absolute; right: 9px; top: 9px; }
 .search-filters button:hover,
 .search-filters button.active { background: var(--reed-dark); border-color: var(--reed-dark); color: white; }
 .search-result-meta { color: var(--ink-soft); font-size: 12px; margin: 30px 0 12px; }
@@ -2122,6 +2140,30 @@ summary {
 .empty-results > span { color: var(--gold); font-family: var(--display); font-size: 45px; }
 .empty-results h2 { color: var(--ink); font-family: var(--serif); font-size: 23px; font-weight: 500; }
 .empty-results p { font-family: var(--serif); font-size: 13px; }
+.empty-results-action { background: transparent; border: 1px solid var(--gold); color: var(--reed-dark); cursor: pointer; font-size: 12px; font-weight: 700; margin-top: 13px; padding: 10px 16px; }
+.empty-results-action:hover { background: var(--reed-dark); border-color: var(--reed-dark); color: white; }
+
+.error-page {
+  align-items: center;
+  display: flex;
+  min-height: calc(100vh - 72px);
+  padding: clamp(24px, 6vw, 80px);
+}
+
+.error-card {
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  margin: 0 auto;
+  max-width: 720px;
+  padding: clamp(36px, 7vw, 72px);
+  width: 100%;
+}
+
+.error-card h1 { font-family: var(--serif); font-size: clamp(32px, 5vw, 52px); font-weight: 500; margin: 15px 0 18px; }
+.error-card p { color: var(--ink-soft); font-family: var(--serif); line-height: 1.8; margin: 0; }
+.error-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.error-actions button { cursor: pointer; }
 
 .not-found-page {
   align-items: center;
@@ -2246,9 +2288,8 @@ summary {
   letter-spacing: 0.02em;
   line-height: 1.14;
   margin: 15px 0 26px;
-  text-wrap: nowrap;
-  white-space: nowrap;
-  word-break: keep-all;
+  text-wrap: balance;
+  white-space: normal;
 }
 
 .not-found-lead {
@@ -2590,6 +2631,7 @@ summary {
 
 @media (hover: none), (pointer: coarse) {
   .route-stage { animation: none; }
+  .member-card { transform: none; will-change: auto; }
 }
 
 @media (max-width: 480px) {
@@ -2615,14 +2657,25 @@ summary {
   .hero-copy h1 { font-size: 45px; line-height: 0.96; }
   .hero-deck { font-size: 15px; }
   .archive-status strong { font-size: 17px; }
-  .category-grid { grid-template-columns: 1fr; }
-  .member-card { display: block; min-height: 320px; padding: 28px 25px 66px; }
-  .member-card-copy { padding-right: 82px; }
-  .member-card-name strong { font-size: 34px; }
-  .member-card-summary { margin-right: -82px; }
-  .member-card-seal { font-size: 30px; height: 70px; margin: 0; position: absolute; right: 25px; top: 58px; width: 70px; }
-  .member-card-enter { bottom: 25px; left: 25px; }
-  .member-card-colophon { bottom: 27px; right: 24px; }
+  .archive-board-groups { gap: 28px; }
+  .archive-board-heading { margin-bottom: 11px; }
+  .category-grid { gap: 10px; grid-template-columns: 1fr; }
+  .category-card { min-height: 108px; padding: 20px 62px 18px 20px; }
+  .category-card .eyebrow { font-size: 8px; }
+  .category-card h3 { font-size: 21px; margin: 7px 0 0; }
+  .category-card p { display: none; }
+  .category-card .card-number { font-size: 32px; right: 17px; top: 14px; }
+  .category-card .card-link { bottom: auto; font-size: 0; left: auto; right: 20px; top: 65px; }
+  .category-card .card-link span { font-size: 18px; margin: 0; }
+  .member-grid { gap: 12px; }
+  .member-card { display: block; min-height: 252px; padding: 24px 20px 58px; }
+  .member-card-copy { padding-right: 64px; }
+  .member-card-name strong { font-size: 31px; }
+  .member-card-role { margin-top: 13px; }
+  .member-card-summary { display: -webkit-box; line-height: 1.65; margin-right: -64px; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .member-card-seal { font-size: 25px; height: 56px; margin: 0; position: absolute; right: 20px; top: 50px; width: 56px; }
+  .member-card-enter { bottom: 21px; left: 20px; }
+  .member-card-colophon { display: none; }
   .person-card { gap: 12px; grid-template-columns: 52px 1fr auto; padding: 13px; }
   .person-monogram { height: 48px; width: 48px; }
   .article-header { display: block; }

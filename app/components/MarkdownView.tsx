@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import { headingId } from "../archive-content.server";
+import { headingId } from "../archive-heading";
 import { archiveHref, archiveManifest } from "../archive-manifest";
 import { GlossaryLink } from "./GlossaryLink";
 import { PendingLink } from "./PendingLink";

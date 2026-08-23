@@ -8,7 +8,7 @@ import {
   siteHref,
   type ArchiveSection,
 } from "../archive-manifest";
-import { englishSections } from "../english-content";
+import { englishSections } from "../english-navigation";
 import { NavigationPendingSignal, PendingLink } from "../components/PendingLink";
 
 export type SearchIndexItem = {
@@ -101,6 +101,14 @@ export function SearchClient({
       });
   }, [activeQuery, category, index, locale]);
 
+  const sectionCounts = useMemo(() => Object.fromEntries(
+    archiveSections.map((section) => [
+      section.id,
+      index.filter((item) => item.section === section.id).length,
+    ]),
+  ) as Record<ArchiveSection, number>, [index]);
+  const emptySection = !activeQuery && category !== "all" && sectionCounts[category] === 0;
+
   useEffect(() => {
     if (window.innerWidth > 960 && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       queryRef.current?.focus({ preventScroll: true });
@@ -167,6 +175,8 @@ export function SearchClient({
         <div className="search-filters" aria-label={locale === "en" ? "Filter by section" : "分类筛选"}>
           {searchFilters.map((value) => (
             <button
+              aria-controls="archive-search-results"
+              aria-pressed={category === value}
               type="button"
               className={category === value ? "active" : undefined}
               onClick={() => chooseCategory(value)}
@@ -180,12 +190,15 @@ export function SearchClient({
                   <span>{locale === "en" ? englishSections[value].title : archiveSectionById[value].chinese}</span>
                 </>
               )}
+              <small className="search-filter-count">
+                {value === "all" ? index.length : sectionCounts[value]}
+              </small>
             </button>
           ))}
         </div>
       </form>
 
-      <div className="search-result-meta">
+      <div className="search-result-meta" aria-live="polite" role="status">
         <strong>{results.length}</strong> {locale === "en" ? (results.length === 1 ? "entry" : "entries") : "个条目"}
         {activeQuery && (
           <Fragment>
@@ -196,7 +209,7 @@ export function SearchClient({
         )}
       </div>
 
-      <div className="search-results">
+      <div className="search-results" id="archive-search-results">
         {results.map((item) => (
           <PendingLink className="search-result" href={item.href} key={item.href} prefetch={false}>
             <div>
@@ -215,12 +228,25 @@ export function SearchClient({
         {results.length === 0 && (
           <div className="empty-results">
             <span>∅</span>
-            <h2>{locale === "en" ? "No matching entry" : "没有找到对应档案"}</h2>
+            <h2>
+              {emptySection
+                ? locale === "en" ? "This section is awaiting its first entry" : "此卷尚未收录档案"
+                : locale === "en" ? "No matching entry" : "没有找到对应档案"}
+            </h2>
             <p>
-              {locale === "en"
-                ? "Try a shorter keyword or switch the filter back to all entries."
-                : "可以缩短关键词，或切换到“全部”分类后重试。"}
+              {emptySection
+                ? locale === "en"
+                  ? `The ${englishSections[category].title} section is in the catalogue, but its first public entries are still being prepared.`
+                  : `${archiveSectionById[category].chinese}卷已经列入目录，首批公开档案仍在整理中。`
+                : locale === "en"
+                  ? "Try a shorter keyword or switch the filter back to all entries."
+                  : "可以缩短关键词，或切换到“全部”分类后重试。"}
             </p>
+            {emptySection && (
+              <button className="empty-results-action" onClick={() => chooseCategory("all")} type="button">
+                {locale === "en" ? "Browse all entries" : "浏览全部档案"}
+              </button>
+            )}
           </div>
         )}
       </div>

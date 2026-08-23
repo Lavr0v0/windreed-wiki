@@ -13,9 +13,9 @@ import {
 import { archiveManifest } from "../archive-manifest";
 import {
   englishArchiveHref,
-  englishArchiveManifest,
+  englishNavigationManifest,
   englishSections,
-} from "../english-content";
+} from "../english-navigation";
 import { NavigationPendingSignal, PendingLink } from "./PendingLink";
 import { useModalDialog } from "./useModalDialog";
 
@@ -219,9 +219,18 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
     });
   }
 
+  function skipToContent(event: React.MouseEvent<HTMLAnchorElement>) {
+    const main = document.getElementById("site-content");
+    if (!main) return;
+    event.preventDefault();
+    window.history.replaceState(null, "", "#site-content");
+    main.focus({ preventScroll: true });
+    main.scrollIntoView({ block: "start" });
+  }
+
   if (isEditorRoute) return children;
 
-  const visibleNavigationEntries = englishMode ? englishArchiveManifest : navigationEntries;
+  const visibleNavigationEntries = englishMode ? englishNavigationManifest : navigationEntries;
 
   const sidebar = (
     <>
@@ -230,19 +239,6 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
         <p>{englishMode ? "Faerûn · Sword Coast North" : "费伦 · 剑湾北境"}</p>
         <span className="nav-year">1492 DR</span>
       </div>
-      <form className="mobile-drawer-search" role="search" onSubmit={submitSearch}>
-        <label className="sr-only" htmlFor="mobile-site-search">
-          {englishMode ? "Search the archive" : "搜索档案"}
-        </label>
-        <span aria-hidden="true">⌕</span>
-        <input
-          id="mobile-site-search"
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={englishMode ? "Search the public archive" : "搜索公开档案"}
-          value={query}
-        />
-        <button type="submit">{englishMode ? "Search" : "搜索"}</button>
-      </form>
       <nav className="archive-tree" aria-label={englishMode ? "Archive catalogue" : "档案目录"}>
         <PendingLink
           className={pathname === (englishMode ? "/en" : siteHref("/")) ? "tree-home active" : "tree-home"}
@@ -284,7 +280,10 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="site-frame" data-locale={englishMode ? "en" : "zh"}>
+    <div className="site-frame" data-locale={englishMode ? "en" : "zh"} lang={englishMode ? "en" : "zh-CN"}>
+      <a className="skip-link" href="#site-content" onClick={skipToContent}>
+        {englishMode ? "Skip to main content" : "跳到正文"}
+      </a>
       <header className="topbar">
         <span className="scroll-progress" aria-hidden="true" />
         <NavigationPendingSignal pending={searchPending} />
@@ -409,11 +408,24 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
                 <strong>{englishMode ? "Close catalogue" : "关闭目录"}</strong>
                 <i aria-hidden="true">×</i>
               </button>
+              <form className="mobile-drawer-search" role="search" onSubmit={submitSearch}>
+                <label className="sr-only" htmlFor="mobile-site-search">
+                  {englishMode ? "Search the archive" : "搜索档案"}
+                </label>
+                <span aria-hidden="true">⌕</span>
+                <input
+                  id="mobile-site-search"
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={englishMode ? "Search the public archive" : "搜索公开档案"}
+                  value={query}
+                />
+                <button type="submit">{englishMode ? "Search" : "搜索"}</button>
+              </form>
               {sidebar}
             </aside>
       </div>
 
-      <main className="site-content">
+      <main className="site-content" id="site-content" tabIndex={-1}>
         <div className="route-stage" key={pathname}>{children}</div>
       </main>
     </div>

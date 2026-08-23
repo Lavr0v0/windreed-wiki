@@ -47,7 +47,7 @@ export default async function Home() {
       </section>
 
       <section className="archive-status" aria-label="档案概况" data-reveal>
-        <div><strong>06</strong><span>正式成员</span></div>
+        <div><strong>{String(members.length).padStart(2, "0")}</strong><span>正式成员</span></div>
         <div><strong>{String(publicEntries.length).padStart(2, "0")}</strong><span>公开条目</span></div>
         <div><strong>1492</strong><span>当前纪年 · DR</span></div>
       </section>

@@ -384,6 +384,20 @@ export function archiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug
   return siteHref(`/archive/${entry.category}/${entry.slug}`);
 }
 
+const canonicalArchiveOrder = new Map(
+  archiveManifest.map((entry, index) => [`${entry.category}/${entry.slug}`, index]),
+);
+
+export function sortArchiveEntries<T extends Pick<ArchiveManifestEntry, "category" | "slug">>(
+  entries: readonly T[],
+) {
+  return [...entries].sort((left, right) => {
+    const leftIndex = canonicalArchiveOrder.get(`${left.category}/${left.slug}`);
+    const rightIndex = canonicalArchiveOrder.get(`${right.category}/${right.slug}`);
+    return (leftIndex ?? Number.MAX_SAFE_INTEGER) - (rightIndex ?? Number.MAX_SAFE_INTEGER);
+  });
+}
+
 export function entriesByCategory(category: ArchiveCategory) {
   return archiveManifest.filter((entry) => entry.category === category);
 }
@@ -400,6 +414,11 @@ export function entriesBySection(section: ArchiveSection) {
 
 export function partyMemberEntries() {
   return archiveManifest.filter((entry) => entry.characterRole === "member");
+}
+
+export function memberFolioNumber(slug: string) {
+  const index = partyMemberEntries().findIndex((entry) => entry.slug === slug);
+  return index < 0 ? null : index + 1;
 }
 
 export function associateEntries() {

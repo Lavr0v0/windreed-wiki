@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import Lenis from "lenis";
+import type Lenis from "lenis";
 
 export function MotionLayer({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -12,14 +12,20 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let cancelled = false;
+    let configuration = 0;
 
-    function configureScroll() {
+    async function configureScroll() {
+      const request = ++configuration;
       lenisRef.current?.destroy();
       lenisRef.current = null;
 
       if (editorRoute || !finePointer.matches || reducedMotion.matches) return;
 
-      lenisRef.current = new Lenis({
+      const { default: LenisConstructor } = await import("lenis");
+      if (cancelled || request !== configuration) return;
+
+      lenisRef.current = new LenisConstructor({
         anchors: false,
         autoRaf: true,
         lerp: 0.085,
@@ -30,13 +36,19 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
       });
     }
 
-    configureScroll();
-    finePointer.addEventListener("change", configureScroll);
-    reducedMotion.addEventListener("change", configureScroll);
+    function handlePreferenceChange() {
+      void configureScroll();
+    }
+
+    void configureScroll();
+    finePointer.addEventListener("change", handlePreferenceChange);
+    reducedMotion.addEventListener("change", handlePreferenceChange);
 
     return () => {
-      finePointer.removeEventListener("change", configureScroll);
-      reducedMotion.removeEventListener("change", configureScroll);
+      cancelled = true;
+      configuration += 1;
+      finePointer.removeEventListener("change", handlePreferenceChange);
+      reducedMotion.removeEventListener("change", handlePreferenceChange);
       lenisRef.current?.destroy();
       lenisRef.current = null;
     };
@@ -91,17 +103,6 @@ export function MotionLayer({ children }: { children: React.ReactNode }) {
     document.addEventListener("click", followTableOfContents);
     return () => document.removeEventListener("click", followTableOfContents);
   }, []);
-
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      lenisRef.current?.scrollTo(0, { immediate: true });
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [pathname]);
 
   useEffect(() => {
     let frame = 0;

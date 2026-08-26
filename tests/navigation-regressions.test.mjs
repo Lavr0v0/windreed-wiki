@@ -36,7 +36,7 @@ test("keeps Merielle with companions and publishes Alberina's biography under fo
   assert.match(manifest, /slug: "merielle",[\s\S]*?category: "characters",[\s\S]*?section: "companions"/);
   assert.match(manifest, /slug: "alberina-biography",[\s\S]*?category: "history",[\s\S]*?section: "fortunes",[\s\S]*?title: "银鳞落在书页之外"/);
   assert.match(manifest, /slug: "relationships",[\s\S]*?category: "history",[\s\S]*?section: "lives"/);
-  assert.match(content, /content\/source\/故事集\/际遇\/银鳞落在书页之外\.md\?raw/);
+  assert.match(content, /content\/source\/故事组\/际遇\/银鳞落在书页之外\.md\?raw/);
   assert.doesNotMatch(content, /content\/source\/(?:角色|传记|事件|地点|道具|设定|NPC)\//);
 });
 

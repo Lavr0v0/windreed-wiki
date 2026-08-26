@@ -17,6 +17,8 @@
     "test:editor-local": "node scripts/smoke-editor-local.mjs",
     "audit:public-local": "node scripts/audit-public-local.mjs",
     "content:status": "node scripts/content-sync.mjs status",
+    "content:doctor": "node scripts/content-catalog.mjs",
+    "content:link-vault": "node scripts/content-catalog.mjs --link",
     "content:push": "node scripts/content-sync.mjs push",
     "content:pull": "node scripts/content-sync.mjs pull",
     "content:export-online": "node --env-file=.env.cloudflare scripts/export-online-sync.mjs",

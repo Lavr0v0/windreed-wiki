@@ -39,7 +39,10 @@ async function replaceRawImports(source, sourcePath) {
 
 async function writeRuntimeModule(runtimeDir, sourcePath, outputName, replacements = []) {
   let source = await readFile(sourcePath, "utf8");
-  if (sourcePath.endsWith("archive-content.server.ts")) source = await replaceRawImports(source, sourcePath);
+  if (sourcePath.endsWith("archive-content.server.ts")) {
+    source = await replaceRawImports(source, sourcePath);
+    source = source.replace(/^import\s+"server-only";\s*$/m, "");
+  }
   let output = transpile(source, sourcePath);
   for (const [from, to] of replacements) output = output.replaceAll(from, to);
   const outputPath = resolve(runtimeDir, outputName);
@@ -51,19 +54,34 @@ async function loadRuntimeModules() {
   const runtimeDir = resolve(root, ".windreed-sync", "runtime", String(process.pid));
   await mkdir(runtimeDir, { recursive: true });
 
-  await writeRuntimeModule(runtimeDir, resolve(root, "app", "editor", "lib", "types.ts"), "types.mjs");
+  await writeRuntimeModule(runtimeDir, resolve(root, "app", "archive-taxonomy.ts"), "archive-taxonomy.mjs");
+  await writeRuntimeModule(runtimeDir, resolve(root, "app", "archive-heading.ts"), "archive-heading.mjs");
+  await writeRuntimeModule(
+    runtimeDir,
+    resolve(root, "app", "editor", "lib", "types.ts"),
+    "types.mjs",
+    [["\"../../archive-taxonomy\"", "\"./archive-taxonomy.mjs\""]],
+  );
   const contentPath = await writeRuntimeModule(
     runtimeDir,
     resolve(root, "app", "editor", "lib", "content.ts"),
     "content.mjs",
     [["\"./types\"", "\"./types.mjs\""]],
   );
-  await writeRuntimeModule(runtimeDir, resolve(root, "app", "archive-manifest.ts"), "archive-manifest.mjs");
+  await writeRuntimeModule(
+    runtimeDir,
+    resolve(root, "app", "archive-manifest.ts"),
+    "archive-manifest.mjs",
+    [["\"./archive-taxonomy\"", "\"./archive-taxonomy.mjs\""]],
+  );
   const archivePath = await writeRuntimeModule(
     runtimeDir,
     resolve(root, "app", "archive-content.server.ts"),
     "archive-content.mjs",
-    [["\"./archive-manifest\"", "\"./archive-manifest.mjs\""]],
+    [
+      ["\"./archive-manifest\"", "\"./archive-manifest.mjs\""],
+      ["\"./archive-heading\"", "\"./archive-heading.mjs\""],
+    ],
   );
 
   return Promise.all([
@@ -74,7 +92,8 @@ async function loadRuntimeModules() {
 }
 
 export async function loadLocalArchive() {
-  const [{ getArchiveEntries }, { archiveManifest }, content] = await loadRuntimeModules();
+  const [{ getArchiveEntries, getArchiveSourceCatalog }, manifestModule, content] = await loadRuntimeModules();
+  const { archiveManifest, archiveSections, archiveCollectionById } = manifestModule;
   const manifestBySlug = new Map(archiveManifest.map((entry) => [entry.slug, entry]));
   const entries = [];
 
@@ -111,6 +130,10 @@ export async function loadLocalArchive() {
 
   return {
     entries,
+    manifest: archiveManifest,
+    sources: getArchiveSourceCatalog(),
+    sections: archiveSections,
+    collections: archiveCollectionById,
     toMarkdown: content.documentToMarkdown,
     toPlainText: content.plainTextFromDocument,
   };

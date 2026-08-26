@@ -3,22 +3,24 @@ import "server-only";
 import teamRaw from "../content/source/风芦旅人.md?raw";
 import shirulRaw from "../content/source/档案组/卷中人/雪露 Shirul.md?raw";
 import alberinaRaw from "../content/source/档案组/卷中人/阿尔贝莉娜 Alberina.md?raw";
-import alberinaBiographyRaw from "../content/source/故事集/际遇/银鳞落在书页之外.md?raw";
+import relationshipsRaw from "../content/source/档案组/卷中人/关系档案.md?raw";
+import alberinaBiographyRaw from "../content/source/故事组/际遇/银鳞落在书页之外.md?raw";
 import flavilarRaw from "../content/source/档案组/卷中人/芙勒维拉 Flavilar.md?raw";
 import pheironRaw from "../content/source/档案组/卷中人/佩伦 Pheiron.md?raw";
 import skamosRaw from "../content/source/档案组/卷中人/斯卡摩斯 Skamos.md?raw";
 import arielRaw from "../content/source/档案组/卷中人/阿瑞尔 Ariel.md?raw";
 import merielleRaw from "../content/source/档案组/同行者/梅莉艾尔 Merielle.md?raw";
-import oathRaw from "../content/source/档案组/见闻/远古誓言.md?raw";
+import oathRaw from "../content/source/档案组/见闻/古贤之誓 Oath of the Ancients.md?raw";
 import miracleLightRaw from "../content/source/档案组/见闻/神迹之光.md?raw";
 import transfigurationRaw from "../content/source/档案组/见闻/变身术.md?raw";
 import branchRaw from "../content/source/档案组/行囊/「枝桠」.md?raw";
 import flasMishyChokerRaw from "../content/source/档案组/行囊/小拉的咪西颈环.md?raw";
-import geographyRaw from "../content/source/档案组/风物/地理.md?raw";
-import emberfordRaw from "../content/source/档案组/风物/雪露的村庄.md?raw";
-import neverwinterRaw from "../content/source/档案组/风物/养病的城.md?raw";
+import emberfordRaw from "../content/source/档案组/风物/安柏弗 Emberford.md?raw";
+import neverwinterRaw from "../content/source/档案组/风物/无冬城 Neverwinter.md?raw";
+import redlarchRaw from "../content/source/档案组/风物/红松镇 Red Larch.md?raw";
+import mereKryptgardenRaw from "../content/source/档案组/风物/亡者沼泽与无冬森林 Mere of Dead Men · Neverwinter Wood.md?raw";
 import evereskaRaw from "../content/source/档案组/风物/艾弗瑞斯卡 Evereska.md?raw";
-import timelineRaw from "../content/source/故事集/长路/风芦旅人时间线.md?raw";
+import timelineRaw from "../content/source/故事组/长路/队伍时间线.md?raw";
 import {
   archiveHref,
   archiveManifest,
@@ -31,84 +33,88 @@ export type ArchiveEntry = ArchiveManifestEntry & {
   body: string;
   headings: ArchiveHeading[];
   plainText: string;
-  source: string;
 };
 
 type SourceSpec = {
   raw: string;
-  source: string;
-  section?: string;
+  sourceRegion?: string;
   filterEditorial?: boolean;
 };
 
-const confirmedRelationships = `
-## 队伍归属
+type ArchiveSource = SourceSpec & {
+  slug: string;
+  sourcePath: string;
+};
 
-- 雪露、阿尔贝莉娜、芙勒维拉、佩伦、斯卡摩斯与阿瑞尔均为风芦旅人的正式成员。
-
-## 核心人际
-
-- **阿尔贝莉娜 → 雪露**：从雪露约五岁起陪伴并引导她。
-- **雪露 → 阿尔贝莉娜**：依赖她，也想证明自己已经长大。
-- **雪露 ↔ 芙勒维拉**：1490 DR 在无冬森林相遇；雪露拒绝放弃芙勒维拉，此后两人共同承担队伍前排。
-- **阿尔贝莉娜 → 芙勒维拉**：教导她，帮助她重新建立语言、知识与常识。
-- **雪露 → 佩伦**：抓包与说教；佩伦称她为“小骑士”。
-- **雪露 → 斯卡摩斯**：邀请他进入队伍。
-- **芙勒维拉 → 佩伦**：战斗中为他的偷袭打开缺口。
-- **雪露 → 阿瑞尔**：两人来自同一地区，雪露邀请他进入队伍。
-- **阿瑞尔 → 雪露**：最先保护、也最信任的人。
-
-## 家庭与旧识
-
-- **梅莉艾尔 → 雪露**：姐姐。
-- **梅莉艾尔 ↔ 埃德里克**：姐弟。
-- **梅莉艾尔 ↔ 阿尔贝莉娜**：彼此认识。
-
-## 设定关联
-
-- 雪露在救助芙勒维拉时先立下保护生命的誓言，随后见到局部的[[神迹之光]]；她也长期持有[[「枝桠」]]。
-- 阿尔贝莉娜出生于[[艾弗瑞斯卡 Evereska|艾弗瑞斯卡]]，后来离开故乡，并将家中赠予的[[小拉的咪西颈环]]长期交给芙勒维拉同调。
-- 芙勒维拉戴着[[小拉的咪西颈环]]时会呈现固定的人类外貌，以此进入城镇。
-`;
-
-const sourceSpecs: Record<string, SourceSpec> = {
-  team: { raw: teamRaw, source: "风芦旅人.md" },
-  shirul: { raw: shirulRaw, source: "档案组/卷中人/雪露 Shirul.md" },
-  alberina: { raw: alberinaRaw, source: "档案组/卷中人/阿尔贝莉娜 Alberina.md" },
-  "alberina-biography": {
+const archiveSourceCatalog: readonly ArchiveSource[] = [
+  { slug: "shirul", sourcePath: "档案组/卷中人/雪露 Shirul.md", raw: shirulRaw },
+  { slug: "alberina", sourcePath: "档案组/卷中人/阿尔贝莉娜 Alberina.md", raw: alberinaRaw },
+  { slug: "flavilar", sourcePath: "档案组/卷中人/芙勒维拉 Flavilar.md", raw: flavilarRaw },
+  { slug: "pheiron", sourcePath: "档案组/卷中人/佩伦 Pheiron.md", raw: pheironRaw },
+  { slug: "skamos", sourcePath: "档案组/卷中人/斯卡摩斯 Skamos.md", raw: skamosRaw },
+  { slug: "ariel", sourcePath: "档案组/卷中人/阿瑞尔 Ariel.md", raw: arielRaw },
+  { slug: "merielle", sourcePath: "档案组/同行者/梅莉艾尔 Merielle.md", raw: merielleRaw },
+  {
+    slug: "oath-of-the-ancients",
+    sourcePath: "档案组/见闻/古贤之誓 Oath of the Ancients.md",
+    raw: oathRaw,
+  },
+  { slug: "miracle-light", sourcePath: "档案组/见闻/神迹之光.md", raw: miracleLightRaw },
+  { slug: "transfiguration", sourcePath: "档案组/见闻/变身术.md", raw: transfigurationRaw },
+  { slug: "branch", sourcePath: "档案组/行囊/「枝桠」.md", raw: branchRaw },
+  {
+    slug: "flas-mishy-choker",
+    sourcePath: "档案组/行囊/小拉的咪西颈环.md",
+    raw: flasMishyChokerRaw,
+  },
+  { slug: "emberford", sourcePath: "档案组/风物/安柏弗 Emberford.md", raw: emberfordRaw },
+  { slug: "neverwinter", sourcePath: "档案组/风物/无冬城 Neverwinter.md", raw: neverwinterRaw },
+  { slug: "redlarch", sourcePath: "档案组/风物/红松镇 Red Larch.md", raw: redlarchRaw },
+  {
+    slug: "mere-kryptgarden",
+    sourcePath: "档案组/风物/亡者沼泽与无冬森林 Mere of Dead Men · Neverwinter Wood.md",
+    raw: mereKryptgardenRaw,
+  },
+  { slug: "evereska", sourcePath: "档案组/风物/艾弗瑞斯卡 Evereska.md", raw: evereskaRaw },
+  {
+    slug: "alberina-biography",
+    sourcePath: "故事组/际遇/银鳞落在书页之外.md",
     raw: alberinaBiographyRaw,
-    source: "故事集/际遇/银鳞落在书页之外.md",
     filterEditorial: false,
   },
-  flavilar: { raw: flavilarRaw, source: "档案组/卷中人/芙勒维拉 Flavilar.md" },
-  pheiron: { raw: pheironRaw, source: "档案组/卷中人/佩伦 Pheiron.md" },
-  skamos: { raw: skamosRaw, source: "档案组/卷中人/斯卡摩斯 Skamos.md" },
-  ariel: { raw: arielRaw, source: "档案组/卷中人/阿瑞尔 Ariel.md" },
-  merielle: { raw: merielleRaw, source: "档案组/同行者/梅莉艾尔 Merielle.md" },
-  oath: { raw: oathRaw, source: "档案组/见闻/远古誓言.md" },
-  "miracle-light": { raw: miracleLightRaw, source: "档案组/见闻/神迹之光.md" },
-  transfiguration: { raw: transfigurationRaw, source: "档案组/见闻/变身术.md" },
-  branch: { raw: branchRaw, source: "档案组/行囊/「枝桠」.md" },
-  "flas-mishy-choker": {
-    raw: flasMishyChokerRaw,
-    source: "档案组/行囊/小拉的咪西颈环.md",
+  { slug: "timeline", sourcePath: "故事组/长路/队伍时间线.md", raw: timelineRaw },
+  {
+    slug: "relationships",
+    sourcePath: "档案组/卷中人/关系档案.md",
+    sourceRegion: "relationships",
+    raw: relationshipsRaw,
   },
-  emberford: { raw: emberfordRaw, source: "档案组/风物/雪露的村庄.md" },
-  neverwinter: { raw: neverwinterRaw, source: "档案组/风物/养病的城.md" },
-  redlarch: {
-    raw: geographyRaw,
-    source: "档案组/风物/地理.md",
-    section: "五人合流地点 · Redlarch",
-  },
-  "mere-kryptgarden": {
-    raw: geographyRaw,
-    source: "档案组/风物/地理.md",
-    section: "芙勒维拉的来处 · 亡者之沼",
-  },
-  evereska: { raw: evereskaRaw, source: "档案组/风物/艾弗瑞斯卡 Evereska.md" },
-  timeline: { raw: timelineRaw, source: "故事集/长路/风芦旅人时间线.md" },
-  relationships: { raw: confirmedRelationships, source: "档案组/卷中人/关系档案.md" },
-};
+];
+
+const archiveSourceBySlug = new Map(
+  archiveSourceCatalog.map((source) => [source.slug, source]),
+);
+
+if (archiveSourceBySlug.size !== archiveSourceCatalog.length) {
+  throw new Error("Archive source catalog contains duplicate slugs");
+}
+if (new Set(archiveSourceCatalog.map((source) => source.sourcePath)).size !== archiveSourceCatalog.length) {
+  throw new Error("Archive source catalog contains duplicate paths");
+}
+const manifestSlugs = new Set(archiveManifest.map((entry) => entry.slug));
+for (const source of archiveSourceCatalog) {
+  if (!manifestSlugs.has(source.slug)) {
+    throw new Error(`Archive source has no manifest entry: ${source.slug}`);
+  }
+}
+
+export function getArchiveSourceCatalog() {
+  return archiveSourceCatalog.map(({ slug, sourcePath, sourceRegion }) => ({
+    slug,
+    sourcePath,
+    sourceRegion,
+  }));
+}
 
 const targetRoutes = new Map<string, string>();
 for (const entry of archiveManifest) {
@@ -177,19 +183,16 @@ function stripFrontmatter(markdown: string) {
   return markdown.replace(/^---\s*\r?\n[\s\S]*?\r?\n---\s*\r?\n?/, "");
 }
 
-function selectSection(markdown: string, section?: string) {
-  if (!section) return markdown;
-  const lines = markdown.split("\n");
-  const start = lines.findIndex((line) => line.trim() === `## ${section}`);
-  if (start < 0) return "";
-  let end = lines.length;
-  for (let index = start + 1; index < lines.length; index += 1) {
-    if (/^##\s+/.test(lines[index])) {
-      end = index;
-      break;
-    }
+function selectRegion(markdown: string, region?: string) {
+  if (!region) return markdown;
+  const startMarker = `<!-- windreed:${region}:start -->`;
+  const endMarker = `<!-- windreed:${region}:end -->`;
+  const start = markdown.indexOf(startMarker);
+  const end = markdown.indexOf(endMarker);
+  if (start < 0 || end < 0 || end <= start) {
+    throw new Error(`Missing public source region: ${region}`);
   }
-  return lines.slice(start + 1, end).join("\n");
+  return markdown.slice(start + startMarker.length, end);
 }
 
 function removeExcludedSections(markdown: string) {
@@ -210,27 +213,8 @@ function removeExcludedSections(markdown: string) {
   return output.join("\n");
 }
 
-function normalizePublicNames(markdown: string) {
-  return markdown
-    .replaceAll("养病的城", "无冬城")
-    .replaceAll("绝冬城", "无冬城")
-    .replaceAll("绝冬林", "无冬森林")
-    .replaceAll("绝冬河", "无冬河")
-    .replaceAll("德萨林河谷", "德沙林河谷")
-    .replaceAll("亡者之沼", "亡者沼泽")
-    .replaceAll("艾佛瑞斯卡", "艾弗瑞斯卡")
-    .replaceAll("远古誓言", "古贤之誓")
-    .replaceAll("远古之誓", "古贤之誓")
-    .replaceAll("上古之誓", "古贤之誓")
-    .replaceAll("Redlarch", "红松镇")
-    .replaceAll("沃恩拉", "福恩拉")
-    .replaceAll("阴影谷", "暗影谷")
-    .replaceAll("阿拉贝", "阿拉贝尔")
-    .replaceAll("伊里亚博", "伊利亚巴")
-    .replaceAll("贝尔杜斯克", "贝尔达斯克")
-    .replaceAll("斯科努贝尔", "斯克努贝尔")
-    .replaceAll("芦溪村", "安柏弗")
-    .replace(/^#\s+.*$/m, "");
+function removeDocumentTitle(markdown: string) {
+  return markdown.replace(/^#\s+.*$/m, "");
 }
 
 function normalizeEditorialVoice(markdown: string) {
@@ -379,9 +363,9 @@ function tidyMarkdown(markdown: string) {
 function sanitizeMarkdown(spec: SourceSpec) {
   let markdown = spec.raw.replaceAll("\r\n", "\n");
   markdown = stripFrontmatter(markdown);
-  markdown = selectSection(markdown, spec.section);
+  markdown = selectRegion(markdown, spec.sourceRegion);
   markdown = removeExcludedSections(markdown);
-  markdown = normalizePublicNames(markdown);
+  markdown = removeDocumentTitle(markdown);
   if (spec.filterEditorial !== false) {
     markdown = normalizeEditorialVoice(markdown);
     markdown = removeEditorialBlocks(markdown);
@@ -418,19 +402,18 @@ function markdownToPlainText(markdown: string) {
 }
 
 const archiveEntries: ArchiveEntry[] = archiveManifest.map((manifestEntry) => {
-  const spec = sourceSpecs[manifestEntry.sourceId];
-  if (!spec) throw new Error(`Missing source for ${manifestEntry.sourceId}`);
-  const body = sanitizeMarkdown(spec);
+  const source = archiveSourceBySlug.get(manifestEntry.slug);
+  if (!source) throw new Error(`Missing source for ${manifestEntry.slug}`);
+  const body = sanitizeMarkdown(source);
   return {
     ...manifestEntry,
     body,
     headings: extractHeadings(body),
     plainText: markdownToPlainText(body),
-    source: spec.source,
   };
 });
 
-export const teamOverview = sanitizeMarkdown(sourceSpecs.team);
+export const teamOverview = sanitizeMarkdown({ raw: teamRaw });
 
 export function getArchiveEntries() {
   return archiveEntries;

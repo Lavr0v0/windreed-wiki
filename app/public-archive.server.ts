@@ -56,7 +56,6 @@ function toArchiveEntry(
     englishTitle: payload.englishTitle || undefined,
     aliases: payload.aliases,
     summary: payload.summary,
-    sourceId: `database:${payload.slug}`,
     monogram: payload.monogram,
     accent: payload.accent,
     characterRole: payload.characterRole || undefined,
@@ -81,7 +80,6 @@ function toArchiveEntry(
     body,
     headings,
     plainText,
-    source: payload.sourceLabel,
   };
 }
 
@@ -94,7 +92,6 @@ function toManifestEntry(payload: PublishedEntrySummary): ArchiveManifestEntry {
     englishTitle: payload.englishTitle || undefined,
     aliases: payload.aliases,
     summary: payload.summary,
-    sourceId: `database:${payload.slug}`,
     monogram: payload.monogram,
     accent: payload.accent,
     characterRole: payload.characterRole || undefined,
@@ -113,7 +110,6 @@ function staticManifestEntries() {
     englishTitle: entry.englishTitle,
     aliases: entry.aliases,
     summary: entry.summary,
-    sourceId: entry.sourceId,
     monogram: entry.monogram,
     accent: entry.accent,
     characterRole: entry.characterRole,

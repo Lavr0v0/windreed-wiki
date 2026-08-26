@@ -82,7 +82,7 @@ export function updateCommonBase(baseState, classification) {
     format: "windreed-content-sync-state",
     version: 1,
     updatedAt: new Date().toISOString(),
-    entries: { ...(baseState.entries ?? {}) },
+    entries: {},
   };
   for (const item of classification) {
     if (item.status === "in-sync" && item.onlineEntry && item.onlineHash) {
@@ -90,6 +90,8 @@ export function updateCommonBase(baseState, classification) {
         revision: item.onlineEntry.baseRevision,
         hash: item.onlineHash,
       };
+    } else if (item.base) {
+      next.entries[item.slug] = item.base;
     }
   }
   return next;

@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { basename, dirname, resolve } from "node:path";
+import { basename, dirname, extname, resolve, sep } from "node:path";
 import { loadLocalArchive } from "./lib/local-archive.mjs";
 import {
   classifySync,
@@ -54,7 +54,45 @@ function printSummary(classification) {
   }
 }
 
-function incomingMarkdown(item) {
+function safeFileStem(payload) {
+  const label = [payload.title, payload.englishTitle].filter(Boolean).join(" ").normalize("NFC");
+  const cleaned = label
+    .replace(/[<>:"/\\|?*\u0000-\u001f]/g, "-")
+    .replace(/[. ]+$/g, "")
+    .trim();
+  return (cleaned || payload.slug).slice(0, 160);
+}
+
+function incomingTarget(item, localArchive) {
+  const payload = item.onlineEntry.payload;
+  const manifestEntry = localArchive.manifest.find((entry) => entry.slug === payload.slug);
+  const sourceEntry = localArchive.sources.find((entry) => entry.slug === payload.slug);
+  const section = localArchive.sections.find((candidate) => candidate.id === payload.section);
+  if (!section) throw new Error(`${payload.slug} 使用了未知卷册：${payload.section}`);
+  const collection = localArchive.collections[section.collection];
+  if (!collection) throw new Error(`${payload.slug} 使用了未知目录组：${section.collection}`);
+  if (manifestEntry && !sourceEntry) {
+    throw new Error(`${payload.slug} 已登记为公开词条，但缺少本地源文件映射。`);
+  }
+  const sourceFile = sourceEntry
+    ? basename(sourceEntry.sourcePath)
+    : `${safeFileStem(payload)} [${payload.slug}].md`;
+  const stem = sourceFile.slice(0, sourceFile.length - extname(sourceFile).length);
+  const directory = resolve(incomingDir, collection.directory, section.directory);
+  const markdownPath = resolve(directory, `${stem}.md`);
+  const jsonPath = resolve(directory, `${stem}.json`);
+  const incomingPrefix = `${incomingDir}${sep}`;
+  if (!markdownPath.startsWith(incomingPrefix) || !jsonPath.startsWith(incomingPrefix)) {
+    throw new Error(`${payload.slug} 的待合并路径超出 content/incoming。`);
+  }
+  return {
+    markdownPath,
+    jsonPath,
+    sourcePath: `${collection.directory}/${section.directory}/${sourceFile}`,
+  };
+}
+
+function incomingMarkdown(item, sourcePath) {
   const payload = item.onlineEntry.payload;
   const header = [
     "---",
@@ -64,6 +102,7 @@ function incomingMarkdown(item) {
     `category: ${payload.category}`,
     `section: ${payload.section}`,
     `title: ${JSON.stringify(payload.title)}`,
+    `source_path: ${JSON.stringify(sourcePath)}`,
     "---",
     "",
   ].join("\n");
@@ -102,17 +141,20 @@ if (command === "pull") {
   await mkdir(incomingDir, { recursive: true });
   for (const item of classification) {
     if (!item.onlineEntry || !["online-changed", "online-only", "conflict"].includes(item.status)) continue;
+    const target = incomingTarget(item, localArchive);
     const markdown = incomingMarkdown({
       ...item,
       onlineEntry: {
         ...item.onlineEntry,
         markdown: localArchive.toMarkdown(item.onlineEntry.payload.body),
       },
-    });
-    await writeFile(resolve(incomingDir, `${item.slug}.md`), markdown, "utf8");
-    await writeJson(resolve(incomingDir, `${item.slug}.json`), {
+    }, target.sourcePath);
+    await mkdir(dirname(target.markdownPath), { recursive: true });
+    await writeFile(target.markdownPath, markdown, "utf8");
+    await writeJson(target.jsonPath, {
       syncStatus: item.status,
       onlineRevision: item.onlineEntry.baseRevision,
+      sourcePath: target.sourcePath,
       payload: item.onlineEntry.payload,
     });
   }

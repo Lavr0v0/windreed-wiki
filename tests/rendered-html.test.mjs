@@ -107,6 +107,13 @@ test("renders the finished archive home page", async () => {
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/i);
 });
 
+test("keeps internal Markdown paths out of public navigation", async () => {
+  const response = await render("/api/public/navigation");
+  assert.equal(response.status, 200);
+  const payload = await response.text();
+  assert.doesNotMatch(payload, /sourcePath|sourceRegion|档案组\/.+\.md|故事组\/.+\.md/u);
+});
+
 test("renders the dated English translation snapshot and its full index", async () => {
   const homeResponse = await render("/en");
   assert.equal(homeResponse.status, 200);

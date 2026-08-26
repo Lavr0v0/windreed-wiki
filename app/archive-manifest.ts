@@ -1,16 +1,20 @@
-export type ArchiveCategory = "characters" | "world" | "history";
+import {
+  archiveSectionById,
+  type ArchiveCategory,
+  type ArchiveSection,
+} from "./archive-taxonomy";
+
+export {
+  archiveCollections,
+  archiveCollectionById,
+  archiveSectionById,
+  archiveSections,
+  type ArchiveCategory,
+  type ArchiveCollection,
+  type ArchiveSection,
+} from "./archive-taxonomy";
+
 export type CharacterRole = "member" | "associate";
-export type ArchiveCollection = "archives" | "stories";
-export type ArchiveSection =
-  | "lives"
-  | "companions"
-  | "places"
-  | "relics"
-  | "lore"
-  | "heraldry"
-  | "tales"
-  | "chronicle"
-  | "fortunes";
 
 export type ArchiveManifestEntry = {
   slug: string;
@@ -20,7 +24,6 @@ export type ArchiveManifestEntry = {
   englishTitle?: string;
   aliases: string[];
   summary: string;
-  sourceId: string;
   monogram: string;
   accent: string;
   characterRole?: CharacterRole;
@@ -35,37 +38,6 @@ export const categoryLabels: Record<ArchiveCategory, string> = {
   history: "历史档案",
 };
 
-export const archiveCollections: Array<{
-  id: ArchiveCollection;
-  english: "ARCHIVES" | "STORIES";
-  chinese: string;
-}> = [
-  { id: "archives", english: "ARCHIVES", chinese: "档案组" },
-  { id: "stories", english: "STORIES", chinese: "故事组" },
-];
-
-export const archiveSections: Array<{
-  id: ArchiveSection;
-  collection: ArchiveCollection;
-  english: string;
-  chinese: string;
-  description: string;
-}> = [
-  { id: "lives", collection: "archives", english: "LIVES", chinese: "卷中人", description: "角色档案；每位角色各有一篇完整故事。" },
-  { id: "companions", collection: "archives", english: "COMPANIONS", chinese: "同行者", description: "与风芦旅人同行的伙伴。" },
-  { id: "places", collection: "archives", english: "PLACES", chinese: "风物", description: "村庄、城市、森林与旅途中经过的地方。" },
-  { id: "relics", collection: "archives", english: "RELICS", chinese: "行囊", description: "有来历、值得收存的物品与信物。" },
-  { id: "lore", collection: "archives", english: "LORE", chinese: "见闻", description: "神迹、誓言、血脉与法术等见闻。" },
-  { id: "heraldry", collection: "archives", english: "HERALDRY", chinese: "纹章", description: "教会、族群与组织的纹章记录。" },
-  { id: "tales", collection: "stories", english: "TALES", chinese: "逸闻", description: "不承担主线或个人线推进、可以独立阅读的短篇与片段。" },
-  { id: "chronicle", collection: "stories", english: "THE CHRONICLE", chinese: "长路", description: "风芦旅人共同经历的主线编年史。" },
-  { id: "fortunes", collection: "stories", english: "FORTUNES", chinese: "际遇", description: "个人线、支线任务与改变命运的遭逢和转折。" },
-];
-
-export const archiveSectionById = Object.fromEntries(
-  archiveSections.map((section) => [section.id, section]),
-) as Record<ArchiveSection, (typeof archiveSections)[number]>;
-
 export const archiveManifest: ArchiveManifestEntry[] = [
   {
     slug: "shirul",
@@ -75,7 +47,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Shirul",
     aliases: ["雪露", "Shirul", "小骑士"],
     summary: "风芦旅人中最年轻的圣武士，也是最早把同行者称为“我们”的人。",
-    sourceId: "shirul",
     monogram: "雪",
     accent: "#78a99a",
     characterRole: "member",
@@ -95,7 +66,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Alberina",
     aliases: ["阿尔贝莉娜", "Alberina", "莉娜"],
     summary: "离开艾弗瑞斯卡的高精灵术士，以知识、判断和长久陪伴支撑队伍。",
-    sourceId: "alberina",
     monogram: "莉",
     accent: "#526b91",
     characterRole: "member",
@@ -115,7 +85,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Flavilar",
     aliases: ["芙勒维拉", "Flavilar"],
     summary: "遭到抹忆与放逐后北上，在无冬森林获救并重新学习语言与规则的黑龙裔战士。",
-    sourceId: "flavilar",
     monogram: "芙",
     accent: "#58735c",
     characterRole: "member",
@@ -135,7 +104,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Pheiron",
     aliases: ["佩伦", "Pheiron"],
     summary: "礼貌、圆滑又难以捉摸的木精灵刺客，常让队伍的日常多出意外。",
-    sourceId: "pheiron",
     monogram: "佩",
     accent: "#777d4f",
     characterRole: "member",
@@ -154,7 +122,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Skamos",
     aliases: ["斯卡摩斯", "Skamos"],
     summary: "从商队生活走来的提夫林吟游诗人，习惯观察，也擅长支援同伴。",
-    sourceId: "skamos",
     monogram: "斯",
     accent: "#7f5962",
     characterRole: "member",
@@ -173,7 +140,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Ariel",
     aliases: ["阿瑞尔", "Ariel"],
     summary: "在街头长大的年轻咒术师，以直接而警觉的方式面对威胁。",
-    sourceId: "ariel",
     monogram: "瑞",
     accent: "#615a86",
     characterRole: "member",
@@ -192,7 +158,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Merielle",
     aliases: ["梅莉艾尔", "Merielle"],
     summary: "村长家的长女、雪露的大姐，一位安静而敏锐的非冒险者。",
-    sourceId: "merielle",
     monogram: "梅",
     accent: "#a87572",
     characterRole: "associate",
@@ -211,7 +176,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Oath of the Ancients",
     aliases: ["古贤之誓", "远古誓言", "远古之誓", "上古之誓", "Oath of the Ancients"],
     summary: "雪露在无冬森林为救芙勒维拉立下的圣武士誓言，以守护生命、光与希望为核心。",
-    sourceId: "oath",
     monogram: "誓",
     accent: "#7b9367",
     presentation: "glossary",
@@ -223,7 +187,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     title: "神迹之光",
     aliases: ["神迹之光", "光"],
     summary: "雪露立誓后出现的局部神迹：芙勒维拉的伤势暂时稳住，近处少量草木抽出新芽。",
-    sourceId: "miracle-light",
     monogram: "光",
     accent: "#b59a56",
   },
@@ -235,7 +198,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Alter Self",
     aliases: ["变身术", "变形术", "Alter Self", "外形变化法术"],
     summary: "阿尔贝莉娜掌握的二环变化系法术，只能暂时改变施法者自身。",
-    sourceId: "transfiguration",
     monogram: "变",
     accent: "#6b7f9c",
   },
@@ -246,7 +208,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     title: "「枝桠」",
     aliases: ["枝桠", "「枝桠」", "Branch"],
     summary: "雪露长期使用的大型双手长剑，也是她珍视的随身之物。",
-    sourceId: "branch",
     monogram: "枝",
     accent: "#8d8156",
   },
@@ -266,7 +227,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
       "储法戒指",
     ],
     summary: "阿尔贝莉娜随口起了个怪名字的艾弗瑞斯卡易貌颈环，如今大多戴在芙勒维拉颈间。",
-    sourceId: "flas-mishy-choker",
     monogram: "M",
     accent: "#78859c",
     presentation: "glossary",
@@ -279,7 +239,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Emberford",
     aliases: ["安柏弗", "Emberford", "雪露的故乡"],
     summary: "无冬森林东缘一座常年萦绕着泉雾的小村庄，村中的 Sune 教堂陪伴雪露长大。",
-    sourceId: "emberford",
     monogram: "安",
     accent: "#a06f4f",
     presentation: "glossary",
@@ -292,7 +251,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Neverwinter",
     aliases: ["无冬城", "绝冬城", "Neverwinter"],
     summary: "气候温暖、医师与圣堂集中的城市，梅莉艾尔常在此接受照料。",
-    sourceId: "neverwinter",
     monogram: "冬",
     accent: "#6d8798",
     presentation: "glossary",
@@ -305,7 +263,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Red Larch",
     aliases: ["红松镇", "Red Larch", "Redlarch"],
     summary: "德沙林河谷长路沿线的商队小镇，早期五人在这里合流。",
-    sourceId: "redlarch",
     monogram: "R",
     accent: "#9a6c52",
     presentation: "glossary",
@@ -318,7 +275,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Mere of Dead Men · Neverwinter Wood",
     aliases: ["亡者沼泽", "亡者之沼", "无冬森林", "绝冬林", "Mere of Dead Men", "Neverwinter Wood"],
     summary: "芙勒维拉在亡者沼泽出生并遭放逐，北上后藏身无冬森林，最终在那里获救。",
-    sourceId: "mere-kryptgarden",
     monogram: "沼",
     accent: "#4f6b5d",
     presentation: "glossary",
@@ -331,7 +287,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Evereska",
     aliases: ["艾弗瑞斯卡", "埃弗瑞斯卡", "艾佛瑞斯卡", "Evereska", "高精灵族群"],
     summary: "位于灰斗篷丘陵一带、受魔法保护的隐秘精灵城邦，也是阿尔贝莉娜的故乡。",
-    sourceId: "evereska",
     monogram: "艾",
     accent: "#657a9b",
     presentation: "glossary",
@@ -344,7 +299,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     englishTitle: "Alberina · A Life Beyond the Pages",
     aliases: ["阿尔贝莉娜 Alberina · 人物传记", "阿尔贝莉娜人物传记", "阿尔贝莉娜传记", "Alberina Biography"],
     summary: "从艾弗瑞斯卡的童年，到安柏弗与风芦旅人的长路。",
-    sourceId: "alberina-biography",
     monogram: "莉",
     accent: "#526b91",
   },
@@ -355,7 +309,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     title: "队伍时间线",
     aliases: ["时间线", "风芦旅人时间线", "1492 DR"],
     summary: "按纪年和合流顺序整理的队伍主要经历。",
-    sourceId: "timeline",
     monogram: "年",
     accent: "#8f7d55",
   },
@@ -366,7 +319,6 @@ export const archiveManifest: ArchiveManifestEntry[] = [
     title: "关系档案",
     aliases: ["关系档案", "关系网", "人际关系"],
     summary: "六名正式成员、梅莉艾尔与核心设定之间已经确认的联系。",
-    sourceId: "relationships",
     monogram: "结",
     accent: "#7c6f78",
   },

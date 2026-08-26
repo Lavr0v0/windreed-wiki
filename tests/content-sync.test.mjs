@@ -112,3 +112,21 @@ test("仅本地存在的词条以无基准版本的新草稿推送", () => {
     { baseRevision: null, payload: createdPayload },
   ]);
 });
+
+test("共同基准会清理本地与线上都已不存在的旧测试词条", () => {
+  const shared = payload("shirul");
+  const result = classifySync([local(shared)], syncPackage([online(shared, 8)]), {
+    entries: {
+      shirul: { hash: payloadHash(shared), revision: 8 },
+      test01: { hash: "obsolete", revision: 2 },
+    },
+  });
+
+  const state = updateCommonBase({
+    entries: {
+      shirul: { hash: payloadHash(shared), revision: 8 },
+      test01: { hash: "obsolete", revision: 2 },
+    },
+  }, result);
+  assert.deepEqual(Object.keys(state.entries), ["shirul"]);
+});

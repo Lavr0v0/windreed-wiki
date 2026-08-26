@@ -77,9 +77,9 @@ npm run content:pull -- "C:\下载目录\windreed-online-YYYY-MM-DD.json"
 npm run content:status
 ```
 
-3. 线上新增、线上修改和冲突内容会写入 `content/incoming/`：
-   - `<slug>.md` 是便于在 Obsidian 阅读和合并的正文；
-   - `<slug>.json` 保存完整字段与线上版本号，不能只看 Markdown 后忽略摘要、别名或名片字段。
+3. 线上新增、线上修改和冲突内容会按网站九卷写入 `content/incoming/{档案组或故事组}/{卷册}/`：
+   - `<规范文件名>.md` 是便于在 Obsidian 阅读和合并的正文，frontmatter 同时记录稳定 slug 与目标 `source_path`；
+   - `<规范文件名>.json` 保存完整字段与线上版本号，不能只看 Markdown 后忽略摘要、别名或名片字段。
 4. 人工把确认后的内容合并进 `content/source/` 与 `app/archive-manifest.ts`。再次执行同一条 `content:pull`，使相同内容成为新的共同基准。
 
 脚本不会自动改写 Obsidian 源文件，也不会自动删除线上内容。
@@ -128,6 +128,7 @@ npm run content:import-drafts
 - 角色专页使用 `/characters/{slug}/`，例如 `/characters/shirul/`。
 - `/DnD/` 语义不够明确，现仅作为旧链接兼容入口，并跳转到 `/characters/`。
 - 档案词条继续使用 `/archive/{category}/{slug}`。编辑器中的 **URL 路径（slug）** 指永久链接末尾的小写标识，不是页面标题。
+- 已有词条的 `category` 与 `slug` 在界面和保存接口中锁定；九卷 `section` 可以调整，并唯一决定本地目录。需要迁移旧 URL 时必须另走带重定向的显式流程。
 
 ## GitHub Pages 回退
 
@@ -135,6 +136,6 @@ npm run content:import-drafts
 
 ## Obsidian 与隐私
 
-D1 保存修史室草稿、版本历史和线上发布状态；`content/source` 保存站主在 Obsidian 维护的本地源文件。两边通过内容同步包建立共同基准，不把任一侧的变化静默覆盖到另一侧。
+D1 保存修史室草稿、版本历史和线上发布状态；`content/source` 是可提交、可构建的本地公开源树，Obsidian 根目录通过本机硬链接显示同一批正文。两边通过内容同步包建立共同基准，不把任一侧的变化静默覆盖到另一侧。
 
 完成公开站切换后应另开隐私清理任务，把原始 Obsidian 副本从公开仓库当前版本移除。是否改写旧 Git 历史必须单独确认，不能自动 force-push。

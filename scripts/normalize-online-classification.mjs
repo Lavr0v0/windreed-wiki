@@ -58,10 +58,21 @@ const rows = queryOnline(`
   ORDER BY e.slug;
 `);
 
-const mismatches = rows.flatMap((row) => {
+const routeIdentityMismatches = rows.flatMap((row) => {
   const canonical = canonicalBySlug.get(String(row.slug));
   if (!canonical) return [];
-  if (row.category === canonical.category && row.section === canonical.section) return [];
+  if (row.category === canonical.category) return [];
+  return [{ row, canonical }];
+});
+if (routeIdentityMismatches.length) {
+  throw new Error(
+    `这些词条的 URL 分类不一致，不能作为普通目录整理自动修改：${routeIdentityMismatches.map(({ row }) => row.slug).join("、")}`,
+  );
+}
+
+const mismatches = rows.flatMap((row) => {
+  const canonical = canonicalBySlug.get(String(row.slug));
+  if (!canonical || row.section === canonical.section) return [];
   return [{ row, canonical }];
 });
 
@@ -75,7 +86,6 @@ const statements = mismatches.flatMap(({ row, canonical }) => {
   const nextRevision = Number(row.current_revision) + 1;
   const hasUnpublishedDraft = Number(row.current_revision) !== Number(row.published_revision);
   const payload = JSON.parse(String(row.payload));
-  payload.category = canonical.category;
   payload.section = canonical.section;
   const revisionId = `revision_classification_${randomUUID()}`;
   return [
@@ -90,8 +100,8 @@ const statements = mismatches.flatMap(({ row, canonical }) => {
       now,
     ].map(sql).join(", ")});`,
     hasUnpublishedDraft
-      ? `UPDATE entries SET category = ${sql(canonical.category)}, section = ${sql(canonical.section)}, current_revision = ${nextRevision}, updated_by = ${sql(editorEmail)}, updated_at = ${now} WHERE id = ${sql(row.id)} AND current_revision = ${Number(row.current_revision)};`
-      : `UPDATE entries SET category = ${sql(canonical.category)}, section = ${sql(canonical.section)}, current_revision = ${nextRevision}, published_revision = ${nextRevision}, status = 'published', updated_by = ${sql(editorEmail)}, updated_at = ${now}, published_at = ${now} WHERE id = ${sql(row.id)} AND current_revision = ${Number(row.current_revision)};`,
+      ? `UPDATE entries SET section = ${sql(canonical.section)}, current_revision = ${nextRevision}, updated_by = ${sql(editorEmail)}, updated_at = ${now} WHERE id = ${sql(row.id)} AND current_revision = ${Number(row.current_revision)};`
+      : `UPDATE entries SET section = ${sql(canonical.section)}, current_revision = ${nextRevision}, published_revision = ${nextRevision}, status = 'published', updated_by = ${sql(editorEmail)}, updated_at = ${now}, published_at = ${now} WHERE id = ${sql(row.id)} AND current_revision = ${Number(row.current_revision)};`,
   ];
 });
 

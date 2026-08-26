@@ -1,6 +1,8 @@
+import { editorEntrySections, type ArchiveCategory } from "../../archive-taxonomy";
+
 export type EditorRole = "admin" | "editor";
 export type EntryStatus = "draft" | "published";
-export type EntryCategory = "characters" | "world" | "history";
+export type EntryCategory = ArchiveCategory;
 
 export type TiptapMark = {
   type: string;
@@ -111,17 +113,7 @@ export const ENTRY_CATEGORIES: Array<{
   { value: "history", label: "故事" },
 ];
 
-export const ENTRY_SECTIONS = [
-  { value: "lives", label: "LIVES · 卷中人", category: "characters" },
-  { value: "companions", label: "COMPANIONS · 同行者", category: "characters" },
-  { value: "places", label: "PLACES · 风物", category: "world" },
-  { value: "relics", label: "RELICS · 行囊", category: "world" },
-  { value: "lore", label: "LORE · 见闻", category: "world" },
-  { value: "heraldry", label: "HERALDRY · 纹章", category: "world" },
-  { value: "tales", label: "TALES · 逸闻", category: "history" },
-  { value: "chronicle", label: "THE CHRONICLE · 长路", category: "history" },
-  { value: "fortunes", label: "FORTUNES · 际遇", category: "history" },
-] as const;
+export const ENTRY_SECTIONS = editorEntrySections;
 
 export const EMPTY_DOCUMENT: TiptapNode = {
   type: "doc",

@@ -120,6 +120,10 @@ for (const [index, candidate] of syncPackage.entries.entries()) {
     conflicts.push(payload.slug);
     continue;
   }
+  const onlinePayload = JSON.parse(online.payload);
+  if (payload.slug !== onlinePayload.slug || payload.category !== onlinePayload.category) {
+    throw new Error(`${payload.slug} 的公开 URL 身份与线上不一致；普通内容同步不会修改 category 或 slug。`);
+  }
   if (JSON.stringify(payload) === online.payload) {
     unchanged.push(payload.slug);
     continue;
@@ -138,7 +142,7 @@ for (const [index, candidate] of syncPackage.entries.entries()) {
       editorEmail,
       now,
     ].map(sql).join(", ")} WHERE EXISTS (SELECT 1 FROM entries WHERE id = ${sql(online.id)} AND current_revision = ${sql(online.current_revision)});`,
-    `UPDATE entries SET slug = ${sql(payload.slug)}, category = ${sql(payload.category)}, section = ${sql(payload.section)}, current_revision = ${nextRevision}, updated_by = ${sql(editorEmail)}, updated_at = ${now} WHERE id = ${sql(online.id)} AND current_revision = ${sql(online.current_revision)} AND EXISTS (SELECT 1 FROM entry_revisions WHERE id = ${sql(revisionId)});`,
+    `UPDATE entries SET section = ${sql(payload.section)}, current_revision = ${nextRevision}, updated_by = ${sql(editorEmail)}, updated_at = ${now} WHERE id = ${sql(online.id)} AND current_revision = ${sql(online.current_revision)} AND EXISTS (SELECT 1 FROM entry_revisions WHERE id = ${sql(revisionId)});`,
   );
   expected.push({ slug: payload.slug, revision: nextRevision, payload });
 }

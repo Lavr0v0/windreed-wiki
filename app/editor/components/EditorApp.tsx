@@ -411,7 +411,7 @@ export function EditorApp() {
               <label><span>英文名或别名</span><input value={payload.englishTitle} onChange={(event) => change("englishTitle", event.target.value)} /></label>
               <label>
                 <span>所属分类 *</span>
-                <select value={payload.category} onChange={(event) => {
+                <select disabled={Boolean(selectedId)} value={payload.category} onChange={(event) => {
                   const category = event.target.value as EntryPayload["category"];
                   const section = ENTRY_SECTIONS.find((item) => item.category === category)?.value ?? "lore";
                   setPayload((current) => ({ ...current, category, section }));
@@ -420,21 +420,21 @@ export function EditorApp() {
                 }}>
                   {ENTRY_CATEGORIES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
+                <small className="field-help">已有词条的 URL 分类会锁定，避免公开链接失效。</small>
               </label>
               <label>
                 <span>卷册 *</span>
                 <select value={payload.section} onChange={(event) => change("section", event.target.value)}>
-                  {ENTRY_SECTIONS.filter((option) => (
-                    option.category === payload.category || option.value === payload.section
-                  )).map((option) => (
+                  {ENTRY_SECTIONS.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
+                <small className="field-help">本地目录：{ENTRY_SECTIONS.find((option) => option.value === payload.section)?.directory ?? "待选择"}/</small>
               </label>
               <label>
                 <span>公开 URL 路径（slug）*</span>
-                <div className="slug-field"><small>windreed.wiki/archive/{payload.category}/</small><input aria-label="公开 URL 路径" value={payload.slug} onChange={(event) => change("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="emberford" /></div>
-                <small className="field-help">这是永久链接的一部分，只能使用小写英文字母、数字和连字符；发布后尽量不要更改。</small>
+                <div className="slug-field"><small>windreed.wiki/archive/{payload.category}/</small><input aria-label="公开 URL 路径" disabled={Boolean(selectedId)} value={payload.slug} onChange={(event) => change("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="emberford" /></div>
+                <small className="field-help">这是永久身份；创建后锁定，只能使用小写英文字母、数字和连字符。</small>
               </label>
               <label><span>其他称呼</span><input value={payload.aliases.join("，")} onChange={(event) => change("aliases", event.target.value.split(/[，,]/).map((item) => item.trim()).filter(Boolean))} placeholder="用逗号分开" /></label>
             </div>

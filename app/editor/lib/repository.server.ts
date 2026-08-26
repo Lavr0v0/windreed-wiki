@@ -225,10 +225,16 @@ export async function saveDraft(
   if (!permission.canEdit) throw new ApiError(403, "你没有编辑这个词条的权限。");
   const payload = sanitizeEntryPayload(rawPayload);
   const current = await database()
-    .prepare("SELECT current_revision FROM entries WHERE id = ?1")
+    .prepare("SELECT slug, category, current_revision FROM entries WHERE id = ?1")
     .bind(entryId)
-    .first<{ current_revision: number }>();
+    .first<{ slug: string; category: string; current_revision: number }>();
   if (!current) throw new ApiError(404, "没有找到这个词条。");
+  if (payload.slug !== current.slug || payload.category !== current.category) {
+    throw new ApiError(409, "公开 URL 已固定。已有词条不能直接修改 URL 分类或 slug。", {
+      category: current.category,
+      slug: current.slug,
+    });
+  }
   if (Number(current.current_revision) !== expectedRevision) {
     throw new ApiError(409, "这个词条刚刚被其他人更新了。请刷新后比较内容再保存。", {
       currentRevision: Number(current.current_revision),
@@ -255,12 +261,10 @@ export async function saveDraft(
       ),
       database().prepare(`
         UPDATE entries
-        SET slug = ?1, category = ?2, section = ?3, current_revision = ?4,
-            updated_by = ?5, updated_at = ?6
-        WHERE id = ?7 AND current_revision = ?8
+        SET section = ?1, current_revision = ?2,
+            updated_by = ?3, updated_at = ?4
+        WHERE id = ?5 AND current_revision = ?6
       `).bind(
-        payload.slug,
-        payload.category,
         payload.section,
         nextRevision,
         identity.email,
@@ -335,17 +339,20 @@ export async function restoreRevision(
   revision: number,
   expectedRevision: number,
 ) {
-  await getEntry(identity, entryId);
+  const current = await getEntry(identity, entryId);
   const source = await database()
     .prepare("SELECT payload FROM entry_revisions WHERE entry_id = ?1 AND revision = ?2")
     .bind(entryId, revision)
     .first<{ payload: string }>();
   if (!source) throw new ApiError(404, "没有找到这个历史版本。");
+  const restoredPayload = JSON.parse(source.payload);
+  restoredPayload.slug = current.slug;
+  restoredPayload.category = current.category;
   return saveDraft(
     identity,
     entryId,
     expectedRevision,
-    JSON.parse(source.payload),
+    restoredPayload,
     `恢复自版本 ${revision}`,
   );
 }

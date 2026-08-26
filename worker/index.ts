@@ -134,7 +134,8 @@ const worker = {
     // With `assets.run_worker_first` enabled, authenticated requests reach this
     // Worker before Cloudflare's static asset service. Serve the client bundle
     // explicitly; otherwise the app shell loads but its JavaScript modules 404.
-    const isStaticAsset = url.pathname.startsWith("/assets/")
+    const isStaticAsset = url.pathname.startsWith("/_next/static/")
+      || url.pathname.startsWith("/assets/")
       || url.pathname.startsWith("/brand/")
       || url.pathname.startsWith("/characters/")
       || url.pathname.startsWith("/DnD/")

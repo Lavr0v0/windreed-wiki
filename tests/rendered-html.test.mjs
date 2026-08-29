@@ -24,6 +24,30 @@ async function render(path = "/") {
   );
 }
 
+test("serves the Vinext client bundle through the Assets binding", async () => {
+  const worker = await getWorker();
+  let requestedUrl = "";
+  const response = await worker.fetch(
+    new Request("http://localhost/_next/static/client-test.js"),
+    {
+      ASSETS: {
+        fetch: async (request) => {
+          requestedUrl = request.url;
+          return new Response("client bundle", {
+            status: 200,
+            headers: { "Content-Type": "text/javascript" },
+          });
+        },
+      },
+    },
+    { waitUntil() {}, passThroughOnException() {} },
+  );
+
+  assert.equal(response.status, 200);
+  assert.equal(await response.text(), "client bundle");
+  assert.equal(requestedUrl, "http://localhost/_next/static/client-test.js");
+});
+
 const routes = [
   "/archive/characters/shirul",
   "/archive/characters/alberina",

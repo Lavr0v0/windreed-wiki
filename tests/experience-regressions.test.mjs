@@ -43,6 +43,15 @@ test("loads the Branch viewer and model only after a visitor asks for it", async
   }
 });
 
+test("keeps the Shirul hero inside narrow mobile viewports", async () => {
+  const styles = await read("public/characters/shirul/shirul.css");
+  assert.match(styles, /\.hero-copy\s*\{[^}]*min-width:\s*0/s);
+  assert.match(
+    styles,
+    /@media \(max-width: 960px\)[\s\S]*?\.hero\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/,
+  );
+});
+
 test("ships persistent editor feedback, tablet catalogue drawer, and lazy heavy panels", async () => {
   const [editor, styles] = await Promise.all([
     read("app/editor/components/EditorApp.tsx"),

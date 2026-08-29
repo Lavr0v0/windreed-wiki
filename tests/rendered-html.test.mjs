@@ -379,8 +379,12 @@ test("ships the standalone personal chronicles with local runtime assets", async
     "../public/characters/alberina/index.html",
     "../public/characters/flavilar/index.html",
     "../public/characters/shirul/index.html",
+    "../public/characters/shirul/shirul.css",
+    "../public/characters/shirul/portrait.webp",
+    "../public/characters/shirul/hilt-detail.webp",
     "../public/characters/shared/page.css",
     "../public/characters/shared/lenis.min.js",
+    "../public/characters/shared/noto-serif-sc/wght.css",
   ];
   await Promise.all(pages.map((path) => access(new URL(path, import.meta.url))));
   const index = await readFile(new URL("../public/characters/index.html", import.meta.url), "utf8");
@@ -389,6 +393,10 @@ test("ships the standalone personal chronicles with local runtime assets", async
   assert.match(index, /href="flavilar\/"/);
   assert.match(index, /href="shirul\/"/);
   assert.doesNotMatch(index, forbiddenPublicText);
+
+  const shirul = await readFile(new URL("../public/characters/shirul/index.html", import.meta.url), "utf8");
+  assert.match(shirul, /src="portrait\.webp"/);
+  assert.doesNotMatch(shirul, /立绘位虚位以待|具体危险、誓言原句与力量来源仍未确定/);
 
   const legacyRedirects = [
     ["../public/DnD/index.html", "/characters/"],

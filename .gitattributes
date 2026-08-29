@@ -1,0 +1,2 @@
+# Cloudflare D1 remote migrations misparse CRLF trigger bodies.
+drizzle/*.sql text eol=lf

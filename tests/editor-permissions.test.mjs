@@ -5,6 +5,7 @@ import test from "node:test";
 const repository = await readFile(new URL("../app/editor/lib/repository.server.ts", import.meta.url), "utf8");
 const collaborators = await readFile(new URL("../app/editor/components/CollaboratorsPanel.tsx", import.meta.url), "utf8");
 const migration = await readFile(new URL("../drizzle/0001_global_editor_access.sql", import.meta.url), "utf8");
+const attributes = await readFile(new URL("../.gitattributes", import.meta.url), "utf8");
 
 test("active editor accounts can edit and publish every current and future entry", () => {
   assert.match(repository, /identity\.role === "admin" \|\| identity\.role === "editor"/);
@@ -25,4 +26,9 @@ test("database compatibility grants existing and future entries to every active 
   assert.match(migration, /grant_active_editors_new_entries/);
   assert.match(migration, /grant_new_active_editor_all_entries/);
   assert.match(migration, /grant_reactivated_editor_all_entries/);
+});
+
+test("keeps D1 trigger migrations on LF line endings in Windows checkouts", () => {
+  assert.doesNotMatch(migration, /\r/);
+  assert.match(attributes, /^drizzle\/\*\.sql text eol=lf$/m);
 });

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Self-hosted third-party runtimes used by standalone static experiences.
+    "public/**/vendor/**",
   ]),
 ]);
 

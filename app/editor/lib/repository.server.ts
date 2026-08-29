@@ -127,36 +127,31 @@ const publishedSummaryColumns = `
   json_extract(r.payload, '$.facts') AS facts
 `;
 
-async function accessFor(identity: EditorIdentity, entryId: string) {
-  if (identity.role === "admin") return { canEdit: true, canPublish: true };
-  const row = await database()
-    .prepare("SELECT can_publish FROM entry_permissions WHERE entry_id = ?1 AND editor_email = ?2")
-    .bind(entryId, identity.email)
-    .first<{ can_publish: number }>();
-  return { canEdit: Boolean(row), canPublish: Boolean(row?.can_publish) };
+async function accessFor(identity: EditorIdentity) {
+  if (identity.role === "admin" || identity.role === "editor") {
+    return { canEdit: true, canPublish: true };
+  }
+  return { canEdit: false, canPublish: false };
 }
 
 export async function listEntries(identity: EditorIdentity) {
-  const admin = identity.role === "admin" ? 1 : 0;
+  if (identity.role !== "admin" && identity.role !== "editor") {
+    throw new ApiError(403, "你没有进入修史室的权限。");
+  }
   const result = await database()
     .prepare(`
-      SELECT e.*, r.payload,
-        CASE WHEN ?1 = 1 THEN 1 ELSE COALESCE(p.can_publish, 0) END AS can_publish
+      SELECT e.*, r.payload, 1 AS can_publish
       FROM entries e
       JOIN entry_revisions r
         ON r.entry_id = e.id AND r.revision = e.current_revision
-      LEFT JOIN entry_permissions p
-        ON p.entry_id = e.id AND p.editor_email = ?2
-      WHERE ?1 = 1 OR p.editor_email IS NOT NULL
       ORDER BY e.updated_at DESC, e.slug ASC
     `)
-    .bind(admin, identity.email)
     .all<D1Row>();
   return result.results.map(listItemFromRow);
 }
 
 export async function getEntry(identity: EditorIdentity, entryId: string) {
-  const permission = await accessFor(identity, entryId);
+  const permission = await accessFor(identity);
   if (!permission.canEdit) throw new ApiError(403, "你没有编辑这个词条的权限。");
   const row = await database()
     .prepare(`
@@ -176,12 +171,6 @@ export async function createEntry(identity: EditorIdentity, rawPayload: unknown)
   const entryId = id("entry");
   const revisionId = id("revision");
   const now = Date.now();
-  const permissionStatement = identity.role === "editor"
-    ? database().prepare(`
-        INSERT INTO entry_permissions (entry_id, editor_email, can_publish, created_at)
-        VALUES (?1, ?2, 0, ?3)
-      `).bind(entryId, identity.email, now)
-    : null;
 
   try {
     await database().batch([
@@ -203,7 +192,6 @@ export async function createEntry(identity: EditorIdentity, rawPayload: unknown)
         identity.email,
         now,
       ),
-      ...(permissionStatement ? [permissionStatement] : []),
     ]);
   } catch (error) {
     if (String(error).toLowerCase().includes("unique")) {
@@ -221,7 +209,7 @@ export async function saveDraft(
   rawPayload: unknown,
   note?: string,
 ) {
-  const permission = await accessFor(identity, entryId);
+  const permission = await accessFor(identity);
   if (!permission.canEdit) throw new ApiError(403, "你没有编辑这个词条的权限。");
   const payload = sanitizeEntryPayload(rawPayload);
   const current = await database()
@@ -291,7 +279,7 @@ export async function publishEntry(
   entryId: string,
   expectedRevision: number,
 ) {
-  const permission = await accessFor(identity, entryId);
+  const permission = await accessFor(identity);
   if (!permission.canPublish) throw new ApiError(403, "你可以编辑这个词条，但尚未获得发布权限。");
   const entry = await getEntry(identity, entryId);
   if (entry.currentRevision !== expectedRevision) {
@@ -441,11 +429,8 @@ export async function getPublishedEntry(slug: string) {
 
 export async function listEditorAccounts(): Promise<EditorAccount[]> {
   const result = await database().prepare(`
-    SELECT ed.email, ed.display_name, ed.role, ed.active,
-           GROUP_CONCAT(ep.entry_id) AS entry_ids
+    SELECT ed.email, ed.display_name, ed.role, ed.active
     FROM editors ed
-    LEFT JOIN entry_permissions ep ON ep.editor_email = ed.email
-    GROUP BY ed.email
     ORDER BY ed.role, ed.email
   `).all<D1Row>();
   return result.results.map((row: D1Row) => ({
@@ -453,7 +438,6 @@ export async function listEditorAccounts(): Promise<EditorAccount[]> {
     displayName: row.display_name ? String(row.display_name) : String(row.email).split("@")[0],
     role: String(row.role) as EditorAccount["role"],
     active: Boolean(row.active),
-    entryIds: row.entry_ids ? String(row.entry_ids).split(",") : [],
   }));
 }
 
@@ -461,28 +445,23 @@ export async function saveEditorAccount(input: {
   email: string;
   displayName?: string;
   active?: boolean;
-  entryIds?: string[];
 }) {
   const email = input.email.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new ApiError(400, "邮箱格式不正确。");
   const now = Date.now();
-  const entryIds = Array.from(new Set(input.entryIds ?? []));
-  const statements = [
-    database().prepare(`
-      INSERT INTO editors (email, display_name, role, active, created_at, updated_at)
-      VALUES (?1, ?2, 'editor', ?3, ?4, ?4)
-      ON CONFLICT(email) DO UPDATE SET
-        display_name = excluded.display_name,
-        active = excluded.active,
-        updated_at = excluded.updated_at
-    `).bind(email, input.displayName?.trim().slice(0, 80) || null, input.active === false ? 0 : 1, now),
-    database().prepare("DELETE FROM entry_permissions WHERE editor_email = ?1").bind(email),
-    ...entryIds.map((entryId) => database().prepare(`
-      INSERT INTO entry_permissions (entry_id, editor_email, can_publish, created_at)
-      VALUES (?1, ?2, 1, ?3)
-    `).bind(entryId, email, now)),
-  ];
-  await database().batch(statements);
+  await database().prepare(`
+    INSERT INTO editors (email, display_name, role, active, created_at, updated_at)
+    VALUES (?1, ?2, 'editor', ?3, ?4, ?4)
+    ON CONFLICT(email) DO UPDATE SET
+      display_name = excluded.display_name,
+      active = excluded.active,
+      updated_at = excluded.updated_at
+  `).bind(
+    email,
+    input.displayName?.trim().slice(0, 80) || null,
+    input.active === false ? 0 : 1,
+    now,
+  ).run();
   return listEditorAccounts();
 }
 

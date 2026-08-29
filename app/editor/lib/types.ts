@@ -72,7 +72,6 @@ export type EditorIdentity = {
 
 export type EditorAccount = EditorIdentity & {
   active: boolean;
-  entryIds: string[];
 };
 
 export const CONTENT_SYNC_FORMAT = "windreed-content-sync";

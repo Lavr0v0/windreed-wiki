@@ -1,6 +1,5 @@
 import {
   listEditorAccounts,
-  listEntries,
   saveEditorAccount,
 } from "@/app/editor/lib/repository.server";
 import {
@@ -14,11 +13,7 @@ export async function GET() {
   try {
     const identity = await requireEditorIdentity();
     requireAdmin(identity);
-    const [editors, entries] = await Promise.all([
-      listEditorAccounts(),
-      listEntries(identity),
-    ]);
-    return Response.json({ editors, entries });
+    return Response.json({ editors: await listEditorAccounts() });
   } catch (error) {
     return jsonError(error);
   }
@@ -33,7 +28,6 @@ export async function PUT(request: Request) {
       email: string;
       displayName?: string;
       active?: boolean;
-      entryIds?: string[];
     };
     return Response.json({ editors: await saveEditorAccount(body) });
   } catch (error) {

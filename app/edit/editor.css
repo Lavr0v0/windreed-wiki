@@ -318,6 +318,12 @@
 .assignment-list strong,
 .assignment-list small { display: block; }
 .assignment-list small { color: var(--editor-muted); font-family: var(--display); font-size: 9px; margin-top: 2px; }
+.collaborator-scope { background: rgba(102,132,113,.08); border: 1px solid rgba(102,132,113,.2); border-left: 3px solid var(--editor-reed); margin-top: 22px; padding: 13px 15px; }
+.collaborator-scope > span { color: #667274; display: block; font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: .08em; margin-bottom: 7px; text-transform: uppercase; }
+.collaborator-scope strong,
+.collaborator-scope small { display: block; }
+.collaborator-scope strong { color: var(--editor-ink); font-family: var(--display); font-size: 15px; }
+.collaborator-scope small { color: var(--editor-muted); font-family: var(--sans); font-size: 11px; line-height: 1.6; margin-top: 4px; }
 .collaborator-form footer { align-items: center; display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
 .editor-message { color: var(--editor-reed); font-family: var(--sans); font-size: 11px; line-height: 1.5; }
 

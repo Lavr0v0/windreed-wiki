@@ -61,10 +61,9 @@ envSource = setEnvValue(envSource, "WINDREED_ENABLE_PUBLIC_DOMAIN", "1");
 await writeFile(envPath, envSource, "utf8");
 
 const now = Date.now();
-const statements = ["PRAGMA foreign_keys = ON;"];
+const statements = ["PRAGMA foreign_keys = ON;", "DELETE FROM entry_permissions;"];
 for (const admin of admins) {
   statements.push(
-    `DELETE FROM entry_permissions WHERE editor_email = ${sql(admin)};`,
     `DELETE FROM editors WHERE email = ${sql(admin)};`,
   );
 }
@@ -79,8 +78,6 @@ for (const editor of editors) {
       now,
       now,
     ].map(sql).join(", ")}) ON CONFLICT(email) DO UPDATE SET display_name = excluded.display_name, role = 'editor', active = 1, updated_at = excluded.updated_at;`,
-    `DELETE FROM entry_permissions WHERE editor_email = ${sql(editor)};`,
-    `INSERT INTO entry_permissions (entry_id, editor_email, can_publish, created_at) SELECT id, ${sql(editor)}, 1, ${now} FROM entries${excludedSlugs.length ? ` WHERE slug NOT IN (${excludedSlugs.map(sql).join(", ")})` : ""};`,
   );
 }
 

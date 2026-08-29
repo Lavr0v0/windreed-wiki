@@ -49,20 +49,23 @@ test("derives public navigation and routes from the published revision rather th
   assert.match(repository, /section: payload\.section/);
 });
 
-test("locks permanent URL identity while the nine archive sections remain movable", async () => {
-  const [content, editor, repository] = await Promise.all([
+test("uses the nine archive sections in canonical URLs while keeping slugs stable", async () => {
+  const [content, editor, repository, manifest, richEditor] = await Promise.all([
     read("app/editor/lib/content.ts"),
     read("app/editor/components/EditorApp.tsx"),
     read("app/editor/lib/repository.server.ts"),
+    read("app/archive-manifest.ts"),
+    read("app/editor/components/RichEditor.tsx"),
   ]);
 
   assert.match(content, /ENTRY_SECTIONS\.some\(\(candidate\) => candidate\.value === requestedSection\)/);
-  assert.match(editor, /select disabled=\{Boolean\(selectedId\)\} value=\{payload\.category\}/);
   assert.match(editor, /aria-label="公开 URL 路径" disabled=\{Boolean\(selectedId\)\}/);
   assert.match(editor, /\{ENTRY_SECTIONS\.map\(\(option\) => \(/);
-  assert.doesNotMatch(editor, /option\.category === payload\.category/);
-  assert.match(repository, /payload\.slug !== current\.slug \|\| payload\.category !== current\.category/);
-  assert.match(repository, /已有词条不能直接修改 URL 分类或 slug/);
+  assert.match(editor, /windreed\.wiki\/archive\/\{payload\.section\}\//);
+  assert.match(manifest, /`\/archive\/\$\{entry\.section\}\/\$\{entry\.slug\}`/);
+  assert.match(richEditor, /`\/archive\/\$\{target\.section\}\/\$\{target\.slug\}`/);
+  assert.match(repository, /payload\.slug !== current\.slug/);
+  assert.match(repository, /slug/);
 });
 
 test("provides route-level loading folios with a CSS-only delayed reveal", async () => {
@@ -130,7 +133,7 @@ test("uses one canonical member order across public navigation and folios", asyn
   const [manifest, publicArchive, article, personalIndex] = await Promise.all([
     read("app/archive-manifest.ts"),
     read("app/public-archive.server.ts"),
-    read("app/archive/[category]/[slug]/page.tsx"),
+    read("app/archive/[section]/[slug]/page.tsx"),
     read("public/characters/index.html"),
   ]);
 

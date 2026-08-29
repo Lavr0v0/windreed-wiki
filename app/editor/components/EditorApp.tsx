@@ -420,7 +420,7 @@ export function EditorApp() {
                 }}>
                   {ENTRY_CATEGORIES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
-                <small className="field-help">已有词条的 URL 分类会锁定，避免公开链接失效。</small>
+                <small className="field-help">内部资料类型；用于人物、世界与历史数据规则，不再组成公开网址。</small>
               </label>
               <label>
                 <span>卷册 *</span>
@@ -429,11 +429,11 @@ export function EditorApp() {
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
-                <small className="field-help">本地目录：{ENTRY_SECTIONS.find((option) => option.value === payload.section)?.directory ?? "待选择"}/</small>
+                <small className="field-help">本地目录与公开网址都由卷册决定；换卷后旧网址会自动跳转。</small>
               </label>
               <label>
                 <span>公开 URL 路径（slug）*</span>
-                <div className="slug-field"><small>windreed.wiki/archive/{payload.category}/</small><input aria-label="公开 URL 路径" disabled={Boolean(selectedId)} value={payload.slug} onChange={(event) => change("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="emberford" /></div>
+                <div className="slug-field"><small>windreed.wiki/archive/{payload.section}/</small><input aria-label="公开 URL 路径" disabled={Boolean(selectedId)} value={payload.slug} onChange={(event) => change("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="emberford" /></div>
                 <small className="field-help">这是永久身份；创建后锁定，只能使用小写英文字母、数字和连字符。</small>
               </label>
               <label><span>其他称呼</span><input value={payload.aliases.join("，")} onChange={(event) => change("aliases", event.target.value.split(/[，,]/).map((item) => item.trim()).filter(Boolean))} placeholder="用逗号分开" /></label>

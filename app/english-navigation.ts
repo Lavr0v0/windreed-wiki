@@ -83,6 +83,6 @@ export const englishSections: Record<
   },
 };
 
-export function englishArchiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug">) {
-  return `/en/archive/${entry.category}/${entry.slug}`;
+export function englishArchiveHref(entry: Pick<ArchiveManifestEntry, "section" | "slug">) {
+  return `/en/archive/${entry.section}/${entry.slug}`;
 }

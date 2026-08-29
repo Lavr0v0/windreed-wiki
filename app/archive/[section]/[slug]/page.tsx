@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
+  appendSearchParams,
   archiveManifest,
   archiveHref,
   archiveSectionById,
   entryCollectionLabel,
+  isArchiveRouteSegment,
   memberFolioNumber,
   partyMemberEntries,
   siteHref,
+  type RouteSearchParams,
 } from "../../../archive-manifest";
 import { getPublicArchiveEntry } from "../../../public-archive.server";
 import { MarkdownView } from "../../../components/MarkdownView";
@@ -15,7 +18,8 @@ import { PendingLink } from "../../../components/PendingLink";
 import { ArticleToc } from "../../../components/ArticleToc";
 
 type PageProps = {
-  params: Promise<{ category: string; slug: string }>;
+  params: Promise<{ section: string; slug: string }>;
+  searchParams: Promise<RouteSearchParams>;
 };
 
 export const dynamic = "force-dynamic";
@@ -23,14 +27,15 @@ export const dynamicParams = true;
 
 export function generateStaticParams() {
   return archiveManifest.map((entry) => ({
-    category: entry.category,
+    section: entry.section,
     slug: entry.slug,
   }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { category, slug } = await params;
-  const entry = await getPublicArchiveEntry(category, slug);
+  const { section, slug } = await params;
+  if (!isArchiveRouteSegment(section)) return {};
+  const entry = await getPublicArchiveEntry(slug);
   if (!entry) return {};
   const title = entry.englishTitle
     ? `${entry.title} ${entry.englishTitle}`
@@ -56,10 +61,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ArchivePage({ params }: PageProps) {
-  const { category, slug } = await params;
-  const entry = await getPublicArchiveEntry(category, slug);
+export default async function ArchivePage({ params, searchParams }: PageProps) {
+  const { section, slug } = await params;
+  if (!isArchiveRouteSegment(section)) notFound();
+
+  const [entry, query] = await Promise.all([
+    getPublicArchiveEntry(slug),
+    searchParams,
+  ]);
   if (!entry) notFound();
+  if (section !== entry.section) {
+    permanentRedirect(appendSearchParams(archiveHref(entry), query));
+  }
 
   const isMember = entry.characterRole === "member";
   const memberNumber = isMember ? memberFolioNumber(entry.slug) : null;

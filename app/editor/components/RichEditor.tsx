@@ -52,7 +52,7 @@ export function RichEditor({ value, onChange, entries, entryId }: RichEditorProp
   function insertArchiveLink() {
     const target = entries.find((entry) => entry.id === linkTarget);
     if (!target) return;
-    const href = `/archive/${target.category}/${target.slug}`;
+    const href = `/archive/${target.section}/${target.slug}`;
     const selection = currentEditor.state.selection;
     if (selection.empty) {
       currentEditor.chain().focus().insertContent({

@@ -2,7 +2,7 @@ import "server-only";
 
 import { getRuntimeEnv } from "@/db";
 
-const publicArchiveCachePrefix = "public-archive:v1:";
+const publicArchiveCachePrefix = "public-archive:v2:";
 
 function namespace() {
   try {
@@ -57,7 +57,7 @@ export const publicArchiveCacheKeys = {
   entries: "entries",
   navigation: "navigation",
   search: "search",
-  entry(category: string, slug: string) {
-    return `entry:${encodeURIComponent(category)}:${encodeURIComponent(slug)}`;
+  entry(slug: string) {
+    return `entry:${encodeURIComponent(slug)}`;
   },
 } as const;

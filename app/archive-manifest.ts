@@ -9,8 +9,10 @@ export {
   archiveCollectionById,
   archiveSectionById,
   archiveSections,
+  isArchiveRouteSegment,
   type ArchiveCategory,
   type ArchiveCollection,
+  type ArchiveRouteSegment,
   type ArchiveSection,
 } from "./archive-taxonomy";
 
@@ -332,22 +334,61 @@ export function siteHref(path: string) {
   return path === "/" ? `${configuredBasePath}/` : `${configuredBasePath}${path}`;
 }
 
-export function archiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug">) {
-  return siteHref(`/archive/${entry.category}/${entry.slug}`);
+export function archivePath(entry: Pick<ArchiveManifestEntry, "section" | "slug">) {
+  return `/archive/${entry.section}/${entry.slug}`;
+}
+
+export function archiveHref(entry: Pick<ArchiveManifestEntry, "section" | "slug">) {
+  return siteHref(archivePath(entry));
+}
+
+export function legacyArchivePath(entry: Pick<ArchiveManifestEntry, "category" | "slug">) {
+  return `/archive/${entry.category}/${entry.slug}`;
+}
+
+export function legacyArchiveHref(entry: Pick<ArchiveManifestEntry, "category" | "slug">) {
+  return siteHref(legacyArchivePath(entry));
 }
 
 const canonicalArchiveOrder = new Map(
-  archiveManifest.map((entry, index) => [`${entry.category}/${entry.slug}`, index]),
+  archiveManifest.map((entry, index) => [entry.slug, index]),
 );
 
-export function sortArchiveEntries<T extends Pick<ArchiveManifestEntry, "category" | "slug">>(
+export function sortArchiveEntries<T extends Pick<ArchiveManifestEntry, "slug">>(
   entries: readonly T[],
 ) {
   return [...entries].sort((left, right) => {
-    const leftIndex = canonicalArchiveOrder.get(`${left.category}/${left.slug}`);
-    const rightIndex = canonicalArchiveOrder.get(`${right.category}/${right.slug}`);
+    const leftIndex = canonicalArchiveOrder.get(left.slug);
+    const rightIndex = canonicalArchiveOrder.get(right.slug);
     return (leftIndex ?? Number.MAX_SAFE_INTEGER) - (rightIndex ?? Number.MAX_SAFE_INTEGER);
   });
+}
+
+const canonicalArchivePathByLegacyPath = new Map(
+  archiveManifest.map((entry) => [legacyArchivePath(entry), archivePath(entry)]),
+);
+const legacyArchivePathPattern = /\/archive\/(?:characters|world|history)\/[a-z0-9-]+/g;
+
+export function canonicalizeArchiveLinks(value: string) {
+  return value.replace(
+    legacyArchivePathPattern,
+    (path) => canonicalArchivePathByLegacyPath.get(path) ?? path,
+  );
+}
+
+export type RouteSearchParams = Record<string, string | string[] | undefined>;
+
+export function appendSearchParams(href: string, values: RouteSearchParams) {
+  const searchParams = new URLSearchParams();
+  for (const [name, value] of Object.entries(values)) {
+    if (Array.isArray(value)) {
+      for (const item of value) searchParams.append(name, item);
+    } else if (value !== undefined) {
+      searchParams.append(name, value);
+    }
+  }
+  const query = searchParams.toString();
+  return query ? `${href}?${query}` : href;
 }
 
 export function entriesByCategory(category: ArchiveCategory) {

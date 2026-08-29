@@ -122,7 +122,7 @@ for (const [index, candidate] of syncPackage.entries.entries()) {
   }
   const onlinePayload = JSON.parse(online.payload);
   if (payload.slug !== onlinePayload.slug || payload.category !== onlinePayload.category) {
-    throw new Error(`${payload.slug} 的公开 URL 身份与线上不一致；普通内容同步不会修改 category 或 slug。`);
+    throw new Error(`${payload.slug} 的永久 slug 或内容类型 category 与线上不一致；普通内容同步不会修改这两项。规范公开 URL 的卷册段由可迁移的 section 决定。`);
   }
   if (JSON.stringify(payload) === online.payload) {
     unchanged.push(payload.slug);

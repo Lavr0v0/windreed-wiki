@@ -5,6 +5,7 @@ import { cache } from "react";
 import {
   getArchiveEntries,
   getArchiveEntry,
+  getArchiveEntryBySlug,
   getSearchIndex,
   type ArchiveEntry,
 } from "./archive-content.server";
@@ -20,6 +21,7 @@ import {
 } from "./editor/lib/repository.server";
 import {
   archiveHref,
+  canonicalizeArchiveLinks,
   sortArchiveEntries,
   type ArchiveManifestEntry,
 } from "./archive-manifest";
@@ -44,10 +46,10 @@ function toArchiveEntry(
   plainText: string,
 ): ArchiveEntry {
   const staticEntry = getArchiveEntry(payload.category, payload.slug);
-  const publishedBody = documentToMarkdown(payload.body);
-  const body = payload.category === "characters"
+  const publishedBody = canonicalizeArchiveLinks(documentToMarkdown(payload.body));
+  const body = canonicalizeArchiveLinks(payload.category === "characters"
     ? mergeCanonicalCoreInfo(publishedBody, staticEntry?.body)
-    : publishedBody;
+    : publishedBody);
   const manifest: ArchiveManifestEntry = {
     slug: payload.slug,
     category: payload.category,
@@ -151,19 +153,19 @@ export async function getPublicArchiveNavigationEntries() {
   }
 }
 
-export const getPublicArchiveEntry = cache(async function getPublicArchiveEntry(category: string, slug: string) {
-  if (!dynamicArchiveAvailable()) return getArchiveEntry(category, slug);
-  const key = publicArchiveCacheKeys.entry(category, slug);
+export const getPublicArchiveEntry = cache(async function getPublicArchiveEntry(slug: string) {
+  if (!dynamicArchiveAvailable()) return getArchiveEntryBySlug(slug);
+  const key = publicArchiveCacheKeys.entry(slug);
   const cached = await readPublicArchiveCache<ArchiveEntry>(key);
-  if (cached) return cached;
+  if (cached) return { ...cached, body: canonicalizeArchiveLinks(cached.body) };
   try {
     const row = await getPublishedEntry(slug);
-    if (!row || row.category !== category) return getArchiveEntry(category, slug);
+    if (!row) return getArchiveEntryBySlug(slug);
     const entry = toArchiveEntry(row.payload, row.plainText);
     await writePublicArchiveCache(key, entry);
     return entry;
   } catch {
-    return getArchiveEntry(category, slug);
+    return getArchiveEntryBySlug(slug);
   }
 });
 
@@ -183,7 +185,10 @@ export async function getPublicSearchIndex() {
       characterRole: entry.characterRole || undefined,
       presentation: entry.presentation,
       summary: entry.summary,
-      href: archiveHref(entry),
+      href: archiveHref({
+        section: entry.section as ArchiveManifestEntry["section"],
+        slug: entry.slug,
+      }),
       text: entry.plainText,
     }));
     await writePublicArchiveCache(publicArchiveCacheKeys.search, index);

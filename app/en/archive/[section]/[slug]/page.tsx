@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { archiveSections } from "../../../../archive-manifest";
+import { notFound, permanentRedirect } from "next/navigation";
+import {
+  appendSearchParams,
+  archiveHref,
+  archiveSections,
+  isArchiveRouteSegment,
+  type RouteSearchParams,
+} from "../../../../archive-manifest";
 import {
   englishArchiveHref,
   englishArchiveManifest,
@@ -13,7 +19,8 @@ import { MarkdownView } from "../../../../components/MarkdownView";
 import { PendingLink } from "../../../../components/PendingLink";
 
 type PageProps = {
-  params: Promise<{ category: string; slug: string }>;
+  params: Promise<{ section: string; slug: string }>;
+  searchParams: Promise<RouteSearchParams>;
 };
 
 export const dynamic = "force-dynamic";
@@ -21,14 +28,15 @@ export const dynamicParams = true;
 
 export function generateStaticParams() {
   return englishArchiveManifest.map((entry) => ({
-    category: entry.category,
+    section: entry.section,
     slug: entry.slug,
   }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { category, slug } = await params;
-  const entry = getEnglishArchiveEntry(category, slug);
+  const { section, slug } = await params;
+  if (!isArchiveRouteSegment(section)) return {};
+  const entry = getEnglishArchiveEntry(slug);
   if (!entry) return {};
   const href = englishArchiveHref(entry);
   return {
@@ -38,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: href,
       languages: {
         en: href,
-        "zh-CN": `/archive/${entry.category}/${entry.slug}`,
+        "zh-CN": archiveHref(entry),
       },
     },
     openGraph: {
@@ -56,10 +64,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function EnglishArchivePage({ params }: PageProps) {
-  const { category, slug } = await params;
-  const entry = getEnglishArchiveEntry(category, slug);
+export default async function EnglishArchivePage({ params, searchParams }: PageProps) {
+  const [{ section: routeSection, slug }, query] = await Promise.all([params, searchParams]);
+  if (!isArchiveRouteSegment(routeSection)) notFound();
+
+  const entry = getEnglishArchiveEntry(slug);
   if (!entry) notFound();
+  if (routeSection !== entry.section) {
+    permanentRedirect(appendSearchParams(englishArchiveHref(entry), query));
+  }
 
   const isMember = entry.characterRole === "member";
   const memberNumber = isMember

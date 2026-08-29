@@ -22,7 +22,7 @@ const publicDataText = await read("/api/public/entries");
 const publicData = JSON.parse(publicDataText);
 const paths = [
   "/",
-  ...publicData.entries.map((entry) => `/archive/${entry.category}/${entry.slug}`),
+  ...publicData.entries.map((entry) => `/archive/${entry.section}/${entry.slug}`),
 ];
 
 for (const path of paths) {

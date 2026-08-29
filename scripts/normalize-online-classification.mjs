@@ -58,15 +58,15 @@ const rows = queryOnline(`
   ORDER BY e.slug;
 `);
 
-const routeIdentityMismatches = rows.flatMap((row) => {
+const contentTypeMismatches = rows.flatMap((row) => {
   const canonical = canonicalBySlug.get(String(row.slug));
   if (!canonical) return [];
   if (row.category === canonical.category) return [];
   return [{ row, canonical }];
 });
-if (routeIdentityMismatches.length) {
+if (contentTypeMismatches.length) {
   throw new Error(
-    `这些词条的 URL 分类不一致，不能作为普通目录整理自动修改：${routeIdentityMismatches.map(({ row }) => row.slug).join("、")}`,
+    `这些词条的内容类型 category 不一致，不能作为普通目录整理自动修改：${contentTypeMismatches.map(({ row }) => row.slug).join("、")}`,
   );
 }
 

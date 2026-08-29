@@ -24,6 +24,7 @@ import timelineRaw from "../content/source/故事组/长路/队伍时间线.md?r
 import {
   archiveHref,
   archiveManifest,
+  canonicalizeArchiveLinks,
   siteHref,
   type ArchiveManifestEntry,
 } from "./archive-manifest";
@@ -117,6 +118,7 @@ export function getArchiveSourceCatalog() {
 }
 
 const targetRoutes = new Map<string, string>();
+const archiveEntryBySlug = new Map(archiveManifest.map((entry) => [entry.slug, entry]));
 for (const entry of archiveManifest) {
   const href = archiveHref(entry);
   for (const name of [entry.title, entry.englishTitle, ...entry.aliases]) {
@@ -124,15 +126,20 @@ for (const entry of archiveManifest) {
   }
 }
 targetRoutes.set("风芦旅人", siteHref("/"));
-targetRoutes.set("雪露 shirul", siteHref("/archive/characters/shirul"));
-targetRoutes.set("阿尔贝莉娜 alberina", siteHref("/archive/characters/alberina"));
-targetRoutes.set("芙勒维拉 flavilar", siteHref("/archive/characters/flavilar"));
-targetRoutes.set("佩伦 pheiron", siteHref("/archive/characters/pheiron"));
-targetRoutes.set("斯卡摩斯 skamos", siteHref("/archive/characters/skamos"));
-targetRoutes.set("阿瑞尔 ariel", siteHref("/archive/characters/ariel"));
-targetRoutes.set("梅莉艾尔 merielle", siteHref("/archive/characters/merielle"));
-targetRoutes.set("艾弗瑞斯卡 evereska", siteHref("/archive/world/evereska"));
-targetRoutes.set("高精灵族群", siteHref("/archive/world/evereska"));
+for (const [name, slug] of [
+  ["雪露 shirul", "shirul"],
+  ["阿尔贝莉娜 alberina", "alberina"],
+  ["芙勒维拉 flavilar", "flavilar"],
+  ["佩伦 pheiron", "pheiron"],
+  ["斯卡摩斯 skamos", "skamos"],
+  ["阿瑞尔 ariel", "ariel"],
+  ["梅莉艾尔 merielle", "merielle"],
+  ["艾弗瑞斯卡 evereska", "evereska"],
+  ["高精灵族群", "evereska"],
+] as const) {
+  const entry = archiveEntryBySlug.get(slug);
+  if (entry) targetRoutes.set(name, archiveHref(entry));
+}
 
 const excludedSection = /^(未解|待定|待补|尚未确定|答卷视角|世界与设定索引)/;
 const editorialBlock = [
@@ -404,7 +411,7 @@ function markdownToPlainText(markdown: string) {
 const archiveEntries: ArchiveEntry[] = archiveManifest.map((manifestEntry) => {
   const source = archiveSourceBySlug.get(manifestEntry.slug);
   if (!source) throw new Error(`Missing source for ${manifestEntry.slug}`);
-  const body = sanitizeMarkdown(source);
+  const body = canonicalizeArchiveLinks(sanitizeMarkdown(source));
   return {
     ...manifestEntry,
     body,
@@ -423,6 +430,10 @@ export function getArchiveEntry(category: string, slug: string) {
   return archiveEntries.find(
     (entry) => entry.category === category && entry.slug === slug,
   );
+}
+
+export function getArchiveEntryBySlug(slug: string) {
+  return archiveEntries.find((entry) => entry.slug === slug);
 }
 
 export function getSearchIndex() {

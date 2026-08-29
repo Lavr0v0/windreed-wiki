@@ -127,8 +127,8 @@ npm run content:import-drafts
 
 - 角色专页使用 `/characters/{slug}/`，例如 `/characters/shirul/`。
 - `/DnD/` 语义不够明确，现仅作为旧链接兼容入口，并跳转到 `/characters/`。
-- 档案词条继续使用 `/archive/{category}/{slug}`。编辑器中的 **URL 路径（slug）** 指永久链接末尾的小写标识，不是页面标题。
-- 已有词条的 `category` 与 `slug` 在界面和保存接口中锁定；九卷 `section` 可以调整，并唯一决定本地目录。需要迁移旧 URL 时必须另走带重定向的显式流程。
+- 档案词条使用 `/archive/{section}/{slug}`，例如雪露为 `/archive/lives/shirul`。编辑器中的 **URL 路径（slug）** 指永久链接末尾的小写标识，不是页面标题；`category` 是内容类型，不再进入公开网址。
+- 已有词条的 `category` 与 `slug` 在界面和保存接口中锁定；九卷 `section` 可以调整，并同时决定本地目录和规范公开 URL。原有 `/archive/{category}/{slug}` 与换卷前的旧 section 网址会以 HTTP 308 永久重定向到当前规范网址。
 
 ## GitHub Pages 回退
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import {
   archiveCollections,
   archiveHref,
+  archiveManifest,
   archiveSections,
   siteHref,
 } from "./archive-manifest";
@@ -28,7 +29,7 @@ export default async function Home() {
             六名来路不同的旅人在路途中成为同伴。这是一份关于他们生平、行程与共同经历的公开档案。
           </p>
           <div className="hero-actions">
-            <PendingLink className="primary-action" href={siteHref("/archive/characters/shirul")} prefetch={false}>开始阅读</PendingLink>
+            <PendingLink className="primary-action" href={archiveHref(archiveManifest[0])} prefetch={false}>开始阅读</PendingLink>
             <PendingLink className="secondary-action" href={siteHref("/search")} prefetch={false}>浏览全部索引</PendingLink>
           </div>
         </div>

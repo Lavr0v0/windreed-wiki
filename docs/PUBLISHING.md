@@ -28,7 +28,8 @@
 - `.env.cloudflare`、访问令牌、同步包和构建目录不得提交到 Git。
 - 不自动新建、切换或强推分支。只有站主明确要求时才创建分支或 PR。
 - `site/content/source/` 是唯一可提交、可构建的公开源树；Obsidian 根目录的同名文件是这批文件的本机硬链接视图，不是第二份正文。
-- 网站九卷中的 `section` 唯一决定目录；`slug` 与 `category` 共同组成永久公开 URL，词条创建后不在普通编辑和同步中改动。
+- 网站九卷中的 `section` 同时决定本地目录和规范公开 URL 的卷册段；档案网址统一为 `/archive/{section}/{slug}`，其中 `slug` 是词条创建后不在普通编辑和同步中改动的永久身份。`category` 只保留为内容类型，不再进入公开网址。
+- 原有 `/archive/{category}/{slug}` 以及词条换卷前的旧 section 网址保留为兼容入口，并以 HTTP 308 永久重定向到当前规范网址。
 - 每个公开词条必须在服务器侧源目录中登记一个独立 `sourcePath`，且一篇 Markdown 只对应一个公开词条。运行 `npm run content:doctor` 检查目录、命名和硬链接；缺少本地视图时运行 `npm run content:link-vault`。
 - 字体使用完整 Unicode 分段资源。新增文字不需要重新制作字体子集。
 
@@ -89,7 +90,7 @@ npm test
 npm run content:publish
 ```
 
-公开卷册以网站清单为准。若修史室误选了卷册，运行下面的命令会保留正文和历史版本，只把公开文章归回正确板块；它不会更改永久 URL 的 `category` 或 `slug`：
+公开卷册以网站清单为准。若修史室误选了卷册，运行下面的命令会保留正文和历史版本，只把公开文章归回正确板块。该操作会同步更新规范 URL 的 `section` 段，但不会更改内容类型 `category` 或永久 `slug`；换卷前的网址会以 HTTP 308 永久重定向到新网址：
 
 ```powershell
 npm run content:classify

@@ -48,49 +48,35 @@ test("serves the Vinext client bundle through the Assets binding", async () => {
   assert.equal(requestedUrl, "http://localhost/_next/static/client-test.js");
 });
 
-const routes = [
-  "/archive/characters/shirul",
-  "/archive/characters/alberina",
-  "/archive/characters/flavilar",
-  "/archive/characters/pheiron",
-  "/archive/characters/skamos",
-  "/archive/characters/ariel",
-  "/archive/characters/merielle",
-  "/archive/world/oath-of-the-ancients",
-  "/archive/world/miracle-light",
-  "/archive/world/transfiguration",
-  "/archive/world/branch",
-  "/archive/world/emberford",
-  "/archive/world/neverwinter",
-  "/archive/world/redlarch",
-  "/archive/world/mere-kryptgarden",
-  "/archive/world/evereska",
-  "/archive/history/timeline",
-  "/archive/history/relationships",
+const archiveRouteCases = [
+  { category: "characters", section: "lives", slug: "shirul" },
+  { category: "characters", section: "lives", slug: "alberina" },
+  { category: "characters", section: "lives", slug: "flavilar" },
+  { category: "characters", section: "lives", slug: "pheiron" },
+  { category: "characters", section: "lives", slug: "skamos" },
+  { category: "characters", section: "lives", slug: "ariel" },
+  { category: "characters", section: "companions", slug: "merielle" },
+  { category: "world", section: "lore", slug: "oath-of-the-ancients" },
+  { category: "world", section: "lore", slug: "miracle-light" },
+  { category: "world", section: "lore", slug: "transfiguration" },
+  { category: "world", section: "relics", slug: "branch" },
+  { category: "world", section: "relics", slug: "flas-mishy-choker" },
+  { category: "world", section: "places", slug: "emberford" },
+  { category: "world", section: "places", slug: "neverwinter" },
+  { category: "world", section: "places", slug: "redlarch" },
+  { category: "world", section: "places", slug: "mere-kryptgarden" },
+  { category: "world", section: "places", slug: "evereska" },
+  { category: "history", section: "fortunes", slug: "alberina-biography" },
+  { category: "history", section: "chronicle", slug: "timeline" },
+  { category: "history", section: "lives", slug: "relationships" },
 ];
 
-const englishRoutes = [
-  "/en/archive/characters/shirul",
-  "/en/archive/characters/alberina",
-  "/en/archive/characters/flavilar",
-  "/en/archive/characters/pheiron",
-  "/en/archive/characters/skamos",
-  "/en/archive/characters/ariel",
-  "/en/archive/characters/merielle",
-  "/en/archive/world/oath-of-the-ancients",
-  "/en/archive/world/miracle-light",
-  "/en/archive/world/transfiguration",
-  "/en/archive/world/branch",
-  "/en/archive/world/flas-mishy-choker",
-  "/en/archive/world/emberford",
-  "/en/archive/world/neverwinter",
-  "/en/archive/world/redlarch",
-  "/en/archive/world/mere-kryptgarden",
-  "/en/archive/world/evereska",
-  "/en/archive/history/alberina-biography",
-  "/en/archive/history/timeline",
-  "/en/archive/history/relationships",
-];
+const routes = archiveRouteCases.map(({ section, slug }) => `/archive/${section}/${slug}`);
+const englishRoutes = archiveRouteCases.map(({ section, slug }) => `/en/archive/${section}/${slug}`);
+const characterRoutes = archiveRouteCases
+  .filter(({ category }) => category === "characters")
+  .map(({ section, slug }) => `/archive/${section}/${slug}`);
+const legacyArchiveUrl = /(?:\/en)?\/archive\/(?:characters|world|history)\//;
 
 const forbiddenPublicText =
   /ChatGPT|Claude|人工智能|问卷|答卷|待定|待补|银月城|现有资料|现有档案|候选方案|工作记录|待跑团|均填|留白|当前均无资料|当前不增加|codex-preview|starter project|your site is taking shape|答卷\/|\.md\b|\.xlsx\b/i;
@@ -162,6 +148,9 @@ test("every English snapshot route renders as translated archive content", async
     const html = await response.text();
     assert.match(html, /TRANSLATION SNAPSHOT/, route);
     assert.match(html, /29 JULY 2026/, route);
+    assert.match(html, new RegExp(`<link rel="canonical" href="https:\/\/windreed\\.wiki${route}">`), route);
+    assert.match(html, new RegExp(`<meta property="og:url" content="https:\/\/windreed\\.wiki${route}">`), route);
+    assert.doesNotMatch(html, legacyArchiveUrl, route);
   }
 });
 
@@ -173,11 +162,61 @@ test("every published archive route renders and passes the content policy", asyn
     assert.match(html, /THE WINDREED CHRONICLES/, route);
     assert.doesNotMatch(html, forbiddenPublicText, route);
     assert.doesNotMatch(html, /芦溪村|银桦林/, route);
+    assert.match(html, new RegExp(`<link rel="canonical" href="https:\/\/windreed\\.wiki${route}">`), route);
+    assert.match(html, new RegExp(`<meta property="og:url" content="https:\/\/windreed\\.wiki${route}">`), route);
+    assert.doesNotMatch(html, legacyArchiveUrl, route);
+  }
+});
+
+test("permanently redirects every legacy category URL to its canonical section URL", async () => {
+  for (const { category, section, slug } of archiveRouteCases) {
+    for (const localePrefix of ["", "/en"]) {
+      const legacy = `${localePrefix}/archive/${category}/${slug}`;
+      const canonical = `${localePrefix}/archive/${section}/${slug}`;
+      const response = await render(legacy);
+      assert.equal(response.status, 308, legacy);
+      assert.equal(new URL(response.headers.get("location"), "http://localhost").pathname, canonical, legacy);
+    }
+  }
+});
+
+test("redirects known wrong sections while unknown archive paths remain 404", async () => {
+  for (const localePrefix of ["", "/en"]) {
+    const wrongSection = `${localePrefix}/archive/lore/shirul`;
+    const response = await render(wrongSection);
+    assert.equal(response.status, 308, wrongSection);
+    assert.equal(
+      new URL(response.headers.get("location"), "http://localhost").pathname,
+      `${localePrefix}/archive/lives/shirul`,
+      wrongSection,
+    );
+
+    const queryResponse = await render(`${wrongSection}?from=legacy&tag=one&tag=two`);
+    const queryLocation = new URL(queryResponse.headers.get("location"), "http://localhost");
+    assert.equal(queryResponse.status, 308, `${wrongSection} query`);
+    assert.equal(queryLocation.pathname, `${localePrefix}/archive/lives/shirul`);
+    assert.equal(queryLocation.search, "?from=legacy&tag=one&tag=two");
+
+    for (const unknown of [
+      `${localePrefix}/archive/not-a-section/shirul`,
+      `${localePrefix}/archive/lives/not-recorded`,
+    ]) {
+      const unknownResponse = await render(unknown);
+      assert.equal(unknownResponse.status, 404, unknown);
+    }
+  }
+});
+
+test("does not emit legacy category URLs from archive entry points", async () => {
+  for (const route of ["/", "/search", "/en", "/en/search"]) {
+    const response = await render(route);
+    assert.equal(response.status, 200, route);
+    assert.doesNotMatch(await response.text(), legacyArchiveUrl, route);
   }
 });
 
 test("shows one canonical core-information panel on every character archive", async () => {
-  for (const route of routes.filter((candidate) => candidate.startsWith("/archive/characters/"))) {
+  for (const route of characterRoutes) {
     const response = await render(route);
     const html = await response.text();
     assert.equal((html.match(/callout-title">核心信息/g) ?? []).length, 1, route);
@@ -185,7 +224,7 @@ test("shows one canonical core-information panel on every character archive", as
 });
 
 test("publishes the 5E Neverwinter name and keeps the old translation as an alias", async () => {
-  const response = await render("/archive/world/neverwinter");
+  const response = await render("/archive/places/neverwinter");
   const html = await response.text();
   assert.match(html, /无冬城/);
   assert.match(html, /绝冬城/);
@@ -195,10 +234,10 @@ test("publishes the 5E Neverwinter name and keeps the old translation as an alia
 
 test("uses checked 5E names for glossary entries", async () => {
   const cases = [
-    ["/archive/world/redlarch", /红松镇/, /Red Larch/],
-    ["/archive/world/oath-of-the-ancients", /古贤之誓/, /Oath of the Ancients/],
-    ["/archive/world/evereska", /艾弗瑞斯卡/, /Evereska/],
-    ["/archive/world/mere-kryptgarden", /亡者沼泽/, /Mere of Dead Men/],
+    ["/archive/places/redlarch", /红松镇/, /Red Larch/],
+    ["/archive/lore/oath-of-the-ancients", /古贤之誓/, /Oath of the Ancients/],
+    ["/archive/places/evereska", /艾弗瑞斯卡/, /Evereska/],
+    ["/archive/places/mere-kryptgarden", /亡者沼泽/, /Mere of Dead Men/],
   ];
 
   for (const [route, chineseName, englishName] of cases) {
@@ -237,14 +276,14 @@ test("uses the fixed bilingual archive and story navigation", async () => {
   assert.match(placesGroup, /无冬城/);
   assert.match(placesGroup, /安柏弗/);
 
-  const shirulResponse = await render("/archive/characters/shirul");
+  const shirulResponse = await render("/archive/lives/shirul");
   const shirul = await shirulResponse.text();
   assert.match(shirul, /glossary-trigger/);
   assert.match(shirul, /aria-haspopup="dialog"/);
 });
 
 test("publishes Emberford as Shirul's confirmed homeland", async () => {
-  const response = await render("/archive/world/emberford");
+  const response = await render("/archive/places/emberford");
   const html = await response.text();
   assert.match(html, /安柏弗/);
   assert.match(html, /Emberford/);
@@ -253,7 +292,7 @@ test("publishes Emberford as Shirul's confirmed homeland", async () => {
 });
 
 test("removes empty headings left behind by unpublished editorial sections", async () => {
-  const response = await render("/archive/world/miracle-light");
+  const response = await render("/archive/lore/miracle-light");
   const html = await response.text();
   assert.doesNotMatch(html, /两种解释/);
 });
@@ -278,9 +317,9 @@ test("gives every published entry its requested chronicle section", async () => 
   assert.match(html, /卷中人/);
   assert.match(visibleResults, /雪露/);
   assert.match(visibleResults, /阿瑞尔/);
-  assert.doesNotMatch(visibleResults, /href="\/archive\/characters\/merielle"/);
+  assert.doesNotMatch(visibleResults, /href="\/archive\/companions\/merielle"/);
 
-  const memberResponse = await render("/archive/characters/shirul");
+  const memberResponse = await render("/archive/lives/shirul");
   const memberHtml = await memberResponse.text();
   assert.match(memberHtml, /PARTY MEMBER/);
   assert.match(memberHtml, /LIVES/);
@@ -362,10 +401,10 @@ test("presents party member names as recorded chronicle entries", async () => {
 
 test("links published character archives to their personal chronicles", async () => {
   const [shirul, alberina, flavilar, pheiron] = await Promise.all([
-    render("/archive/characters/shirul").then((response) => response.text()),
-    render("/archive/characters/alberina").then((response) => response.text()),
-    render("/archive/characters/flavilar").then((response) => response.text()),
-    render("/archive/characters/pheiron").then((response) => response.text()),
+    render("/archive/lives/shirul").then((response) => response.text()),
+    render("/archive/lives/alberina").then((response) => response.text()),
+    render("/archive/lives/flavilar").then((response) => response.text()),
+    render("/archive/lives/pheiron").then((response) => response.text()),
   ]);
   assert.match(shirul, /href="\/characters\/shirul\/"/);
   assert.match(alberina, /href="\/characters\/alberina\/"/);
@@ -398,6 +437,15 @@ test("ships the standalone personal chronicles with local runtime assets", async
   assert.match(shirul, /src="portrait\.webp"/);
   assert.doesNotMatch(shirul, /立绘位虚位以待|具体危险、誓言原句与力量来源仍未确定/);
 
+  const archiveLinkedPages = await Promise.all([
+    "../public/characters/alberina/index.html",
+    "../public/characters/flavilar/index.html",
+    "../public/characters/shirul/index.html",
+    "../public/characters/shirul/branch/index.html",
+    "../public/characters/shirul/branch-openwork/index.html",
+  ].map((path) => readFile(new URL(path, import.meta.url), "utf8")));
+  for (const page of archiveLinkedPages) assert.doesNotMatch(page, legacyArchiveUrl);
+
   const legacyRedirects = [
     ["../public/DnD/index.html", "/characters/"],
     ["../public/DnD/Alberina/index.html", "/characters/alberina/"],
@@ -413,7 +461,7 @@ test("ships the standalone personal chronicles with local runtime assets", async
 
 test("renders archive prose immediately without an intersection reveal gate", async () => {
   const archivePage = await readFile(
-    new URL("../app/archive/[category]/[slug]/page.tsx", import.meta.url),
+    new URL("../app/archive/[section]/[slug]/page.tsx", import.meta.url),
     "utf8",
   );
   assert.doesNotMatch(archivePage, /<div data-reveal>\s*<MarkdownView/);

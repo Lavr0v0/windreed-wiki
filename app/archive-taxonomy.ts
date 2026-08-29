@@ -113,6 +113,19 @@ export const archiveSections = [
   description: string;
 }>;
 
+export type ArchiveRouteSegment = ArchiveCategory | ArchiveSection;
+
+const archiveRouteSegmentSet = new Set<string>([
+  "characters",
+  "world",
+  "history",
+  ...archiveSections.map((section) => section.id),
+]);
+
+export function isArchiveRouteSegment(value: string): value is ArchiveRouteSegment {
+  return archiveRouteSegmentSet.has(value);
+}
+
 export const archiveCollectionById = Object.fromEntries(
   archiveCollections.map((collection) => [collection.id, collection]),
 ) as Record<ArchiveCollection, (typeof archiveCollections)[number]>;

@@ -579,10 +579,8 @@ Shirul named the bond first. Alberina brought learning and judgment. Flavilar he
 
 The public archive records the company in 1492 DR on the Sword Coast. It collects their lives, places, possessions, encounters, and the chronology that connects them.`;
 
-export function getEnglishArchiveEntry(category: string, slug: string) {
-  return englishArchiveManifest.find(
-    (entry) => entry.category === category && entry.slug === slug,
-  );
+export function getEnglishArchiveEntry(slug: string) {
+  return englishArchiveManifest.find((entry) => entry.slug === slug);
 }
 
 export function getEnglishSearchIndex() {

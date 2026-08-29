@@ -28,7 +28,7 @@ export default function EnglishHome() {
           <div className="hero-actions">
             <PendingLink
               className="primary-action"
-              href="/en/archive/characters/shirul"
+              href={englishArchiveHref(englishArchiveManifest[0])}
               prefetch={false}
             >
               Begin with Shirul

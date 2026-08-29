@@ -32,7 +32,7 @@ test("queries compact publication metadata for navigation and home without rerea
     read("app/editor/lib/repository.server.ts"),
     read("app/public-archive.server.ts"),
     read("app/page.tsx"),
-    read("app/archive/[category]/[slug]/page.tsx"),
+    read("app/archive/[section]/[slug]/page.tsx"),
   ]);
 
   assert.match(repository, /listPublishedEntrySummaries/);

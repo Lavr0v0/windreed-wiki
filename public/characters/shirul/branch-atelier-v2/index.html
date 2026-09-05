@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>枝桠 · 工艺修订版 · The Windreed Wayfarers</title>
+  <meta name="description" content="双手长剑「枝桠」：平整的花纹焊接钢、修长镂空、植物形金属工艺与深棕皮革握柄。">
+  <meta name="theme-color" content="#edf3f1">
+  <link rel="stylesheet" href="./branch.css?rev=1">
+</head>
+<body>
+  <a class="skip-link" href="#model-stage">跳到剑的展示</a>
+  <div class="page-progress" aria-hidden="true"><span id="page-progress-bar"></span></div>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="返回风芦旅人主站">
+      <span class="brand-mark" aria-hidden="true">W</span>
+      <span><b>Windreed</b><small>The Wayfarers Archive</small></span>
+    </a>
+    <nav aria-label="页面导航">
+      <a href="../">雪露 Shirul</a>
+      <a href="#craft">工艺细节</a>
+      <a href="../branch-openwork/">上一版本</a>
+      <a href="/archive/relics/branch">道具档案</a>
+    </nav>
+  </header>
+  <main id="showcase">
+    <section class="hero" aria-labelledby="branch-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> Pattern-welded steel · Atelier II</p>
+        <h1 id="branch-title">枝桠</h1>
+        <p class="roman-name" aria-hidden="true">BRANCH</p>
+        <p class="lead">修长的双刃围合一线镂空。光掠过平整的钢面，锻焊层纹随角度隐现；枝叶在护手处舒展，收于深棕皮革与芽苞形剑首。</p>
+        <dl class="quick-specs" aria-label="枝桠的主要尺寸">
+          <div><dt>总长</dt><dd>1.270 <span>m</span></dd></div>
+          <div><dt>刃长</dt><dd>0.930 <span>m</span></dd></div>
+          <div><dt>握持区</dt><dd>0.235 <span>m</span></dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="primary-action" href="#model-stage">近看枝桠 <span aria-hidden="true">↓</span></a>
+          <a class="text-action" href="../branch-openwork/">查看上一版本</a>
+        </div>
+        <p class="edition-note">工艺修订版 <span aria-hidden="true">／</span> 02</p>
+      </div>
+      <div class="model-column" id="model-stage">
+        <div class="model-frame">
+          <div class="model-surface">
+            <div class="frame-corner frame-corner--tl" aria-hidden="true"></div>
+            <div class="frame-corner frame-corner--br" aria-hidden="true"></div>
+            <p class="model-label">BRANCH <span>·</span> II</p>
+            <img class="model-poster" id="model-poster" src="./branch-sword-atelier-v2-poster.webp" alt="枝桠的完整静态展示：修长双刃、植物形护手和深棕握柄" fetchpriority="high">
+            <model-viewer
+              id="branch-model"
+              data-src="./branch-sword-atelier-v2.glb"
+              alt="可旋转的枝桠三维模型。使用下方按钮查看全剑、刃纹、镂空、护手、握柄、剑首和剑尖。"
+              loading="eager"
+              reveal="auto"
+              camera-controls
+              touch-action="pan-y"
+              interaction-prompt="none"
+              camera-target="0m 0.295m 0m"
+              camera-orbit="-14deg 82deg 108%"
+              min-camera-orbit="auto 25deg 7%"
+              max-camera-orbit="auto 145deg 180%"
+              field-of-view="25deg"
+              min-field-of-view="25deg"
+              max-field-of-view="25deg"
+              environment-image="./branch-studio-atelier.hdr"
+              tone-mapping="agx"
+              exposure="1.0"
+              shadow-intensity="0.35"
+              shadow-softness="1"
+              auto-rotate-delay="3500"
+              rotation-per-second="8deg">
+              <div class="model-progress" slot="progress-bar" aria-hidden="true"><span id="model-progress-bar"></span></div>
+            </model-viewer>
+            <noscript><style>.model-load-action { display: none; }</style><p class="no-script-note">当前为静态展示图；启用 JavaScript 后可旋转查看。</p></noscript>
+          </div>
+          <div class="viewer-panel" id="viewer-panel" aria-busy="false">
+            <button class="model-load-action" id="model-load-action" type="button"><span>打开三维展示</span><small>拖动旋转 · 近看工艺细节</small></button>
+            <div class="viewer-caption"><p class="viewer-status" id="viewer-status" role="status">当前显示静态展示图</p><p class="viewer-hint">拖动旋转 · 双指缩放</p></div>
+            <div class="viewer-toolbar is-disabled" aria-label="模型视角控制" inert>
+              <div class="view-presets" role="group" aria-label="预设视角">
+                <button type="button" class="is-active" data-view="full" aria-pressed="true" disabled>全剑</button>
+                <button type="button" data-view="blade" aria-pressed="false" disabled>刃纹</button>
+                <button type="button" data-view="opening" aria-pressed="false" disabled>镂空</button>
+                <button type="button" data-view="hilt" aria-pressed="false" disabled>护手</button>
+                <button type="button" data-view="grip" aria-pressed="false" disabled>握柄</button>
+                <button type="button" data-view="pommel" aria-pressed="false" disabled>剑首</button>
+                <button type="button" data-view="tip" aria-pressed="false" disabled>剑尖</button>
+              </div>
+              <button type="button" class="rotation-toggle" id="rotation-toggle" aria-pressed="false" disabled><span class="rotation-icon" aria-hidden="true">↻</span><span>自动转动</span></button>
+            </div>
+            <div class="viewer-adjustments is-disabled" id="viewer-adjustments" aria-label="观看调整" inert>
+              <label class="camera-control" for="view-orbit"><span>转动角度</span><output id="view-orbit-output" for="view-orbit">−14°</output><input id="view-orbit" type="range" min="-180" max="180" value="-14" step="1" disabled></label>
+              <label class="camera-control" for="view-height"><span>观看高度</span><output id="view-height-output" for="view-height">29.5 cm</output><input id="view-height" type="range" min="-34" max="94" value="29.5" step="0.1" disabled></label>
+              <label class="camera-control" for="view-zoom"><span>视角大小</span><output id="view-zoom-output" for="view-zoom">1.0×</output><input id="view-zoom" type="range" min="0.6" max="15" value="1" step="0.01" disabled></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="craft" id="craft" aria-labelledby="craft-title">
+      <div class="section-heading">
+        <p class="section-index">01 / CRAFT & FORM</p>
+        <h2 id="craft-title">钢、枝叶与皮革</h2>
+        <p>从刃尖向下看，钢的层次逐渐靠拢、舒展，再交给护手的植物形轮廓与握柄细密的缠绕。</p>
+      </div>
+      <div class="detail-grid">
+        <article><a class="detail-image" href="./branch-aperture.webp" aria-label="查看镂空与钢纹大图"><img src="./branch-aperture.webp" alt="镂空周围的平整花纹焊接钢与连续孔缘" loading="lazy" width="1000" height="1000"></a><div class="detail-body"><span class="detail-number">01</span><h3>光里的钢层</h3><p>花纹来自不同钢材锻焊后的内部层次。研磨与酸洗让它显露在平整刃面上。转动时，细微的色泽与反射差随光浮现。</p><button class="detail-link" type="button" data-inspect="blade">近看刃纹 <span aria-hidden="true">↗</span></button></div></article>
+        <article><a class="detail-image" href="./branch-hilt.webp" aria-label="查看护手与握柄大图"><img src="./branch-hilt.webp" alt="枝叶形金属护手与深棕皮革握柄的衔接" loading="lazy" width="1000" height="1000"></a><div class="detail-body"><span class="detail-number">02</span><h3>留白与枝叶</h3><p>中央的修长六边形镂空沿剑身伸展，内壁与孔缘保留钢的厚度。护手从中心向两侧舒展，叶脉与边缘呼应这条轮廓。</p><button class="detail-link" type="button" data-inspect="hilt">近看护手 <span aria-hidden="true">↗</span></button></div></article>
+        <article><a class="detail-image" href="./branch-pommel.webp" aria-label="查看剑首与皮革大图"><img src="./branch-pommel.webp" alt="芽苞形剑首、金属收边与深棕皮革缠带" loading="lazy" width="1000" height="1000"></a><div class="detail-body"><span class="detail-number">03</span><h3>掌中的细节</h3><p>深棕皮革顺着握柄的鼓度缠合，接缝、收边与细纹近看可辨。金属端箍衔接护手与芽苞形剑首，收住皮革的两端。</p><button class="detail-link" type="button" data-inspect="pommel">近看剑首 <span aria-hidden="true">↗</span></button></div></article>
+      </div>
+    </section>
+    <section class="data-strip" aria-label="枝桠尺寸与材质">
+      <div><span>护手宽</span><strong>230 mm</strong></div>
+      <div><span>刃身</span><strong>花纹焊接钢</strong></div>
+      <div><span>握柄</span><strong>深棕皮革</strong></div>
+      <div><span>形制</span><strong>直身 · 双刃 · 双手</strong></div>
+    </section>
+  </main>
+  <footer><div><p class="footer-kicker">The Windreed Wayfarers</p><p>枝桠 · 工艺修订版</p></div><div class="footer-links"><a href="../">雪露人物专页</a><a href="../branch-openwork/">上一版本</a><a href="/archive/relics/branch">道具档案</a><a href="#showcase">回到顶部 ↑</a></div></footer>
+  <script src="./branch.js?rev=1"></script>
+</body>
+</html>

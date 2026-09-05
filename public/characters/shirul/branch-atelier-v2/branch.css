@@ -713,3 +713,10 @@ model-viewer[data-state="ready"] .model-progress { visibility: hidden; }
   .camera-control output { text-align: left; }
   .model-frame { height: auto; min-height: 835px; }
 }
+
+.sword-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 3; }
+.sword-canvas.is-active { opacity: 1; pointer-events: auto; }
+.sword-canvas canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; outline-offset: -5px; }
+.sword-canvas canvas:focus-visible { outline: 2px solid #d5c697; }
+.sword-canvas[data-state="ready"] .model-progress { visibility: hidden; }
+.model-surface { background: #57534b; }

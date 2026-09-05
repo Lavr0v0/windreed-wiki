@@ -1,5 +1,5 @@
 (() => {
-  const model = document.querySelector('#branch-model');
+  const host = document.querySelector('#branch-model');
   const poster = document.querySelector('#model-poster');
   const loadButton = document.querySelector('#model-load-action');
   const status = document.querySelector('#viewer-status');
@@ -11,234 +11,132 @@
   const presets = [...document.querySelectorAll('[data-view]')];
   const sliders = Object.fromEntries(['orbit', 'height', 'zoom'].map(key => [key, document.querySelector(`#view-${key}`)]));
   const outputs = Object.fromEntries(['orbit', 'height', 'zoom'].map(key => [key, document.querySelector(`#view-${key}-output`)]));
-  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const environmentSource = model.getAttribute('environment-image');
+  const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  const fullDistance = 3.35;
+  host.inert = true;
   const views = {
-    full: { target: 0.295, theta: -14, phi: 82, radius: 108 },
-    blade: { target: 0.52, theta: 6, phi: 84, radius: 30 },
-    opening: { target: 0.145, theta: 18, phi: 82, radius: 17 },
-    hilt: { target: -0.02, theta: 18, phi: 80, radius: 27 },
-    grip: { target: -0.16, theta: 22, phi: 82, radius: 22 },
-    pommel: { target: -0.295, theta: 20, phi: 80, radius: 11 },
-    tip: { target: 0.877, theta: 4, phi: 86, radius: 13 },
+    full: { target: 0.27, theta: -14, phi: 78, radius: fullDistance },
+    blade: { target: 0.52, theta: 6, phi: 84, radius: 0.9 },
+    opening: { target: 0.145, theta: 18, phi: 82, radius: 0.51 },
+    hilt: { target: -0.02, theta: 18, phi: 80, radius: 0.81 },
+    grip: { target: -0.16, theta: 22, phi: 82, radius: 0.66 },
+    pommel: { target: -0.295, theta: 20, phi: 78, radius: 0.36 },
+    tip: { target: 0.877, theta: 4, phi: 86, radius: 0.39 },
   };
-  let ready = false;
-  let loading = false;
-  let loadedModule = false;
-  let moduleAttempts = 0;
-  let assetAttempts = 0;
-  let timeout;
-  let pendingView = null;
-  let fullDistance = 3.17;
+  let ready = false, loading = false, module = null, stage = null;
+  let attempts = 0, sequence = 0, timer, controller, pendingView = null;
   let draggingSlider = null;
-
-  const radians = degrees => degrees * Math.PI / 180;
   const degrees = angle => angle * 180 / Math.PI;
-  const normalizeAngle = angle => ((angle + 180) % 360 + 360) % 360 - 180;
-
-  function setControlsEnabled(enabled) {
+  const normalized = angle => ((angle + 180) % 360 + 360) % 360 - 180;
+  function controlsEnabled(enabled) {
     for (const group of [toolbar, adjustments]) {
-      group.inert = !enabled;
-      group.classList.toggle('is-disabled', !enabled);
+      group.inert = !enabled; group.classList.toggle('is-disabled', !enabled);
       group.querySelectorAll('button, input').forEach(control => { control.disabled = !enabled; });
     }
   }
-
-  function setRotation(rotating) {
-    model.autoRotate = rotating && ready;
-    rotationButton.setAttribute('aria-pressed', String(rotating && ready));
-    rotationButton.querySelector('span:last-child').textContent = rotating && ready ? '暂停转动' : '自动转动';
+  function rotationLabel() {
+    const active = Boolean(ready && stage?.autoRotate);
+    rotationButton.setAttribute('aria-pressed', String(active));
+    rotationButton.querySelector('span:last-child').textContent = active ? '暂停转动' : '自动转动';
   }
-
   function clearPreset() {
-    for (const button of presets) {
-      button.classList.remove('is-active');
-      button.setAttribute('aria-pressed', 'false');
-    }
+    presets.forEach(button => { button.classList.remove('is-active'); button.setAttribute('aria-pressed', 'false'); });
   }
-
-  function readCamera() {
-    return { orbit: model.getCameraOrbit(), target: model.getCameraTarget() };
-  }
-
   function syncControls() {
-    if (!ready) return;
-    const { orbit, target } = readCamera();
-    const angle = normalizeAngle(degrees(orbit.theta));
-    const zoom = fullDistance / orbit.radius;
+    if (!ready || !stage) return;
+    const orbit = stage.getCameraOrbit(), target = stage.getCameraTarget();
+    const angle = normalized(degrees(orbit.theta)), zoom = fullDistance / orbit.radius;
     if (draggingSlider !== 'orbit') sliders.orbit.value = String(angle);
     if (draggingSlider !== 'height') {
-      // A user can pan beyond the sword: keep the range truthful and reversible.
       sliders.height.min = String(Math.min(-34, Math.floor(target.y * 100)));
       sliders.height.max = String(Math.max(94, Math.ceil(target.y * 100)));
       sliders.height.value = String(target.y * 100);
     }
-    if (draggingSlider !== 'zoom') {
-      sliders.zoom.max = String(Math.max(15, Math.ceil(zoom * 100) / 100));
-      sliders.zoom.value = String(zoom);
-    }
+    if (draggingSlider !== 'zoom') { sliders.zoom.max = String(Math.max(18, Math.ceil(zoom * 100) / 100)); sliders.zoom.value = String(zoom); }
     outputs.orbit.textContent = `${Math.round(angle)}°`;
     outputs.height.textContent = `${(target.y * 100).toFixed(1)} cm`;
     outputs.zoom.textContent = `${zoom.toFixed(1)}×`;
-    sliders.orbit.setAttribute('aria-valuetext', outputs.orbit.textContent);
-    sliders.height.setAttribute('aria-valuetext', outputs.height.textContent);
-    sliders.zoom.setAttribute('aria-valuetext', outputs.zoom.textContent);
+    for (const key of Object.keys(sliders)) sliders[key].setAttribute('aria-valuetext', outputs[key].textContent);
+    rotationLabel();
   }
-
   function selectView(name) {
     if (!ready || !views[name]) return;
-    const view = views[name];
-    setRotation(false);
-    // Reset the turntable so a preset has the same orientation after auto-rotation.
-    model.resetTurntableRotation(0);
-    model.cameraTarget = `0m ${view.target}m 0m`;
-    model.cameraOrbit = `${view.theta}deg ${view.phi}deg ${fullDistance * view.radius / views.full.radius}m`;
-    if (motionPreference.matches) model.jumpCameraToGoal();
+    stage.setView({ ...views[name], resetTarget: true });
     presets.forEach(button => {
       const active = button.dataset.view === name;
-      button.classList.toggle('is-active', active);
-      button.setAttribute('aria-pressed', String(active));
+      button.classList.toggle('is-active', active); button.setAttribute('aria-pressed', String(active));
     });
+    syncControls();
   }
-
-  function showFallback(message) {
-    window.clearTimeout(timeout);
-    ready = false;
-    loading = false;
-    model.dataset.state = 'error';
-    panel.setAttribute('aria-busy', 'false');
-    setRotation(false);
-    setControlsEnabled(false);
-    model.classList.remove('is-active');
-    poster.classList.remove('is-hidden');
-    loadButton.classList.remove('is-hidden');
-    loadButton.disabled = false;
+  function fallback(message) {
+    clearTimeout(timer); controller?.abort(); ready = false; loading = false;
+    stage?.dispose(); stage = null; host.stage = null; host.loaded = false;
+    host.dataset.state = 'error'; host.classList.remove('is-active'); host.inert = true;
+    poster.classList.remove('is-hidden'); loadButton.classList.remove('is-hidden'); loadButton.disabled = false;
     loadButton.querySelector('span').textContent = '重新加载三维展示';
-    status.textContent = message;
+    panel.setAttribute('aria-busy', 'false'); controlsEnabled(false); rotationLabel(); status.textContent = message;
   }
-
   async function loadModel() {
     if (ready || loading) return;
-    loading = true;
-    model.dataset.state = 'loading';
-    panel.setAttribute('aria-busy', 'true');
-    loadButton.disabled = true;
-    loadButton.querySelector('span').textContent = '正在加载三维展示';
-    status.textContent = '正在载入查看器…';
-    progress.style.transform = 'scaleX(0)';
-    // A stalled request stays on the poster and can be retried. This never marks
-    // a model ready: only the actual model-viewer load event does that.
-    timeout = window.setTimeout(() => showFallback('载入时间较长，当前保留静态图，可重试'), 45000);
+    loading = true; const current = ++sequence, retry = attempts++;
+    host.dataset.state = 'loading'; panel.setAttribute('aria-busy', 'true');
+    loadButton.disabled = true; loadButton.querySelector('span').textContent = '正在加载三维展示';
+    status.textContent = '正在载入查看器…'; progress.style.transform = 'scaleX(0)';
+    controller = new AbortController();
+    timer = setTimeout(() => { if (current === sequence) fallback('载入时间较长，当前保留静态图，可重试'); }, 45000);
     try {
-      if (!loadedModule) {
-        if (!customElements.get('model-viewer')) {
-          const retry = moduleAttempts++;
-          await import(`../branch-openwork/vendor/model-viewer.min.js${retry ? `?retry=${retry}` : ''}`);
-        }
-        await customElements.whenDefined('model-viewer');
-        loadedModule = true;
-      }
-      if (!loading) return;
-      status.textContent = '正在载入剑与材质…';
-      model.removeAttribute('src');
-      model.cameraTarget = `0m ${views.full.target}m 0m`;
-      model.cameraOrbit = `${views.full.theta}deg ${views.full.phi}deg ${views.full.radius}%`;
-      model.resetTurntableRotation(0);
-      await model.updateComplete;
-      // model-viewer retains a rejected asset URL in its loader cache. Give a
-      // user-requested retry a fresh URL so a recovered connection really retries.
-      const attempt = assetAttempts++;
-      const asset = new URL(model.dataset.src, document.baseURI);
-      if (attempt) {
-        asset.searchParams.set('retry', String(attempt));
-        const environment = new URL(environmentSource, document.baseURI);
-        // This bundled viewer identifies HDR files from the end of the URL.
-        environment.searchParams.set('retry', `${attempt}.hdr`);
-        model.environmentImage = environment.href;
-      }
-      model.src = asset.href;
-    } catch {
-      showFallback('三维展示暂时无法载入，仍可查看静态图');
+      if (!module) module = await import(`./vendor/branch-stage.min.js${retry ? `?retry=${retry}` : ''}`);
+      if (!loading || current !== sequence) return;
+      const asset = new URL(host.dataset.src, document.baseURI), environment = new URL(host.dataset.environment, document.baseURI);
+      if (retry) { asset.searchParams.set('retry', String(retry)); environment.searchParams.set('retry', String(retry)); }
+      const loadedStage = await module.createBranchStage({
+        host, modelUrl: asset.href, environmentUrl: environment.href, signal: controller.signal,
+        onProgress: amount => {
+          if (!loading || current !== sequence) return;
+          progress.style.transform = `scaleX(${amount})`;
+          status.textContent = amount < 0.9 ? `正在载入 ${Math.round(amount * 100)}%` : '正在准备光影…';
+        },
+        onChange: event => { if (event.source === 'user-interaction') clearPreset(); syncControls(); },
+        onError: () => { if (current === sequence) fallback('三维展示暂时中断，当前保留静态图'); },
+      });
+      if (!loading || current !== sequence) { loadedStage.dispose(); return; }
+      stage = loadedStage; host.stage = stage; host.loaded = true;
+      ready = true; loading = false; clearTimeout(timer);
+      host.dataset.state = 'ready'; host.classList.add('is-active'); host.inert = false; poster.classList.add('is-hidden');
+      loadButton.classList.add('is-hidden'); loadButton.disabled = false; panel.setAttribute('aria-busy', 'false');
+      controlsEnabled(true); syncControls(); status.textContent = '三维展示已就绪';
+      if (pendingView) { selectView(pendingView); pendingView = null; }
+    } catch (error) {
+      if (current !== sequence) return;
+      if (error?.name === 'AbortError' && !loading) return;
+      fallback('三维展示暂时无法载入，仍可查看静态图');
     }
   }
-
-  model.addEventListener('load', () => {
-    if (!loading) return;
-    window.clearTimeout(timeout);
-    ready = true;
-    loading = false;
-    model.dataset.state = 'ready';
-    panel.setAttribute('aria-busy', 'false');
-    model.jumpCameraToGoal();
-    const distance = model.getCameraOrbit().radius;
-    if (distance > 0) fullDistance = distance;
-    model.classList.add('is-active');
-    poster.classList.add('is-hidden');
-    loadButton.classList.add('is-hidden');
-    loadButton.disabled = false;
-    setControlsEnabled(true);
-    setRotation(false);
-    syncControls();
-    status.textContent = '三维展示已就绪';
-    if (pendingView) {
-      selectView(pendingView);
-      pendingView = null;
-    }
-  });
-
-  model.addEventListener('progress', event => {
-    if (!loading) return;
-    const amount = Math.max(0, Math.min(1, event.detail.totalProgress || 0));
-    progress.style.transform = `scaleX(${amount})`;
-    status.textContent = amount < 1 ? `正在载入 ${Math.round(amount * 100)}%` : '正在准备画面…';
-  });
-  model.addEventListener('error', () => showFallback('三维展示暂时无法载入，当前保留静态图'));
-  model.addEventListener('camera-change', event => {
-    if (!ready) return;
-    if (event.detail.source === 'user-interaction') {
-      setRotation(false);
-      clearPreset();
-    }
-    syncControls();
-  });
-
-  for (const [name, slider] of Object.entries(sliders)) {
-    slider.addEventListener('pointerdown', () => { draggingSlider = name; });
+  for (const [key, slider] of Object.entries(sliders)) {
+    slider.addEventListener('pointerdown', () => { draggingSlider = key; });
     slider.addEventListener('input', () => {
       if (!ready) return;
-      const { orbit, target } = readCamera();
-      const value = Number(slider.value);
-      setRotation(false);
-      clearPreset();
-      if (name === 'height') model.cameraTarget = `${target.x}m ${value / 100}m ${target.z}m`;
-      if (name === 'orbit') model.cameraOrbit = `${radians(value)}rad ${orbit.phi}rad ${orbit.radius}m`;
-      if (name === 'zoom') model.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${fullDistance / value}m`;
-      model.jumpCameraToGoal();
+      const value = Number(slider.value); clearPreset();
+      if (key === 'height') stage.setView({ target: value / 100 });
+      if (key === 'orbit') stage.setView({ theta: value });
+      if (key === 'zoom') stage.setView({ radius: fullDistance / value });
+      syncControls();
     });
     slider.addEventListener('change', () => { draggingSlider = null; syncControls(); });
   }
   window.addEventListener('pointerup', () => { draggingSlider = null; syncControls(); });
   window.addEventListener('pointercancel', () => { draggingSlider = null; });
   presets.forEach(button => button.addEventListener('click', () => selectView(button.dataset.view)));
-  rotationButton.addEventListener('click', () => {
-    if (!ready) return;
-    clearPreset();
-    setRotation(!model.autoRotate);
-  });
-  motionPreference.addEventListener('change', event => {
-    if (event.matches) { setRotation(false); if (ready) model.jumpCameraToGoal(); }
-  });
+  rotationButton.addEventListener('click', () => { if (ready) { clearPreset(); stage.setRotation(!stage.autoRotate); rotationLabel(); } });
+  motionPreference.addEventListener('change', event => { if (event.matches && stage) { stage.setRotation(false); rotationLabel(); } });
   document.querySelectorAll('[data-inspect]').forEach(button => button.addEventListener('click', () => {
     document.querySelector('#model-stage').scrollIntoView({ behavior: motionPreference.matches ? 'instant' : 'smooth', block: 'start' });
-    if (ready) selectView(button.dataset.inspect);
-    else { pendingView = button.dataset.inspect; loadModel(); }
+    if (ready) selectView(button.dataset.inspect); else { pendingView = button.dataset.inspect; loadModel(); }
   }));
   loadButton.addEventListener('click', loadModel);
-  const updatePageProgress = () => {
-    const available = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    document.querySelector('#page-progress-bar').style.transform = `scaleX(${Math.max(0, Math.min(1, window.scrollY / available))})`;
+  const pageProgress = () => {
+    const available = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    document.querySelector('#page-progress-bar').style.transform = `scaleX(${Math.max(0, Math.min(1, scrollY / available))})`;
   };
-  window.addEventListener('scroll', updatePageProgress, { passive: true });
-  window.addEventListener('resize', updatePageProgress, { passive: true });
-  updatePageProgress();
+  addEventListener('scroll', pageProgress, { passive: true }); addEventListener('resize', pageProgress, { passive: true }); pageProgress();
 })();

@@ -85,12 +85,12 @@
     controller = new AbortController();
     timer = setTimeout(() => { if (current === sequence) fallback('载入时间较长，当前保留静态图，可重试'); }, 45000);
     try {
-      if (!module) module = await import(`./vendor/branch-stage.min.js${retry ? `?retry=${retry}` : ''}`);
+      if (!module) module = await import(`./vendor/branch-stage.min.js?rev=forest4${retry ? `&retry=${retry}` : ''}`);
       if (!loading || current !== sequence) return;
-      const asset = new URL(host.dataset.src, document.baseURI), environment = new URL(host.dataset.environment, document.baseURI);
-      if (retry) { asset.searchParams.set('retry', String(retry)); environment.searchParams.set('retry', String(retry)); }
+      const asset = new URL(host.dataset.src, document.baseURI), environment = new URL(host.dataset.environment, document.baseURI), panorama = new URL(host.dataset.panorama, document.baseURI);
+      if (retry) { asset.searchParams.set('retry', String(retry)); environment.searchParams.set('retry', String(retry)); panorama.searchParams.set('retry', String(retry)); }
       const loadedStage = await module.createBranchStage({
-        host, modelUrl: asset.href, environmentUrl: environment.href, signal: controller.signal,
+        host, modelUrl: asset.href, environmentUrl: environment.href, panoramaUrl: panorama.href, signal: controller.signal,
         onProgress: amount => {
           if (!loading || current !== sequence) return;
           progress.style.transform = `scaleX(${amount})`;

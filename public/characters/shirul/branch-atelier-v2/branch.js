@@ -85,7 +85,7 @@
     controller = new AbortController();
     timer = setTimeout(() => { if (current === sequence) fallback('载入时间较长，当前保留静态图，可重试'); }, 45000);
     try {
-      if (!module) module = await import(`./vendor/branch-stage.min.js?rev=forest4${retry ? `&retry=${retry}` : ''}`);
+      if (!module) module = await import(`./vendor/branch-stage.min.js?rev=mirror5-optical${retry ? `&retry=${retry}` : ''}`);
       if (!loading || current !== sequence) return;
       const asset = new URL(host.dataset.src, document.baseURI), environment = new URL(host.dataset.environment, document.baseURI), panorama = new URL(host.dataset.panorama, document.baseURI);
       if (retry) { asset.searchParams.set('retry', String(retry)); environment.searchParams.set('retry', String(retry)); panorama.searchParams.set('retry', String(retry)); }

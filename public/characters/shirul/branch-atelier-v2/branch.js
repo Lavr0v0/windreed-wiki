@@ -23,7 +23,7 @@
     pommel: { target: -0.295, theta: 20, phi: 78, radius: 0.36 },
     tip: { target: 0.877, theta: 4, phi: 86, radius: 0.39 },
   };
-  let ready = false, loading = false, module = null, stage = null;
+  let ready = false, loading = false, stageModule = null, stage = null;
   let attempts = 0, sequence = 0, timer, controller, pendingView = null;
   let draggingSlider = null;
   const degrees = angle => angle * 180 / Math.PI;
@@ -85,11 +85,11 @@
     controller = new AbortController();
     timer = setTimeout(() => { if (current === sequence) fallback('载入时间较长，当前保留静态图，可重试'); }, 45000);
     try {
-      if (!module) module = await import(`./vendor/branch-stage.min.js?rev=filament9${retry ? `&retry=${retry}` : ''}`);
+      if (!stageModule) stageModule = await import(`./vendor/branch-stage.min.js?rev=filament9${retry ? `&retry=${retry}` : ''}`);
       if (!loading || current !== sequence) return;
       const asset = new URL(host.dataset.src, document.baseURI), environment = new URL(host.dataset.environment, document.baseURI), panorama = new URL(host.dataset.panorama, document.baseURI);
       if (retry) { asset.searchParams.set('retry', String(retry)); environment.searchParams.set('retry', String(retry)); panorama.searchParams.set('retry', String(retry)); }
-      const loadedStage = await module.createBranchStage({
+      const loadedStage = await stageModule.createBranchStage({
         host, modelUrl: asset.href, environmentUrl: environment.href, panoramaUrl: panorama.href, signal: controller.signal,
         onProgress: amount => {
           if (!loading || current !== sequence) return;

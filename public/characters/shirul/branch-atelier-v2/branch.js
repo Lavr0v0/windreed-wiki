@@ -16,7 +16,7 @@
   host.inert = true;
   const views = {
     full: { target: 0.27, theta: -14, phi: 78, radius: fullDistance },
-    blade: { target: 0.52, theta: 6, phi: 84, radius: 0.9 },
+    blade: { target: 0.52, theta: 6, phi: 84, radius: 0.36 },
     opening: { target: 0.145, theta: 18, phi: 82, radius: 0.51 },
     hilt: { target: -0.02, theta: 18, phi: 80, radius: 0.81 },
     grip: { target: -0.16, theta: 22, phi: 82, radius: 0.66 },
@@ -85,7 +85,7 @@
     controller = new AbortController();
     timer = setTimeout(() => { if (current === sequence) fallback('载入时间较长，当前保留静态图，可重试'); }, 45000);
     try {
-      if (!module) module = await import(`./vendor/branch-stage.min.js?rev=lamina8${retry ? `&retry=${retry}` : ''}`);
+      if (!module) module = await import(`./vendor/branch-stage.min.js?rev=filament9${retry ? `&retry=${retry}` : ''}`);
       if (!loading || current !== sequence) return;
       const asset = new URL(host.dataset.src, document.baseURI), environment = new URL(host.dataset.environment, document.baseURI), panorama = new URL(host.dataset.panorama, document.baseURI);
       if (retry) { asset.searchParams.set('retry', String(retry)); environment.searchParams.set('retry', String(retry)); panorama.searchParams.set('retry', String(retry)); }

@@ -1,13 +1,13 @@
 @font-face {
   font-family: "Cinzel";
-  src: url("../../shared/Cinzel-VariableFont_wght.woff2") format("woff2");
+  src: url("./fonts/Cinzel-VariableFont_wght.woff2") format("woff2");
   font-weight: 400 900;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Windreed Serif";
-  src: url("../../shared/NotoSerifSC-subset.woff2") format("woff2");
+  src: url("./fonts/NotoSerifSC-subset.woff2") format("woff2");
   font-weight: 400 700;
   font-display: swap;
 }

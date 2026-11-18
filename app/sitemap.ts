@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: entry.characterRole === "member" ? 0.8 : 0.6,
     })),
     { url: `${origin}/en/search`, changeFrequency: "yearly", priority: 0.7 },
+    { url: `${origin}/exhibits/split-hook/`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${origin}/characters/alberina/`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${origin}/characters/flavilar/`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${origin}/characters/shirul/`, changeFrequency: "monthly", priority: 0.8 },

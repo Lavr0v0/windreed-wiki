@@ -198,6 +198,17 @@ export function SearchClient({
         </div>
       </form>
 
+      {locale === "zh" && category === "relics" && !activeQuery && (
+        <a className="search-result" href={siteHref("/exhibits/split-hook/")}>
+          <div>
+            <span className="result-category">器物展台</span>
+            <h2>右臂分钩义手</h2>
+            <p>旋转查看皮箍、猫头鹰栖木与两枚内弯钩。</p>
+          </div>
+          <span className="result-arrow" aria-hidden="true">→</span>
+        </a>
+      )}
+
       <div className="search-result-meta" aria-live="polite" role="status">
         <strong>{results.length}</strong> {locale === "en" ? (results.length === 1 ? "entry" : "entries") : "个条目"}
         {activeQuery && (

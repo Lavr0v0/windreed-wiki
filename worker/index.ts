@@ -138,6 +138,7 @@ const worker = {
       || url.pathname.startsWith("/assets/")
       || url.pathname.startsWith("/brand/")
       || url.pathname.startsWith("/characters/")
+      || url.pathname.startsWith("/exhibits/")
       || url.pathname.startsWith("/DnD/")
       || ["/favicon.svg", "/file.svg", "/globe.svg", "/window.svg"].includes(url.pathname);
     if (isStaticAsset && env.ASSETS) {

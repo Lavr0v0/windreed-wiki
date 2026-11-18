@@ -2,72 +2,34 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f3eb">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#d7d1c9">
   <title>右臂分钩义手 · 风芦旅人</title>
-  <meta name="description" content="旋转查看一件旅人自制的右臂义手，近看皮箍、猫头鹰栖木和内弯双钩。">
-  <link rel="canonical" href="https://windreed.wiki/exhibits/split-hook/">
-  <meta property="og:title" content="右臂分钩义手 · 风芦旅人">
-  <meta property="og:description" content="从上臂皮箍到两枚内弯钩，拖动查看这件器物的各个角度。">
+  <meta name="description" content="可自由旋转、缩放的右臂分钩义手模型。">
+  <meta property="og:title" content="右臂分钩义手">
   <meta property="og:image" content="https://windreed.wiki/exhibits/split-hook/study.webp">
-  <base href="/exhibits/split-hook/">
+  <link rel="canonical" href="https://windreed.wiki/exhibits/split-hook/">
   <link rel="icon" href="/brand/final/windreed-logo-favicon.svg">
-  <link rel="stylesheet" href="./gallery.css">
-  <link rel="preload" href="./study.webp" as="image">
-  <script type="module" src="./gallery.js"></script>
+  <base href="/exhibits/split-hook/">
+  <link rel="stylesheet" href="./gallery.css?v=2">
+  <script type="module" src="./gallery.js?v=2"></script>
 </head>
 <body>
-  <header class="mast">
-    <div class="wrap mast-inner">
-      <a class="brand" href="/" aria-label="风芦旅人首页">
-        <img src="/brand/final/windreed-logo-favicon.svg" width="39" height="39" alt="">
-        <span lang="en">The Windreed Wayfarers</span>
-      </a>
-      <a class="back" href="/search?section=relics"><span aria-hidden="true">←</span> 返回行囊</a>
-    </div>
-  </header>
-  <main class="wrap gallery">
-    <div class="intro">
-      <p class="collection">行囊 <span aria-hidden="true">/</span> 器物</p>
-      <h1>右臂分钩义手</h1>
-      <p class="english" lang="en">Split-hook prosthesis</p>
-      <p class="description">她给自己做的右臂义手。两枚弯钩用来拿取物件，铁杆上方还给同行的猫头鹰留了一根栖木。</p>
-    </div>
-    <section class="studio" aria-label="义手三维展台" data-state="loading">
-      <div class="stage">
-        <div class="registration" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <img class="plate" src="./study.webp" alt="酒红皮箍通过两条悬带连至圆短的承筒，单根铁杆向前接着赤红的分钩。">
-        <model-viewer id="object" data-source="./split-hook.glb"
-          alt="可旋转的右臂分钩义手，含上臂皮箍、悬带、前臂承筒、木栖杠与两枚内弯钩"
-          loading="eager" reveal="auto" camera-controls touch-action="pan-y" interaction-prompt="none"
-          camera-orbit="28deg 62deg 0.70m" camera-target="0.151m 0.036m 0.003m"
-          min-camera-orbit="auto 0deg 0.09m" max-camera-orbit="auto 180deg 1.5m"
-          field-of-view="27deg" min-field-of-view="15deg" max-field-of-view="48deg"
-          environment-image="legacy" tone-mapping="neutral" exposure="0.90"
-          shadow-intensity="0.55" shadow-softness="0.9"
-          rotation-per-second="14deg" auto-rotate-delay="0">
-          <span slot="progress-bar"></span>
-        </model-viewer>
-        <p class="load-status" role="status"><span class="load-note">正在载入三维模型…</span><button class="retry" type="button" hidden>重新载入</button></p>
-        <noscript><p class="no-script">启用 JavaScript 后即可拖动旋转模型。</p></noscript>
-      </div>
-      <div class="tools">
-        <p class="gesture"><span class="gesture-mark" aria-hidden="true">↔</span><span class="mouse-help">拖动旋转 · 滚轮缩放</span><span class="touch-help">单指旋转 · 双指缩放</span></p>
-        <div class="actions">
-          <button type="button" id="spin" aria-pressed="false" disabled><span class="spin-icon" aria-hidden="true"></span><span id="spin-label">自动旋转</span></button>
-          <button type="button" id="reset" disabled><span class="reset-icon" aria-hidden="true">↺</span>复位</button>
-        </div>
-      </div>
-    </section>
-    <section class="views" aria-labelledby="views-title">
-      <h2 id="views-title">观察部位</h2>
-      <div class="choices" role="group" aria-labelledby="views-title">
-        <button type="button" data-view="whole" aria-pressed="true" disabled><img alt="" src="./whole.webp"><span><strong>全貌</strong><small>整件义手</small></span><i aria-hidden="true"></i></button>
-        <button type="button" data-view="cuff" aria-pressed="false" disabled><img alt="" src="./fastening.webp"><span><strong>固定皮箍</strong><small>皮箍、带扣与两侧悬带</small></span><i aria-hidden="true"></i></button>
-        <button type="button" data-view="perch" aria-pressed="false" disabled><img alt="" src="./perch.webp"><span><strong>猫头鹰栖木</strong><small>与铁杆平行的木栖杠</small></span><i aria-hidden="true"></i></button>
-        <button type="button" data-view="hook" aria-pressed="false" disabled><img alt="" src="./hook.webp"><span><strong>分钩</strong><small>转盘与两枚同形内弯钩</small></span><i aria-hidden="true"></i></button>
-      </div>
-    </section>
+  <main id="studio" aria-label="右臂分钩义手三维展示">
+    <picture id="still">
+      <source media="(max-aspect-ratio: 4/5)" srcset="./portrait.webp?v=2">
+      <img src="./study.webp?v=2" alt="两条皮悬带连接带有红铜扣的皮箍和承筒，木栖杠沿铁杆伸向两枚赤色弯钩。">
+    </picture>
+    <model-viewer id="object"
+      alt="右臂分钩义手。拖动或使用方向键旋转，滚轮或双指缩放。"
+      camera-controls touch-action="none" interaction-prompt="none"
+      loading="eager" reveal="auto" camera-target="0.154m 0.036m 0.003m"
+      camera-orbit="29deg 62deg 1.17m" min-camera-orbit="auto 0deg 0.08m"
+      max-camera-orbit="auto 180deg 2.1m" field-of-view="16deg" min-field-of-view="10deg" max-field-of-view="40deg"
+      environment-image="./studio.hdr" tone-mapping="aces" exposure="0.56"
+      shadow-intensity="0.48" shadow-softness="0.92">
+      <span slot="progress-bar" aria-hidden="true"></span>
+    </model-viewer>
   </main>
 </body>
 </html>
